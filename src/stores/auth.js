@@ -7,6 +7,9 @@ if (typeof window !== 'undefined') {
   const storedLoginState = localStorage.getItem('isLoggedIn');
   if (storedLoginState) {
     isLoggedIn.set(JSON.parse(storedLoginState));
+  } else {
+    // If no stored state, ensure it's set to false
+    isLoggedIn.set(false);
   }
 }
 

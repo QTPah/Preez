@@ -5,6 +5,9 @@ const API_URL = 'http://localhost:5000/api/auth';
 export const login = async (username, password) => {
   try {
     const response = await axios.post(`${API_URL}/login`, { username, password }, { withCredentials: true });
+    if (response.data.success && response.data.token) {
+      return { success: true, token: response.data.token, user: response.data.user };
+    }
     return response.data;
   } catch (error) {
     console.error('Login error:', error);

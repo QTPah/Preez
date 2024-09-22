@@ -157,3 +157,13 @@
     </div>
   </footer>
 </div>
+<script>
+  import { onMount } from 'svelte';
+  import { checkAuthStatus } from '../stores/auth';
+
+  onMount(async () => {
+    await checkAuthStatus();
+  });
+</script>
+
+<slot />

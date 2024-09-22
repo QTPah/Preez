@@ -4,6 +4,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/auth');
 const offerRoutes = require('./routes/offers');
+const notificationRoutes = require('./routes/notifications');
 require('dotenv').config();
 
 const app = express();
@@ -27,6 +28,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/offers', offerRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

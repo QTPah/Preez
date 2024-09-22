@@ -2,9 +2,14 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:5000/api/auth';
 
+const api = axios.create({
+  baseURL: API_URL,
+  withCredentials: true,
+});
+
 export const validateToken = async (token) => {
   try {
-    const response = await axios.get(`${API_URL}/validate-token`, {
+    const response = await api.get('/validate-token', {
       headers: { Authorization: `Bearer ${token}` }
     });
     return response.data.success;
@@ -16,51 +21,42 @@ export const validateToken = async (token) => {
 
 export const login = async (username, password) => {
   try {
-    const response = await axios.post(`${API_URL}/login`, { username, password }, { withCredentials: true });
-    if (response.data.success && response.data.token) {
-      return response.data;
-    }
-    return { success: false, message: 'Login failed' };
+    const response = await api.post('/login', { username, password });
+    return response.data;
   } catch (error) {
     console.error('Login error:', error);
-    return { success: false, message: error.response?.data?.message || 'An error occurred during login' };
+    throw error.response?.data || { success: false, message: 'An error occurred during login' };
   }
 };
 
 export const register = async (username, email, password) => {
   try {
-    const response = await axios.post(`${API_URL}/register`, { username, email, password }, { withCredentials: true });
-    if (response.data.success && response.data.token) {
-      return response.data;
-    }
-    return { success: false, message: 'Registration failed' };
+    const response = await api.post('/register', { username, email, password });
+    return response.data;
   } catch (error) {
     console.error('Registration error:', error);
-    return { success: false, message: error.response?.data?.message || 'An error occurred during registration' };
+    throw error.response?.data || { success: false, message: 'An error occurred during registration' };
   }
 };
 
 export const logout = async () => {
   try {
-    const response = await axios.post(`${API_URL}/logout`, {}, { withCredentials: true });
+    const response = await api.post('/logout');
     return response.data;
   } catch (error) {
     console.error('Logout error:', error);
-    return { success: false, message: error.response?.data?.message || 'An error occurred during logout' };
+    throw error.response?.data || { success: false, message: 'An error occurred during logout' };
   }
 };
 
 export const fetchUserData = async (token) => {
   try {
-    const response = await axios.get(`${API_URL}/user`, {
+    const response = await api.get('/user', {
       headers: { Authorization: `Bearer ${token}` }
     });
-    if (response.data.success) {
-      return response.data.user;
-    }
-    return null;
+    return response.data.user;
   } catch (error) {
     console.error('Fetch user data error:', error);
-    return null;
+    throw error.response?.data || { success: false, message: 'An error occurred while fetching user data' };
   }
 };

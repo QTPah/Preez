@@ -1,41 +1,30 @@
-import { writable } from 'svelte/store';
-import { validateToken } from '../lib/api/auth';
+import { writable, derived } from 'svelte/store';
+import { browser } from '$app/environment';
 
-export const token = writable(null);
-export const user = writable(null);
-export const isLoggedIn = writable(false);
+const createAuthStore = () => {
+  const { subscribe, set, update } = writable({
+    token: browser ? localStorage.getItem('authToken') : null,
+    user: null,
+  });
 
-export function setSession(sessionData) {
-  if (sessionData && sessionData.token) {
-    token.set(sessionData.token);
-    user.set(sessionData.user);
-    isLoggedIn.set(true);
-    // Optionally, you can store the token in localStorage for persistence
-    localStorage.setItem('authToken', sessionData.token);
-  } else {
-    token.set(null);
-    user.set(null);
-    isLoggedIn.set(false);
-    localStorage.removeItem('authToken');
-  }
-}
-
-export async function checkAuthStatus() {
-  const storedToken = localStorage.getItem('authToken');
-  if (storedToken) {
-    const isValid = await validateToken(storedToken);
-    if (isValid) {
-      token.set(storedToken);
-      isLoggedIn.set(true);
-      // Fetch user data
-      const userData = await fetchUserData(storedToken);
-      if (userData) {
-        user.set(userData);
+  return {
+    subscribe,
+    setSession: (sessionData) => {
+      if (sessionData && sessionData.token) {
+        if (browser) localStorage.setItem('authToken', sessionData.token);
+        set({ token: sessionData.token, user: sessionData.user });
       } else {
-        setSession(null); // Clear the session if user data couldn't be fetched
+        if (browser) localStorage.removeItem('authToken');
+        set({ token: null, user: null });
       }
-    } else {
-      setSession(null); // Clear the invalid session
-    }
-  }
-}
+    },
+    clearSession: () => {
+      if (browser) localStorage.removeItem('authToken');
+      set({ token: null, user: null });
+    },
+    updateUser: (userData) => update(state => ({ ...state, user: userData })),
+  };
+};
+
+export const auth = createAuthStore();
+export const isLoggedIn = derived(auth, $auth => !!$auth.token);

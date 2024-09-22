@@ -6,9 +6,9 @@ export const login = async (username, password) => {
   try {
     const response = await axios.post(`${API_URL}/login`, { username, password }, { withCredentials: true });
     if (response.data.success && response.data.token) {
-      return { success: true, token: response.data.token, user: response.data.user };
+      return response.data;
     }
-    return response.data;
+    return { success: false, message: 'Login failed' };
   } catch (error) {
     console.error('Login error:', error);
     return { success: false, message: error.response?.data?.message || 'An error occurred during login' };
@@ -18,7 +18,10 @@ export const login = async (username, password) => {
 export const register = async (username, email, password) => {
   try {
     const response = await axios.post(`${API_URL}/register`, { username, email, password }, { withCredentials: true });
-    return response.data;
+    if (response.data.success && response.data.token) {
+      return response.data;
+    }
+    return { success: false, message: 'Registration failed' };
   } catch (error) {
     console.error('Registration error:', error);
     return { success: false, message: error.response?.data?.message || 'An error occurred during registration' };

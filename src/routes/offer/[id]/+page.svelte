@@ -1,9 +1,19 @@
 <script>
   import { page } from '$app/stores';
+  import { isLoggedIn, showAuthForm } from '../../../stores/auth';
   
   export let data;
   
   $: offer = data.offer;
+
+  function handleBuy() {
+    if ($isLoggedIn) {
+      // Implement buy logic here
+      alert('Purchase successful!');
+    } else {
+      $showAuthForm = true;
+    }
+  }
 </script>
 
 <div class="container mx-auto px-4 py-8">
@@ -18,6 +28,13 @@
   <p class="text-xl font-bold mb-4">${offer.price}</p>
   
   <p class="text-gray-700 mb-6">{offer.description}</p>
+  
+  <button
+    on:click={handleBuy}
+    class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mb-6"
+  >
+    Buy Now
+  </button>
   
   <h2 class="text-2xl font-bold mb-4">Additional Details</h2>
   

@@ -2,16 +2,15 @@
   import "../app.css";
   import { page } from '$app/stores';
   import { fade } from 'svelte/transition';
+  import { isLoggedIn, showAuthForm } from '../stores/auth';
 
-  let showAuthForm = false;
   let isLoginMode = true;
   let username = '';
   let password = '';
   let email = '';
-  let isLoggedIn = false;
 
   function toggleAuthForm() {
-    showAuthForm = !showAuthForm;
+    $showAuthForm = !$showAuthForm;
     isLoginMode = true;
   }
 
@@ -24,21 +23,21 @@
       // Here you would typically send a request to your backend to authenticate the user
       // For this example, we'll just simulate a successful login
       if (username && password) {
-        isLoggedIn = true;
-        showAuthForm = false;
+        $isLoggedIn = true;
+        $showAuthForm = false;
       }
     } else {
       // Here you would typically send a request to your backend to register the user
       // For this example, we'll just simulate a successful registration
       if (username && password && email) {
-        isLoggedIn = true;
-        showAuthForm = false;
+        $isLoggedIn = true;
+        $showAuthForm = false;
       }
     }
   }
 
   function handleLogout() {
-    isLoggedIn = false;
+    $isLoggedIn = false;
     username = '';
     password = '';
     email = '';

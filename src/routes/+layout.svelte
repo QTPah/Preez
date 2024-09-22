@@ -12,8 +12,10 @@
     if ($auth.token) {
       try {
         const userData = await fetchUserData($auth.token);
+        $isLoggedIn = true;
         auth.updateUser(userData);
       } catch (error) {
+        $isLoggedIn = false;
         console.error('Failed to fetch user data:', error);
         auth.clearSession();
       }

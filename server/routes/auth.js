@@ -5,6 +5,9 @@ const User = require('../models/User');
 const router = express.Router();
 
 router.post('/register', async (req, res) => {
+  console.log('register');
+  console.log(req.body);
+
   try {
     const { username, email, password } = req.body;
     const existingUser = await User.findOne({ $or: [{ username }, { email }] });
@@ -41,6 +44,9 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/logout', (req, res) => {
+  console.log('logout');
+  console.log(req.body);
+
   res.clearCookie('session');
   res.json({ success: true, message: 'Logout successful' });
 });

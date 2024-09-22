@@ -1,18 +1,18 @@
-import { setSession } from '../stores/auth';
+import { auth } from '../stores/auth';
 
-export async function handleSession({ event, resolve }) {
+export const handleSession = async ({ event, resolve }) => {
   const session = event.cookies.get('session');
   
   if (session) {
     try {
       const sessionData = JSON.parse(session);
-      setSession(sessionData);
+      auth.setSession(sessionData);
     } catch (error) {
-      console.error('Error parsing session:', error);
+      console.error('Error parsing session cookie:', error);
     }
   }
 
   const response = await resolve(event);
 
   return response;
-}
+};

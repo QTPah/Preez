@@ -1,16 +1,8 @@
 <script>
   import OfferCard from '$lib/components/OfferCard.svelte';
+  import { recommendedOffers } from '../data/offers';
 
   let searchQuery = '';
-
-  const recommendedOffers = [
-    { tags: ['math', 'midterm'], title: 'Math 101 Midterm', description: 'Comprehensive study guide for Math 101 midterm', price: 9.99 },
-    { tags: ['biology', 'final'], title: 'Biology 201 Final Review', description: 'Detailed summary of key concepts for Biology 201 final', price: 14.99 },
-    { tags: ['python', 'tutoring'], title: 'Python Tutoring', description: 'One-on-one Python programming tutoring sessions', price: 24.99 },
-    { tags: ['history', 'quiz'], title: 'History 301 Quiz Bank', description: 'Practice quizzes for History 301 course', price: 7.99 },
-    { tags: ['economics', 'summary'], title: 'Economics 202 Chapter Summaries', description: 'Concise summaries for all chapters in Economics 202', price: 19.99 },
-    { tags: ['essay', 'proofreading'], title: 'Essay Proofreading', description: 'Professional proofreading for your essays', price: 12.99 },
-  ];
 
   $: filteredOffers = searchQuery
     ? recommendedOffers.filter(offer =>
@@ -36,7 +28,7 @@
 
   <h2 class="text-3xl font-bold mb-6">Offers</h2>
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    {#each filteredOffers as offer}
+    {#each filteredOffers as offer (offer.id)}
       <OfferCard {...offer} />
     {/each}
   </div>

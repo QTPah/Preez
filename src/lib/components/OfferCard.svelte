@@ -1,4 +1,5 @@
 <script>
+  export let id;
   export let tags;
   export let title;
   export let description;
@@ -32,7 +33,7 @@
     <span class="text-lg font-bold">${price}</span>
   </div>
   <p class="text-gray-600 mb-4">{description}</p>
-  <button class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded w-full">
+  <a href="/offer/{id}" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded w-full inline-block text-center">
     View Details
-  </button>
+  </a>
 </div>

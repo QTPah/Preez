@@ -2,7 +2,7 @@
   import "../app.css";
   import { page } from '$app/stores';
   import { fade } from 'svelte/transition';
-  import { isLoggedIn, user, setSession } from '../stores/auth';
+  import { isLoggedIn, user, setSession, checkAuthStatus } from '../stores/auth';
   import { login, register, logout } from '$lib/api/auth';
   import { onMount } from 'svelte';
 
@@ -13,7 +13,6 @@
   let showAuthForm = false;
   let errorMessage = '';
 
-  $: loggedIn = $isLoggedIn;
   $: currentUser = $user;
 
   function openAuthForm() {
@@ -60,7 +59,8 @@
     }
   }
 
-  onMount(() => {
+  onMount(async () => {
+    await checkAuthStatus();
     window.addEventListener('openAuthForm', openAuthForm);
     return () => {
       window.removeEventListener('openAuthForm', openAuthForm);
@@ -76,7 +76,7 @@
         <li><a href="/" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/'}>Home</a></li>
         <li><a href="/about" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/about'}>About</a></li>
         <li><a href="/contact" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/contact'}>Contact</a></li>
-        {#if loggedIn}
+        {#if isLoggedIn}
           <li>
             <span class="mr-4">Welcome, {currentUser.username}!</span>
             <button on:click={handleLogout} class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
@@ -157,13 +157,5 @@
     </div>
   </footer>
 </div>
-<script>
-  import { onMount } from 'svelte';
-  import { checkAuthStatus } from '../stores/auth';
-
-  onMount(async () => {
-    await checkAuthStatus();
-  });
-</script>
 
 <slot />

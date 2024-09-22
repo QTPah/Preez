@@ -2,7 +2,7 @@
   import "../app.css";
   import { page } from '$app/stores';
   import { fade } from 'svelte/transition';
-  import { isLoggedIn } from '../stores/auth';
+  import { isLoggedIn, user } from '../stores/auth';
   import { login, register, logout } from '$lib/api/auth';
 
   let isLoginMode = true;
@@ -12,9 +12,14 @@
   let showAuthForm = false;
   let errorMessage = '';
   let loggedIn;
+  let currentUser;
 
   isLoggedIn.subscribe(value => {
     loggedIn = value;
+  });
+
+  user.subscribe(value => {
+    currentUser = value;
   });
 
   function openAuthForm() {
@@ -81,6 +86,7 @@
         <li><a href="/contact" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/contact'}>Contact</a></li>
         {#if loggedIn}
           <li>
+            <span class="mr-4">Welcome, {currentUser.username}!</span>
             <button on:click={handleLogout} class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
               Logout
             </button>

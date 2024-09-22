@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { isLoggedIn } from '../../stores/auth';
 
-const API_URL = 'http://your-backend-api-url.com'; // Replace with your actual API URL
+const API_URL = 'http://localhost:5000/api/auth'; // Update this to match your server URL and port
 
 export const login = async (username, password) => {
   try {

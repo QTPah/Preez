@@ -27,7 +27,13 @@ export async function checkAuthStatus() {
     if (isValid) {
       token.set(storedToken);
       isLoggedIn.set(true);
-      // You might want to fetch user data here if needed
+      // Fetch user data
+      const userData = await fetchUserData(storedToken);
+      if (userData) {
+        user.set(userData);
+      } else {
+        setSession(null); // Clear the session if user data couldn't be fetched
+      }
     } else {
       setSession(null); // Clear the invalid session
     }

@@ -49,3 +49,18 @@ export const logout = async () => {
     return { success: false, message: error.response?.data?.message || 'An error occurred during logout' };
   }
 };
+
+export const fetchUserData = async (token) => {
+  try {
+    const response = await axios.get(`${API_URL}/user`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (response.data.success) {
+      return response.data.user;
+    }
+    return null;
+  } catch (error) {
+    console.error('Fetch user data error:', error);
+    return null;
+  }
+};

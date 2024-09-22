@@ -1,4 +1,1 @@
-import { sequence } from '@sveltejs/kit/hooks';
-import { handleSession } from '$lib/session';
-
-export const handle = sequence(handleSession);
+// This file is no longer needed and can be removed

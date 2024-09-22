@@ -47,6 +47,16 @@
     password = '';
     email = '';
   }
+
+  // Listen for the custom openAuthForm event
+  import { onMount } from 'svelte';
+
+  onMount(() => {
+    window.addEventListener('openAuthForm', openAuthForm);
+    return () => {
+      window.removeEventListener('openAuthForm', openAuthForm);
+    };
+  });
 </script>
 
 <div class="flex flex-col min-h-screen">

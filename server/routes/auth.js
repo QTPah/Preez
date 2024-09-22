@@ -1,6 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const authMiddleware = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
@@ -62,26 +63,12 @@ router.post('/logout', (req, res) => {
   res.json({ success: true, message: 'Logout successful' });
 });
 
-router.get('/validate-token', async (req, res) => {
-  const token = req.headers.authorization?.split(' ')[1];
-  if (!token) {
-    return res.status(401).json({ success: false, message: 'No token provided' });
-  }
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.userId).select('-password');
-    if (!user) {
-      return res.status(404).json({ success: false, message: 'User not found' });
-    }
-    res.json({ 
-      success: true, 
-      user: { id: user._id, username: user.username, email: user.email },
-      accessToken: token
-    });
-  } catch (error) {
-    res.status(401).json({ success: false, message: 'Invalid token' });
-  }
+router.get('/validate-token', authMiddleware, (req, res) => {
+  res.json({ 
+    success: true, 
+    user: { id: req.user._id, username: req.user.username, email: req.user.email },
+    accessToken: req.headers.authorization.split(' ')[1]
+  });
 });
 
 router.post('/refresh-token', async (req, res) => {

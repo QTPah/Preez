@@ -63,6 +63,7 @@
       window.removeEventListener('openAuthForm', openAuthForm);
     };
   });
+
 </script>
 
 <div class="flex flex-col min-h-screen">

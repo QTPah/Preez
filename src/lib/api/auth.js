@@ -1,35 +1,43 @@
+import axios from 'axios';
 import { isLoggedIn } from '../../stores/auth';
 
-// Simulated API delay
-const apiDelay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+const API_URL = 'http://your-backend-api-url.com'; // Replace with your actual API URL
 
 export const login = async (username, password) => {
-  await apiDelay(1000); // Simulate API call
-  
-  // In a real app, you'd validate credentials with a backend
-  if (username === 'demo' && password === 'password') {
-    isLoggedIn.set(true);
-    return { success: true, message: 'Logged in successfully' };
-  } else {
-    return { success: false, message: 'Invalid credentials' };
+  try {
+    const response = await axios.post(`${API_URL}/login`, { username, password });
+    if (response.data.success) {
+      isLoggedIn.set(true);
+    }
+    return response.data;
+  } catch (error) {
+    console.error('Login error:', error);
+    return { success: false, message: error.response?.data?.message || 'An error occurred during login' };
   }
 };
 
 export const register = async (username, email, password) => {
-  await apiDelay(1000); // Simulate API call
-  
-  // In a real app, you'd send this data to a backend
-  if (username && email && password) {
-    isLoggedIn.set(true);
-    return { success: true, message: 'Registered successfully' };
-  } else {
-    return { success: false, message: 'Invalid registration data' };
+  try {
+    const response = await axios.post(`${API_URL}/register`, { username, email, password });
+    if (response.data.success) {
+      isLoggedIn.set(true);
+    }
+    return response.data;
+  } catch (error) {
+    console.error('Registration error:', error);
+    return { success: false, message: error.response?.data?.message || 'An error occurred during registration' };
   }
 };
 
 export const logout = async () => {
-  await apiDelay(500); // Simulate API call
-  
-  isLoggedIn.set(false);
-  return { success: true, message: 'Logged out successfully' };
+  try {
+    const response = await axios.post(`${API_URL}/logout`);
+    if (response.data.success) {
+      isLoggedIn.set(false);
+    }
+    return response.data;
+  } catch (error) {
+    console.error('Logout error:', error);
+    return { success: false, message: error.response?.data?.message || 'An error occurred during logout' };
+  }
 };

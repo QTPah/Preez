@@ -9,9 +9,8 @@
       <a href="/" class="text-2xl font-bold">Preez</a>
       <ul class="flex space-x-4">
         <li><a href="/" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/'}>Home</a></li>
-        <li><a href="/tests" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/tests'}>Tests</a></li>
-        <li><a href="/summaries" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/summaries'}>Summaries</a></li>
-        <li><a href="/services" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/services'}>Services</a></li>
+        <li><a href="/about" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/about'}>About</a></li>
+        <li><a href="/contact" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/contact'}>Contact</a></li>
       </ul>
     </div>
   </nav>

@@ -15,7 +15,9 @@ router.post('/register', async (req, res) => {
     await user.save();
     
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.status(201).json({ success: true, token, user: { id: user._id, username: user.username, email: user.email } });
+    const sessionData = { token, user: { id: user._id, username: user.username, email: user.email } };
+    res.cookie('session', JSON.stringify(sessionData), { httpOnly: true, maxAge: 3600000 }); // 1 hour
+    res.status(201).json({ success: true, user: { id: user._id, username: user.username, email: user.email } });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }
@@ -30,14 +32,16 @@ router.post('/login', async (req, res) => {
     }
     
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.json({ success: true, token, user: { id: user._id, username: user.username, email: user.email } });
+    const sessionData = { token, user: { id: user._id, username: user.username, email: user.email } };
+    res.cookie('session', JSON.stringify(sessionData), { httpOnly: true, maxAge: 3600000 }); // 1 hour
+    res.json({ success: true, user: { id: user._id, username: user.username, email: user.email } });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }
 });
 
 router.post('/logout', (req, res) => {
-  // In a stateless JWT setup, the client is responsible for removing the token
+  res.clearCookie('session');
   res.json({ success: true, message: 'Logout successful' });
 });
 

@@ -1,33 +1,17 @@
 import { writable } from 'svelte/store';
-import { browser } from "$app/environment"
 
-export const token = writable(browser && localStorage.getItem('token') || null);
-export const user = writable(JSON.parse(localStorage.getItem('user')) || null);
+export const token = writable(null);
+export const user = writable(null);
+export const isLoggedIn = writable(false);
 
-token.subscribe(value => {
-  if (typeof window !== 'undefined') {
-    if (value) {
-      localStorage.setItem('token', value);
-    } else {
-      localStorage.removeItem('token');
-    }
+export function setSession(sessionData) {
+  if (sessionData) {
+    token.set(sessionData.token);
+    user.set(sessionData.user);
+    isLoggedIn.set(true);
+  } else {
+    token.set(null);
+    user.set(null);
+    isLoggedIn.set(false);
   }
-});
-
-user.subscribe(value => {
-  if (typeof window !== 'undefined') {
-    if (value) {
-      localStorage.setItem('user', JSON.stringify(value));
-    } else {
-      localStorage.removeItem('user');
-    }
-  }
-});
-
-export const isLoggedIn = writable(!!localStorage.getItem('token'));
-
-isLoggedIn.subscribe(value => {
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('isLoggedIn', JSON.stringify(value));
-  }
-});
+}

@@ -2,8 +2,9 @@
   import "../app.css";
   import { page } from '$app/stores';
   import { fade } from 'svelte/transition';
-  import { isLoggedIn, user } from '../stores/auth';
+  import { isLoggedIn, user, setSession } from '../stores/auth';
   import { login, register, logout } from '$lib/api/auth';
+  import { onMount } from 'svelte';
 
   let isLoginMode = true;
   let username = '';
@@ -11,16 +12,9 @@
   let email = '';
   let showAuthForm = false;
   let errorMessage = '';
-  let loggedIn;
-  let currentUser;
 
-  isLoggedIn.subscribe(value => {
-    loggedIn = value;
-  });
-
-  user.subscribe(value => {
-    currentUser = value;
-  });
+  $: loggedIn = $isLoggedIn;
+  $: currentUser = $user;
 
   function openAuthForm() {
     showAuthForm = true;
@@ -49,6 +43,7 @@
     }
 
     if (result.success) {
+      setSession(result);
       closeAuthForm();
     } else {
       errorMessage = result.message;
@@ -58,14 +53,12 @@
   async function handleLogout() {
     const result = await logout();
     if (result.success) {
+      setSession(null);
       username = '';
       password = '';
       email = '';
     }
   }
-
-  // Listen for the custom openAuthForm event
-  import { onMount } from 'svelte';
 
   onMount(() => {
     window.addEventListener('openAuthForm', openAuthForm);
@@ -73,7 +66,6 @@
       window.removeEventListener('openAuthForm', openAuthForm);
     };
   });
-
 </script>
 
 <div class="flex flex-col min-h-screen">

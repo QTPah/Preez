@@ -2,7 +2,7 @@
   // Add any necessary imports and logic here
 </script>
 
-<main class="container mx-auto px-4 py-8">
+<main class="px-4 py-8">
   <h1 class="text-3xl font-bold mb-8">Summaries</h1>
   <p class="mb-4">Find and share course summaries to help with your studies.</p>
   

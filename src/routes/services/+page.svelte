@@ -2,7 +2,7 @@
   // Add any necessary imports and logic here
 </script>
 
-<main class="container mx-auto px-4 py-8">
+<main class="px-4 py-8">
   <h1 class="text-3xl font-bold mb-8">Services</h1>
   <p class="mb-4">Discover and offer student services to help your peers.</p>
   

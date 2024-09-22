@@ -16,7 +16,7 @@
   ];
 </script>
 
-<main class="container mx-auto px-4 py-8">
+<main class="px-4 py-8">
   <h1 class="text-4xl font-bold mb-8 text-center">Welcome to Preez</h1>
   <p class="text-xl mb-8 text-center">A marketplace for students to share Tests, Summaries, and Services</p>
   

@@ -2,16 +2,21 @@
   import "../app.css";
   import { page } from '$app/stores';
   import { fade } from 'svelte/transition';
-  import { isLoggedIn, showAuthForm } from '../stores/auth';
+  import { isLoggedIn } from '../stores/auth';
 
   let isLoginMode = true;
   let username = '';
   let password = '';
   let email = '';
+  let showAuthForm = false;
 
-  function toggleAuthForm() {
-    $showAuthForm = !$showAuthForm;
+  function openAuthForm() {
+    showAuthForm = true;
     isLoginMode = true;
+  }
+
+  function closeAuthForm() {
+    showAuthForm = false;
   }
 
   function toggleAuthMode() {
@@ -24,14 +29,14 @@
       // For this example, we'll just simulate a successful login
       if (username && password) {
         $isLoggedIn = true;
-        $showAuthForm = false;
+        closeAuthForm();
       }
     } else {
       // Here you would typically send a request to your backend to register the user
       // For this example, we'll just simulate a successful registration
       if (username && password && email) {
         $isLoggedIn = true;
-        $showAuthForm = false;
+        closeAuthForm();
       }
     }
   }
@@ -60,7 +65,7 @@
           </li>
         {:else}
           <li>
-            <button on:click={toggleAuthForm} class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+            <button on:click={openAuthForm} class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
               Login / Register
             </button>
           </li>
@@ -70,7 +75,7 @@
   </nav>
 
   {#if showAuthForm}
-    <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" on:click={toggleAuthForm}>
+    <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" on:click={closeAuthForm}>
       <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white"
            on:click|stopPropagation>
         <div class="mt-3 text-center">

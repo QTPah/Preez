@@ -1,6 +1,6 @@
 <script>
   import { page } from '$app/stores';
-  import { isLoggedIn, showAuthForm } from '../../../stores/auth';
+  import { isLoggedIn } from '../../../stores/auth';
   
   export let data;
   
@@ -11,7 +11,8 @@
       // Implement buy logic here
       alert('Purchase successful!');
     } else {
-      $showAuthForm = true;
+      // Dispatch a custom event to open the auth form
+      window.dispatchEvent(new CustomEvent('openAuthForm'));
     }
   }
 </script>

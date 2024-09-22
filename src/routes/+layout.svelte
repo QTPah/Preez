@@ -3,7 +3,7 @@
   import { page } from '$app/stores';
   import { onMount } from 'svelte';
   import { auth, isLoggedIn } from '../stores/auth';
-  import { login, register, logout, fetchUserData } from '$lib/api/auth';
+  import { login, register, logout, validateTokenAndFetchUser } from '$lib/api/auth';
   import AuthForm from '$lib/components/AuthForm.svelte';
 
   let showAuthForm = false;
@@ -11,12 +11,17 @@
   onMount(async () => {
     if ($auth.token) {
       try {
-        const userData = await fetchUserData($auth.token);
-        $isLoggedIn = true;
-        auth.updateUser(userData);
+        const result = await validateTokenAndFetchUser($auth.token);
+        if (result.success) {
+          $isLoggedIn = true;
+          auth.setSession({ token: result.token, user: result.user });
+        } else {
+          $isLoggedIn = false;
+          auth.clearSession();
+        }
       } catch (error) {
         $isLoggedIn = false;
-        console.error('Failed to fetch user data:', error);
+        console.error('Failed to validate token and fetch user data:', error);
         auth.clearSession();
       }
     }

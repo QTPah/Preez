@@ -3,21 +3,37 @@
   import { page } from '$app/stores';
   import { fade } from 'svelte/transition';
 
-  let showLoginForm = false;
+  let showAuthForm = false;
+  let isLoginMode = true;
   let username = '';
   let password = '';
+  let email = '';
   let isLoggedIn = false;
 
-  function toggleLoginForm() {
-    showLoginForm = !showLoginForm;
+  function toggleAuthForm() {
+    showAuthForm = !showAuthForm;
+    isLoginMode = true;
   }
 
-  function handleLogin() {
-    // Here you would typically send a request to your backend to authenticate the user
-    // For this example, we'll just simulate a successful login
-    if (username && password) {
-      isLoggedIn = true;
-      showLoginForm = false;
+  function toggleAuthMode() {
+    isLoginMode = !isLoginMode;
+  }
+
+  function handleAuth() {
+    if (isLoginMode) {
+      // Here you would typically send a request to your backend to authenticate the user
+      // For this example, we'll just simulate a successful login
+      if (username && password) {
+        isLoggedIn = true;
+        showAuthForm = false;
+      }
+    } else {
+      // Here you would typically send a request to your backend to register the user
+      // For this example, we'll just simulate a successful registration
+      if (username && password && email) {
+        isLoggedIn = true;
+        showAuthForm = false;
+      }
     }
   }
 
@@ -25,6 +41,7 @@
     isLoggedIn = false;
     username = '';
     password = '';
+    email = '';
   }
 </script>
 
@@ -44,8 +61,8 @@
           </li>
         {:else}
           <li>
-            <button on:click={toggleLoginForm} class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-              Login
+            <button on:click={toggleAuthForm} class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+              Login / Register
             </button>
           </li>
         {/if}
@@ -53,12 +70,14 @@
     </div>
   </nav>
 
-  {#if showLoginForm}
-    <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" on:click={toggleLoginForm}>
+  {#if showAuthForm}
+    <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" on:click={toggleAuthForm}>
       <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white"
            on:click|stopPropagation>
         <div class="mt-3 text-center">
-          <h3 class="text-lg leading-6 font-medium text-gray-900">Login</h3>
+          <h3 class="text-lg leading-6 font-medium text-gray-900">
+            {isLoginMode ? 'Login' : 'Register'}
+          </h3>
           <div class="mt-2 px-7 py-3">
             <input
               type="text"
@@ -66,6 +85,14 @@
               bind:value={username}
               class="mb-3 px-3 py-2 border rounded-md w-full"
             />
+            {#if !isLoginMode}
+              <input
+                type="email"
+                placeholder="Email"
+                bind:value={email}
+                class="mb-3 px-3 py-2 border rounded-md w-full"
+              />
+            {/if}
             <input
               type="password"
               placeholder="Password"
@@ -73,11 +100,20 @@
               class="mb-3 px-3 py-2 border rounded-md w-full"
             />
             <button
-              on:click={handleLogin}
-              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              on:click={handleAuth}
+              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
             >
-              Login
+              {isLoginMode ? 'Login' : 'Register'}
             </button>
+            <p class="mt-4 text-sm">
+              {isLoginMode ? "Don't have an account?" : "Already have an account?"}
+              <button
+                on:click={toggleAuthMode}
+                class="text-blue-500 hover:text-blue-700"
+              >
+                {isLoginMode ? 'Register' : 'Login'}
+              </button>
+            </p>
           </div>
         </div>
       </div>

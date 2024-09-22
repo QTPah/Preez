@@ -13,8 +13,6 @@
   let showAuthForm = false;
   let errorMessage = '';
 
-  $: currentUser = $user;
-
   function openAuthForm() {
     showAuthForm = true;
     isLoginMode = true;

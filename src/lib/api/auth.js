@@ -7,15 +7,21 @@ const api = axios.create({
   withCredentials: true,
 });
 
-export const validateToken = async (token) => {
+export const validateTokenAndFetchUser = async (token) => {
   try {
     const response = await api.get('/validate-token', {
       headers: { Authorization: `Bearer ${token}` }
     });
-    return response.data.success;
+    if (response.data.success) {
+      return { success: true, user: response.data.user, token: response.data.token };
+    } else {
+      await logout(); // Log out the user if token validation fails
+      return { success: false };
+    }
   } catch (error) {
-    console.error('Token validation error:', error);
-    return false;
+    console.error('Token validation and user fetch error:', error);
+    await logout(); // Log out the user if there's an error
+    return { success: false, error: error.response?.data || { message: 'An error occurred during token validation and user fetch' } };
   }
 };
 
@@ -49,14 +55,3 @@ export const logout = async () => {
   }
 };
 
-export const fetchUserData = async (token) => {
-  try {
-    const response = await api.get('/user', {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    return response.data.user;
-  } catch (error) {
-    console.error('Fetch user data error:', error);
-    throw error.response?.data || { success: false, message: 'An error occurred while fetching user data' };
-  }
-};

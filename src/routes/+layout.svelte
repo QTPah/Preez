@@ -3,49 +3,55 @@
   import { page } from '$app/stores';
   import { fade } from 'svelte/transition';
   import { isLoggedIn } from '../stores/auth';
+  import { login, register, logout } from '$lib/api/auth';
 
   let isLoginMode = true;
   let username = '';
   let password = '';
   let email = '';
   let showAuthForm = false;
+  let errorMessage = '';
 
   function openAuthForm() {
     showAuthForm = true;
     isLoginMode = true;
+    errorMessage = '';
   }
 
   function closeAuthForm() {
     showAuthForm = false;
+    errorMessage = '';
   }
 
   function toggleAuthMode() {
     isLoginMode = !isLoginMode;
+    errorMessage = '';
   }
 
-  function handleAuth() {
+  async function handleAuth() {
+    errorMessage = '';
+    let result;
+    
     if (isLoginMode) {
-      // Here you would typically send a request to your backend to authenticate the user
-      // For this example, we'll just simulate a successful login
-      if (username && password) {
-        $isLoggedIn = true;
-        closeAuthForm();
-      }
+      result = await login(username, password);
     } else {
-      // Here you would typically send a request to your backend to register the user
-      // For this example, we'll just simulate a successful registration
-      if (username && password && email) {
-        $isLoggedIn = true;
-        closeAuthForm();
-      }
+      result = await register(username, email, password);
+    }
+
+    if (result.success) {
+      closeAuthForm();
+    } else {
+      errorMessage = result.message;
     }
   }
 
-  function handleLogout() {
-    $isLoggedIn = false;
-    username = '';
-    password = '';
-    email = '';
+  async function handleLogout() {
+    const result = await logout();
+    if (result.success) {
+      username = '';
+      password = '';
+      email = '';
+    }
   }
 
   // Listen for the custom openAuthForm event
@@ -113,6 +119,9 @@
               bind:value={password}
               class="mb-3 px-3 py-2 border rounded-md w-full"
             />
+            {#if errorMessage}
+              <p class="text-red-500 text-sm mb-3">{errorMessage}</p>
+            {/if}
             <button
               on:click={handleAuth}
               class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"

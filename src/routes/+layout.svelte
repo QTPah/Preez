@@ -8,13 +8,13 @@
 
   let showAuthForm = false;
 
-  onMount(async () => {
-    if ($auth.token) {
+  async function validateToken() {
+    if ($auth.accessToken) {
       try {
-        const result = await validateTokenAndFetchUser($auth.token);
+        const result = await validateTokenAndFetchUser($auth.accessToken);
         if (result.success) {
           $isLoggedIn = true;
-          auth.setSession({ token: result.token, user: result.user });
+          auth.setSession({ accessToken: result.accessToken, refreshToken: $auth.refreshToken, user: result.user });
         } else {
           $isLoggedIn = false;
           auth.clearSession();
@@ -24,8 +24,20 @@
         console.error('Failed to validate token and fetch user data:', error);
         auth.clearSession();
       }
+    } else {
+      $isLoggedIn = false;
+      auth.clearSession();
     }
-  });
+  }
+
+  // Validate token on initial load
+  validateToken();
+
+  // Validate token on every navigation
+  $: {
+    $page;
+    validateToken();
+  }
 
   function openAuthForm() {
     showAuthForm = true;

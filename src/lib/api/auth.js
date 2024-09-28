@@ -43,23 +43,18 @@ api.interceptors.response.use(
 );
 
 export const validateTokenAndFetchUser = async (token) => {
-  console.log('validateTokenAndFetchUser called with token:', token);
   try {
     const response = await api.get('/validate-token', {
       headers: { Authorization: `Bearer ${token}` }
     });
-    console.log('Token validation response:', response.data);
     if (response.data.success) {
-      console.log('Token validation successful, user:', response.data.user);
       return { success: true, user: response.data.user, accessToken: response.data.accessToken };
     } else {
-      console.log('Token validation failed, logging out');
       await logout(); // Log out the user if token validation fails
       return { success: false };
     }
   } catch (error) {
     console.error('Token validation and user fetch error:', error);
-    console.log('Error during token validation, logging out');
     await logout(); // Log out the user if there's an error
     return { success: false, error: error.response?.data || { message: 'An error occurred during token validation and user fetch' } };
   }

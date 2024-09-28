@@ -1,5 +1,4 @@
-import winston from 'winston';
-import 'winston-daily-rotate-file';
+import pino from 'pino';
 import fs from 'fs';
 import path from 'path';
 
@@ -10,24 +9,22 @@ if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir);
 }
 
-const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.json()
-  ),
-  transports: [
-    new winston.transports.Console({
-      format: winston.format.simple(),
-    }),
-    new winston.transports.DailyRotateFile({
-      filename: path.join(logDir, 'application-%DATE%.log'),
-      datePattern: 'YYYY-MM-DD',
-      zippedArchive: true,
-      maxSize: '20m',
-      maxFiles: '10d',
-    }),
+const transport = pino.transport({
+  targets: [
+    {
+      target: 'pino/file',
+      options: { destination: path.join(logDir, 'application.log') },
+    },
+    {
+      target: 'pino-pretty',
+      options: { destination: 1 }, // stdout
+    },
   ],
 });
+
+const logger = pino({
+  level: 'info',
+  timestamp: pino.stdTimeFunctions.isoTime,
+}, transport);
 
 export default logger;

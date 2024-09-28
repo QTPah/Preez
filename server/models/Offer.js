@@ -36,6 +36,10 @@ const offerSchema = new mongoose.Schema({
     type: String,
     enum: ['active', 'sold', 'expired'],
     default: 'active'
+  },
+  tags: {
+    type: [String],
+    default: []
   }
 });
 

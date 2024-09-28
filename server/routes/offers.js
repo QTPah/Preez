@@ -8,7 +8,7 @@ const router = express.Router();
 // Get all offers
 router.get('/', async (req, res) => {
   try {
-    const offers = await Offer.find({ status: 'active' }).populate('user', 'username');
+    const offers = await Offer.find({ status: 'active' }).populate('user', 'username').select('title description price category tags user createdAt updatedAt status');
     res.json({ success: true, offers });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

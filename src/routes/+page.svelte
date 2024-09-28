@@ -11,6 +11,7 @@
   onMount(async () => {
     try {
       offers = await getAllOffers();
+      console.log('Offers:', offers);
       isLoading = false;
     } catch (err) {
       console.error('Error fetching offers:', err);

@@ -1,13 +1,18 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const cookieParser = require('cookie-parser');
-const path = require('path');
-const authRoutes = require('./routes/auth');
-const offerRoutes = require('./routes/offers');
-const notificationRoutes = require('./routes/notifications');
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+import authRoutes from './routes/auth.js';
+import offerRoutes from './routes/offers.js';
+import notificationRoutes from './routes/notifications.js';
 
-require('dotenv').config();
+dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 5000;

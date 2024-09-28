@@ -1,8 +1,9 @@
-const express = require('express');
-const jwt = require('jsonwebtoken');
-const Offer = require('../models/Offer');
-const Notification = require('../models/Notification');
-const authMiddleware = require('../middleware/authMiddleware');
+import express from 'express';
+import jwt from 'jsonwebtoken';
+import Offer from '../models/Offer.js';
+import Notification from '../models/Notification.js';
+import authMiddleware from '../middleware/authMiddleware.js';
+
 const router = express.Router();
 
 // Get all offers
@@ -113,4 +114,4 @@ router.post('/:id/purchase', authMiddleware, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

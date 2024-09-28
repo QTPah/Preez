@@ -35,8 +35,11 @@ app.use('/api/offers', offerRoutes);
 app.use('/api/notifications', notificationRoutes);
 
 if (PROD_MODE) {
-  const { handler } = require('../build/handler');
-  app.use(handler);
+  import('../build/handler.js').then(({ handler }) => {
+    app.use(handler);
+  }).catch(err => {
+    console.error('Failed to import handler:', err);
+  });
 } else {
   app.use((req, res) => {
     res.status(404).send('Not found');

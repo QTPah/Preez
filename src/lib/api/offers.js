@@ -7,7 +7,7 @@ const api = axios.create({
 export const getAllOffers = async () => {
   try {
     const response = await api.get('/offers');
-    return response.data;
+    return response.data.offers;
   } catch (error) {
     console.error('Error fetching offers:', error);
     throw error;

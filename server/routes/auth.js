@@ -6,6 +6,7 @@ import authMiddleware from '../middleware/authMiddleware.js';
 const router = express.Router();
 
 const generateTokens = (user) => {
+  console.log('Generating tokens for user:', user._id);
   const payload = {
     userId: user._id,
     permissions: user.permissions
@@ -16,11 +17,13 @@ const generateTokens = (user) => {
 };
 
 router.post('/register', async (req, res) => {
+  console.log('Register attempt:', req.body);
   try {
     const { username, email, password } = req.body;
     const user = new User({ username, email, password });
     await user.save();
-    const { accessToken, refreshToken } = generateTokens(user._id);
+    console.log('User registered:', user._id);
+    const { accessToken, refreshToken } = generateTokens(user);
     res.status(201).json({
       success: true,
       message: 'User registered successfully',
@@ -29,17 +32,21 @@ router.post('/register', async (req, res) => {
       user: { id: user._id, username: user.username, email: user.email }
     });
   } catch (error) {
+    console.error('Registration error:', error);
     res.status(400).json({ success: false, message: error.message });
   }
 });
 
 router.post('/login', async (req, res) => {
+  console.log('Login attempt:', req.body.username);
   try {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
     if (!user || !(await user.comparePassword(password))) {
+      console.log('Login failed: Invalid credentials');
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
+    console.log('User logged in:', user._id);
     const { accessToken, refreshToken } = generateTokens(user);
     res.json({
       success: true,
@@ -48,38 +55,48 @@ router.post('/login', async (req, res) => {
       user: { id: user._id, username: user.username, email: user.email, permissions: user.permissions }
     });
   } catch (error) {
+    console.error('Login error:', error);
     res.status(400).json({ success: false, message: error.message });
   }
 });
 
 router.post('/logout', authMiddleware, (req, res) => {
+  console.log('User logged out:', req.user.id);
   // In a real-world scenario, you might want to invalidate the tokens here
   res.json({ success: true, message: 'Logged out successfully' });
 });
 
 router.post('/refresh-token', async (req, res) => {
+  console.log('Refresh token attempt');
   const { refreshToken } = req.body;
   if (!refreshToken) {
+    console.log('Refresh token missing');
     return res.status(401).json({ success: false, message: 'Refresh token is required' });
   }
 
   try {
     const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
-    const { accessToken, refreshToken: newRefreshToken } = generateTokens(decoded.userId);
+    console.log('Refresh token valid for user:', decoded.userId);
+    const { accessToken, refreshToken: newRefreshToken } = generateTokens({ _id: decoded.userId });
     res.json({ success: true, accessToken, refreshToken: newRefreshToken });
   } catch (error) {
+    console.error('Refresh token error:', error);
     res.status(401).json({ success: false, message: 'Invalid refresh token' });
   }
 });
 
 router.get('/validate-token', authMiddleware, async (req, res) => {
+  console.log('Token validation attempt for user:', req.user.id);
   try {
-    const user = await User.findById(req.user.userId).select('-password');
+    const user = await User.findById(req.user.id).select('-password');
     if (!user) {
+      console.log('User not found during token validation');
       return res.status(404).json({ success: false, message: 'User not found' });
     }
+    console.log('Token validated successfully for user:', user._id);
     res.json({ success: true, user, accessToken: req.headers.authorization.split(' ')[1] });
   } catch (error) {
+    console.error('Token validation error:', error);
     res.status(400).json({ success: false, message: error.message });
   }
 });

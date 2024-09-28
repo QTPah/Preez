@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "seed": "node seed_offers.js"
+    "seed": "node seed_offers.js",
+    "update-permissions": "node updateUserPermissions.js"
   },
   "keywords": [],
   "author": "",

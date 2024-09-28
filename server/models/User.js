@@ -5,6 +5,12 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  permissions: {
+    createOffer: { type: Boolean, default: true },
+    editAnyOffer: { type: Boolean, default: false },
+    deleteAnyOffer: { type: Boolean, default: false },
+    adminAccess: { type: Boolean, default: false }
+  },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });

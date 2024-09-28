@@ -5,9 +5,13 @@ import authMiddleware from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-const generateTokens = (userId) => {
-  const accessToken = jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '15m' });
-  const refreshToken = jwt.sign({ userId }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
+const generateTokens = (user) => {
+  const payload = {
+    userId: user._id,
+    permissions: user.permissions
+  };
+  const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '15m' });
+  const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
   return { accessToken, refreshToken };
 };
 
@@ -36,12 +40,12 @@ router.post('/login', async (req, res) => {
     if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
-    const { accessToken, refreshToken } = generateTokens(user._id);
+    const { accessToken, refreshToken } = generateTokens(user);
     res.json({
       success: true,
       accessToken,
       refreshToken,
-      user: { id: user._id, username: user.username, email: user.email }
+      user: { id: user._id, username: user.username, email: user.email, permissions: user.permissions }
     });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });

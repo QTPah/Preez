@@ -46,6 +46,9 @@ router.get('/:id', async (req, res) => {
 // Create a new offer
 router.post('/', authMiddleware, async (req, res) => {
   try {
+    if (!req.user.permissions.createOffer) {
+      return res.status(403).json({ success: false, message: 'You do not have permission to create offers' });
+    }
     const { title, description, price, category, tags } = req.body;
     const offer = new Offer({
       title,
@@ -69,7 +72,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
     if (!offer) {
       return res.status(404).json({ success: false, message: 'Offer not found' });
     }
-    if (offer.seller.toString() !== req.user.id) {
+    if (offer.seller.toString() !== req.user.id && !req.user.permissions.editAnyOffer) {
       return res.status(403).json({ success: false, message: 'Not authorized to update this offer' });
     }
     Object.assign(offer, req.body);
@@ -87,7 +90,7 @@ router.delete('/:id', authMiddleware, async (req, res) => {
     if (!offer) {
       return res.status(404).json({ success: false, message: 'Offer not found' });
     }
-    if (offer.seller.toString() !== req.user.id) {
+    if (offer.seller.toString() !== req.user.id && !req.user.permissions.deleteAnyOffer) {
       return res.status(403).json({ success: false, message: 'Not authorized to delete this offer' });
     }
     await offer.deleteOne();

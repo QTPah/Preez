@@ -2,6 +2,9 @@ import dotenv from 'dotenv';
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import https from 'https';
+import fs from 'fs';
+import path from 'path';
 import authRoutes from './routes/auth.js';
 import offerRoutes from './routes/offers.js';
 import { handler } from '../build/handler.js';
@@ -9,6 +12,12 @@ import { handler } from '../build/handler.js';
 dotenv.config();
 
 const isProduction = process.argv.includes('--prod');
+
+// Load your SSL certificate and key
+const options = {
+    key: fs.readFileSync('private-key.pem'),
+    cert: fs.readFileSync('certificate.pem'),
+};
 
 const app = express();
 
@@ -39,5 +48,5 @@ if(isProduction) {
   app.use(handler);
 }
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const PORT = process.env.PORT || 443;
+https.createServer(options, app).listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`));

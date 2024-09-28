@@ -78,3 +78,53 @@
     {/each}
   </dl>
 </div>
+<script>
+  import { onMount } from 'svelte';
+  import { getOfferById } from '$lib/api/offers';
+
+  export let data;
+
+  let offer = null;
+  let isLoading = true;
+  let error = null;
+
+  onMount(async () => {
+    try {
+      const response = await getOfferById(data.id);
+      if (response.success) {
+        offer = response.offer;
+      } else {
+        throw new Error(response.message || 'Failed to fetch offer');
+      }
+    } catch (err) {
+      console.error('Error fetching offer:', err);
+      error = err.message || 'An error occurred while fetching the offer';
+    } finally {
+      isLoading = false;
+    }
+  });
+</script>
+
+<main class="container mx-auto px-4 py-8">
+  {#if isLoading}
+    <p class="text-center text-xl">Loading offer...</p>
+  {:else if error}
+    <p class="text-center text-xl text-red-500">{error}</p>
+  {:else if offer}
+    <h1 class="text-3xl font-bold mb-4">{offer.title}</h1>
+    <p class="text-xl mb-4">${offer.price}</p>
+    <p class="mb-4">{offer.description}</p>
+    <p class="mb-4">Category: {offer.category}</p>
+    <p class="mb-4">Posted by: {offer.user.username}</p>
+    <div class="flex flex-wrap gap-2 mb-4">
+      {#each offer.tags as tag}
+        <span class="bg-blue-500 text-white px-2 py-1 rounded">{tag}</span>
+      {/each}
+    </div>
+    <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+      Contact Seller
+    </button>
+  {:else}
+    <p class="text-center text-xl">Offer not found</p>
+  {/if}
+</main>

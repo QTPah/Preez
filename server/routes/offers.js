@@ -6,7 +6,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 const router = express.Router();
 
 // Get all offers
-router.get('/', async (req, 5res) => {
+router.get('/', async (req, res) => {
   try {
     const offers = await Offer.find({ status: 'active' }).populate('user', 'username');
     res.json({ success: true, offers });

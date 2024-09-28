@@ -1,7 +1,8 @@
-const express = require('express');
+import express from 'express';
+import Offer from '../models/Offer.js';
+import authMiddleware from '../middleware/authMiddleware.js';
+
 const router = express.Router();
-const Offer = require('../models/Offer');
-const authMiddleware = require('../middleware/authMiddleware');
 
 // Get all offers
 router.get('/', async (req, res) => {
@@ -89,11 +90,11 @@ router.delete('/:id', authMiddleware, async (req, res) => {
     if (offer.seller.toString() !== req.user.id) {
       return res.status(403).json({ success: false, message: 'Not authorized to delete this offer' });
     }
-    await offer.remove();
+    await offer.deleteOne();
     res.json({ success: true, message: 'Offer deleted successfully' });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }
 });
 
-module.exports = router;
+export default router;

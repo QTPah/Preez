@@ -1,8 +1,9 @@
-const express = require('express');
+import express from 'express';
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
+import authMiddleware from '../middleware/authMiddleware.js';
+
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const authMiddleware = require('../middleware/authMiddleware');
 
 router.post('/register', async (req, res) => {
   try {
@@ -34,4 +35,4 @@ router.post('/logout', authMiddleware, (req, res) => {
   res.json({ success: true, message: 'Logged out successfully' });
 });
 
-module.exports = router;
+export default router;

@@ -16,5 +16,5 @@ cd server
 npm install
 
 # Start the server
-npm start
+node server.js
 

@@ -11,6 +11,15 @@ const userSchema = new mongoose.Schema({
     deleteAnyOffer: { type: Boolean, default: false },
     adminAccess: { type: Boolean, default: false }
   },
+  settings: {
+    profileVisibility: { type: String, default: 'public' },
+    showEmail: { type: Boolean, default: false },
+    allowMessaging: { type: Boolean, default: true },
+    emailNotifications: { type: Boolean, default: true },
+    pushNotifications: { type: Boolean, default: false },
+    offerUpdates: { type: Boolean, default: true },
+    marketingEmails: { type: Boolean, default: false }
+  },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });

@@ -100,3 +100,23 @@ export const logout = async () => {
   }
 };
 
+export const updateUserSettings = async (settings) => {
+  try {
+    const response = await api.put('/settings', settings);
+    return response.data;
+  } catch (error) {
+    console.error('Update settings error:', error);
+    throw error.response?.data || { success: false, message: 'An error occurred while updating settings' };
+  }
+};
+
+export const changePassword = async (currentPassword, newPassword) => {
+  try {
+    const response = await api.put('/change-password', { currentPassword, newPassword });
+    return response.data;
+  } catch (error) {
+    console.error('Change password error:', error);
+    throw error.response?.data || { success: false, message: 'An error occurred while changing password' };
+  }
+};
+

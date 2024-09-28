@@ -101,4 +101,52 @@ router.get('/validate-token', authMiddleware, async (req, res) => {
   }
 });
 
+router.get('/settings', authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('settings');
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    res.json({ success: true, settings: user.settings });
+  } catch (error) {
+    console.error('Error fetching user settings:', error);
+    res.status(400).json({ success: false, message: error.message });
+  }
+});
+
+router.put('/settings', authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    user.settings = { ...user.settings, ...req.body };
+    await user.save();
+    res.json({ success: true, message: 'Settings updated successfully', settings: user.settings });
+  } catch (error) {
+    console.error('Error updating user settings:', error);
+    res.status(400).json({ success: false, message: error.message });
+  }
+});
+
+router.put('/change-password', authMiddleware, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) {
+      return res.status(400).json({ success: false, message: 'Current password is incorrect' });
+    }
+    user.password = newPassword;
+    await user.save();
+    res.json({ success: true, message: 'Password changed successfully' });
+  } catch (error) {
+    console.error('Error changing password:', error);
+    res.status(400).json({ success: false, message: error.message });
+  }
+});
+
 export default router;

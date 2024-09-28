@@ -70,6 +70,17 @@ const createAuthStore = () => {
         return { ...state, accessToken, refreshToken };
       });
     },
+    getUserSettings: async () => {
+      const response = await fetch('/api/auth/settings', {
+        headers: {
+          'Authorization': `Bearer ${get(auth).accessToken}`
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch user settings');
+      }
+      return response.json();
+    }
   };
 };
 

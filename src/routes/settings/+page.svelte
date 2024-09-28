@@ -1,6 +1,7 @@
 <script>
   import { auth } from '../../stores/auth';
   import { onMount } from 'svelte';
+  import { updateUserSettings, changePassword } from '$lib/api/auth';
 
   let activeSection = 'profile';
   let username = $auth.user?.username || '';
@@ -19,6 +20,7 @@
   let password = '';
   let newPassword = '';
   let confirmPassword = '';
+  let message = '';
 
   const sections = [
     { id: 'profile', name: 'Profile' },
@@ -27,21 +29,55 @@
     { id: 'privacy', name: 'Privacy' },
   ];
 
-  onMount(() => {
-    // TODO: Fetch user settings from the server
-    console.log('Fetching user settings...');
+  onMount(async () => {
+    try {
+      const userSettings = await auth.getUserSettings();
+      notificationPreferences = { ...notificationPreferences, ...userSettings.notificationPreferences };
+      privacySettings = { ...privacySettings, ...userSettings.privacySettings };
+    } catch (error) {
+      console.error('Error fetching user settings:', error);
+      message = 'Failed to load user settings. Please try again.';
+    }
   });
 
   async function handleSave() {
-    // TODO: Implement save functionality
-    console.log('Saving settings...');
-    // Here you would typically send the updated settings to your server
+    try {
+      const updatedSettings = {
+        notificationPreferences,
+        privacySettings
+      };
+      const result = await updateUserSettings(updatedSettings);
+      if (result.success) {
+        message = 'Settings saved successfully!';
+        auth.updateUser({ ...auth.user, settings: updatedSettings });
+      } else {
+        throw new Error(result.message);
+      }
+    } catch (error) {
+      console.error('Error saving settings:', error);
+      message = 'Failed to save settings. Please try again.';
+    }
   }
 
-  function handlePasswordChange() {
-    // TODO: Implement password change functionality
-    console.log('Changing password...');
-    // Here you would typically send the password change request to your server
+  async function handlePasswordChange() {
+    if (newPassword !== confirmPassword) {
+      message = 'New passwords do not match.';
+      return;
+    }
+    try {
+      const result = await changePassword(password, newPassword);
+      if (result.success) {
+        message = 'Password changed successfully!';
+        password = '';
+        newPassword = '';
+        confirmPassword = '';
+      } else {
+        throw new Error(result.message);
+      }
+    } catch (error) {
+      console.error('Error changing password:', error);
+      message = 'Failed to change password. Please try again.';
+    }
   }
 </script>
 

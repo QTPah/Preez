@@ -44,9 +44,12 @@ app.use((err, req, res, next) => {
 });
 
 
+const PORT = process.env.PORT || 443;
+
 if(isProduction) {
   app.use(handler);
+  https.createServer(options, app).listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`));
+} else {
+  app.listen(PORT, () => console.log(`Server running on port ${process.env.PORT}`))
 }
 
-const PORT = process.env.PORT || 443;
-https.createServer(options, app).listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`));

@@ -13,19 +13,19 @@
       try {
         const result = await validateTokenAndFetchUser($auth.accessToken);
         if (result.success) {
-          $isLoggedIn = true;
+          //$isLoggedIn = true;
           auth.setSession({ accessToken: result.accessToken, refreshToken: $auth.refreshToken, user: result.user });
         } else {
-          $isLoggedIn = false;
+          //$isLoggedIn = false;
           auth.clearSession();
         }
       } catch (error) {
-        $isLoggedIn = false;
+        //$isLoggedIn = false;
         console.error('Failed to validate token and fetch user data:', error);
         auth.clearSession();
       }
     } else {
-      $isLoggedIn = false;
+      //$isLoggedIn = false;
       auth.clearSession();
     }
   }

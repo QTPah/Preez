@@ -1,17 +1,33 @@
 import { writable, derived } from 'svelte/store';
 import { browser } from '$app/environment';
 
+const initialState = {
+  accessToken: null,
+  refreshToken: null,
+  user: null,
+};
+
 const createAuthStore = () => {
-  const store = writable({
-    accessToken: browser ? localStorage.getItem('authToken') : null,
-    refreshToken: browser ? localStorage.getItem('refreshToken') : null,
-    user: browser ? JSON.parse(localStorage.getItem('authUser')) : null,
-  });
+  const { subscribe, set, update } = writable(initialState);
+
+  if (browser) {
+    const storedAccessToken = localStorage.getItem('authToken');
+    const storedRefreshToken = localStorage.getItem('refreshToken');
+    const storedUser = localStorage.getItem('authUser');
+
+    if (storedAccessToken && storedRefreshToken && storedUser) {
+      set({
+        accessToken: storedAccessToken,
+        refreshToken: storedRefreshToken,
+        user: JSON.parse(storedUser),
+      });
+    }
+  }
 
   return {
-    subscribe: store.subscribe,
+    subscribe,
     setSession: (sessionData) => {
-      store.update(state => {
+      update(state => {
         if (sessionData && sessionData.accessToken) {
           if (browser) {
             localStorage.setItem('authToken', sessionData.accessToken);
@@ -25,23 +41,21 @@ const createAuthStore = () => {
             localStorage.removeItem('refreshToken');
             localStorage.removeItem('authUser');
           }
-          return { accessToken: null, refreshToken: null, user: null };
+          return initialState;
         }
       });
     },
     clearSession: () => {
-console.log('clearSession');
-      store.update(state => {
-        if (browser) {
-          localStorage.removeItem('authToken');
-          localStorage.removeItem('refreshToken');
-          localStorage.removeItem('authUser');
-        }
-        return { accessToken: null, refreshToken: null, user: null };
-      });
+      console.log('clearSession');
+      if (browser) {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('authUser');
+      }
+      set(initialState);
     },
     updateUser: (userData) => {
-      store.update(state => {
+      update(state => {
         if (browser) {
           localStorage.setItem('authUser', JSON.stringify(userData));
         }
@@ -49,7 +63,7 @@ console.log('clearSession');
       });
     },
     updateTokens: (accessToken, refreshToken) => {
-      store.update(state => {
+      update(state => {
         if (browser) {
           localStorage.setItem('authToken', accessToken);
           localStorage.setItem('refreshToken', refreshToken);

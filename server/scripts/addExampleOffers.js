@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 const Offer = require('../models/Offer');
-require('dotenv').config({ path: '../.env' });
+
+const MONGODB_URI = 'mongodb://localhost:27017/preez';    
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI, {
+    await mongoose.connect(MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });

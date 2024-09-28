@@ -34,7 +34,6 @@ api.interceptors.response.use(
         localStorage.removeItem('authToken');
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('authUser');
-        window.location.href = '/login';
         return Promise.reject(refreshError);
       }
     }

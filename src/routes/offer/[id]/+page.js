@@ -1,14 +1,16 @@
-import { recommendedOffers } from '../../../data/offers';
+import { error } from '@sveltejs/kit';
+import { getOfferById } from '$lib/api/offers';
 
-export function load({ params }) {
-  const offer = recommendedOffers.find(o => o.id === parseInt(params.id));
-  
-  if (!offer) {
-    return {
-      status: 404,
-      error: new Error(`Offer with ID ${params.id} not found`)
-    };
+/** @type {import('./$types').PageLoad} */
+export async function load({ params }) {
+  try {
+    const response = await getOfferById(params.id);
+    if (!response.success) {
+      throw new Error(response.message || 'Failed to fetch offer');
+    }
+    return { offer: response.offer };
+  } catch (err) {
+    console.error('Error fetching offer:', err);
+    throw error(404, err.message || 'Offer not found');
   }
-
-  return { offer };
 }

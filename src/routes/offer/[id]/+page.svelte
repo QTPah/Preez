@@ -70,7 +70,7 @@
   <h2 class="text-2xl font-bold mb-4">Additional Details</h2>
   
   <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    {#each Object.entries(offer.customFields) as [key, value]}
+    {#each Object.entries(offer.customFields || {}) as [key, value]}
       <div>
         <dt class="font-semibold text-gray-600">{key}</dt>
         <dd>{value}</dd>

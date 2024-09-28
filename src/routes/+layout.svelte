@@ -6,6 +6,7 @@
   import { login, register, logout, validateTokenAndFetchUser } from '$lib/api/auth';
   import AuthForm from '$lib/components/AuthForm.svelte';
   import { clickOutside } from '$lib/actions/clickOutside';
+  import defaultProfile from '$lib/assets/default-picture.jpeg';
 
   let showAuthForm = false;
   let showDropdown = false;
@@ -83,7 +84,7 @@
         {#if $isLoggedIn}
           <li class="mx-2 my-1 relative">
             <button on:click={() => showDropdown = !showDropdown} class="focus:outline-none">
-              <img src="/default-profile.png" alt="Profile" class="w-8 h-8 rounded-full">
+              <img src={defaultProfile} alt="Profile" class="w-8 h-8 rounded-full">
             </button>
             {#if showDropdown}
               <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">

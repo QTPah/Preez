@@ -9,33 +9,39 @@
   let showAuthForm = false;
 
   async function validateToken() {
+    console.log('validateToken called, current auth state:', $auth);
     if ($auth.accessToken) {
       try {
+        console.log('Attempting to validate token:', $auth.accessToken);
         const result = await validateTokenAndFetchUser($auth.accessToken);
+        console.log('Token validation result:', result);
         if (result.success) {
+          console.log('Token validation successful, updating session');
           auth.setSession({ accessToken: result.accessToken, refreshToken: $auth.refreshToken, user: result.user });
-console.log('success');
         } else {
+          console.log('Token validation failed, clearing session');
           auth.clearSession();
-console.log('failed');
         }
       } catch (error) {
         console.error('Failed to validate token and fetch user data:', error);
+        console.log('Clearing session due to error');
         auth.clearSession();
-console.log('error');
       }
     } else {
+      console.log('No access token found, clearing session');
       auth.clearSession();
-console.log('no token');
     }
   }
 
   // Validate token on initial load
-  validateToken();
+  onMount(() => {
+    console.log('Component mounted, validating token');
+    validateToken();
+  });
 
   // Validate token on every navigation
   $: {
-    $page;
+    console.log('Page changed, current route:', $page.url.pathname);
     validateToken();
   }
 

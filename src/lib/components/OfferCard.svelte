@@ -20,7 +20,7 @@
   }
 </script>
 
-<div class="border rounded-lg p-4 shadow-md">
+<div class="border rounded-lg p-4 shadow-md flex flex-col h-full">
   <div class="flex flex-wrap gap-2 mb-2">
     {#each tags as tag, index}
       <span class="{getTagColor(index)} text-white text-xs font-semibold px-2 py-1 rounded">
@@ -32,8 +32,8 @@
     <h2 class="text-xl font-semibold">{title}</h2>
     <span class="text-lg font-bold">${price}</span>
   </div>
-  <p class="text-gray-600 mb-4">{description}</p>
-  <a href="/offer/{_id}" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded w-full inline-block text-center">
+  <p class="text-gray-600 mb-4 flex-grow">{description}</p>
+  <a href="/offer/{_id}" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded w-full inline-block text-center mt-auto">
     View Details
   </a>
 </div>

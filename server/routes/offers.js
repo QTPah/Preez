@@ -6,8 +6,24 @@ const authMiddleware = require('../middleware/authMiddleware');
 // Get all offers
 router.get('/', async (req, res) => {
   try {
-    const offers = await Offer.find().populate('seller', 'username');
-    res.json({ success: true, offers });
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const startIndex = (page - 1) * limit;
+
+    const total = await Offer.countDocuments();
+    const offers = await Offer.find()
+      .populate('seller', 'username')
+      .sort({ createdAt: -1 })
+      .skip(startIndex)
+      .limit(limit);
+
+    res.json({
+      success: true,
+      offers,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+      totalOffers: total
+    });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }

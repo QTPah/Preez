@@ -7,10 +7,18 @@
   let searchQuery = '';
   let isLoading = true;
   let error = null;
+  let currentPage = 1;
+  let totalPages = 1;
+  let totalOffers = 0;
 
-  onMount(async () => {
+  async function loadOffers(page = 1) {
+    isLoading = true;
     try {
-      offers = await getAllOffers();
+      const result = await getAllOffers(page);
+      offers = result.offers;
+      currentPage = result.currentPage;
+      totalPages = result.totalPages;
+      totalOffers = result.totalOffers;
       console.log('Offers:', offers);
       isLoading = false;
     } catch (err) {
@@ -18,7 +26,23 @@
       error = 'Failed to load offers. Please try again later.';
       isLoading = false;
     }
+  }
+
+  onMount(() => {
+    loadOffers();
   });
+
+  function nextPage() {
+    if (currentPage < totalPages) {
+      loadOffers(currentPage + 1);
+    }
+  }
+
+  function prevPage() {
+    if (currentPage > 1) {
+      loadOffers(currentPage - 1);
+    }
+  }
 
   $: filteredOffers = searchQuery
     ? offers.filter(offer =>
@@ -56,5 +80,24 @@
         <OfferCard {...offer} />
       {/each}
     </div>
+    
+    <div class="mt-8 flex justify-between items-center">
+      <button
+        on:click={prevPage}
+        disabled={currentPage === 1}
+        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
+      >
+        Previous
+      </button>
+      <span>Page {currentPage} of {totalPages}</span>
+      <button
+        on:click={nextPage}
+        disabled={currentPage === totalPages}
+        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
+      >
+        Next
+      </button>
+    </div>
+    <p class="text-center mt-4">Total offers: {totalOffers}</p>
   {/if}
 </main>

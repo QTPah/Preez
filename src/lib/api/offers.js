@@ -4,10 +4,12 @@ const api = axios.create({
   baseURL: 'http://localhost:5000/api'
 });
 
-export const getAllOffers = async () => {
+export const getAllOffers = async (page = 1, limit = 10) => {
   try {
-    const response = await api.get('/offers');
-    return response.data.offers;
+    const response = await api.get('/offers', {
+      params: { page, limit }
+    });
+    return response.data;
   } catch (error) {
     console.error('Error fetching offers:', error);
     throw error;

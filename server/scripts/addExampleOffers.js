@@ -1,9 +1,9 @@
-const mongoose = require('mongoose');
-const Offer = require('../models/Offer');
+import mongoose from 'mongoose';
+import Offer from '../models/Offer';
 
 const MONGODB_URI = 'mongodb://localhost:27017/preez';    
 
-const connectDB = async () => {
+const connectDB = async (): Promise<void> => {
   try {
     await mongoose.connect(MONGODB_URI, {
       useNewUrlParser: true,

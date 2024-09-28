@@ -4,16 +4,16 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import authRoutes from './routes/auth.js';
 import offerRoutes from './routes/offers.js';
+import { handler } from '../build/handler.js';
 
 dotenv.config();
+
+const isProduction = process.argv.includes('--prod');
 
 const app = express();
 
 // Middleware
-app.use(cors({
-  origin: process.env.CORS_ORIGIN,
-  credentials: true
-}));
+app.use(cors());
 app.use(express.json());
 
 // Connect to MongoDB
@@ -33,6 +33,11 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ success: false, message: 'Something went wrong!' });
 });
+
+
+if(isProduction) {
+  app.use(handler);
+}
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

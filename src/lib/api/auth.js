@@ -29,6 +29,7 @@ api.interceptors.response.use(
         originalRequest.headers['Authorization'] = `Bearer ${data.accessToken}`;
         return api(originalRequest);
       } catch (refreshError) {
+  console.log('refreshError', refreshError);
         refreshTokenRequest = null;
         localStorage.removeItem('authToken');
         localStorage.removeItem('refreshToken');

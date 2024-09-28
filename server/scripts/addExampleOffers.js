@@ -23,27 +23,33 @@ const addExampleOffers = async () => {
     const exampleOffers = [
       {
         title: "Introduction to Computer Science Textbook",
-        description: "Slightly used textbook for CS101",
+        description: "Slightly used textbook for CS101. Great condition, all pages intact.",
         price: 50,
         category: "Books",
         user: mongoose.Types.ObjectId(),
-        status: "active"
+        status: "active",
+        tags: ["Computer Science", "Textbook", "CS101"],
+        id: mongoose.Types.ObjectId()
       },
       {
         title: "Calculus Study Guide",
-        description: "Comprehensive study guide for Calculus I and II",
+        description: "Comprehensive study guide for Calculus I and II. Includes practice problems and solutions.",
         price: 25,
         category: "Study Materials",
         user: mongoose.Types.ObjectId(),
-        status: "active"
+        status: "active",
+        tags: ["Mathematics", "Calculus", "Study Guide"],
+        id: mongoose.Types.ObjectId()
       },
       {
         title: "Physics Lab Equipment Set",
-        description: "Complete set of equipment for introductory physics lab",
+        description: "Complete set of equipment for introductory physics lab. Includes pendulum, springs, and more.",
         price: 100,
         category: "Lab Equipment",
         user: mongoose.Types.ObjectId(),
-        status: "active"
+        status: "active",
+        tags: ["Physics", "Lab Equipment", "Science"],
+        id: mongoose.Types.ObjectId()
       }
     ];
 
@@ -56,4 +62,28 @@ const addExampleOffers = async () => {
   }
 };
 
-addExampleOffers();
+const removeExampleOffers = async () => {
+  try {
+    await connectDB();
+
+    const result = await Offer.deleteMany({
+      title: {
+        $in: [
+          "Introduction to Computer Science Textbook",
+          "Calculus Study Guide",
+          "Physics Lab Equipment Set"
+        ]
+      }
+    });
+
+    console.log(`${result.deletedCount} example offers removed successfully`);
+  } catch (error) {
+    console.error('Error removing example offers:', error);
+  } finally {
+    mongoose.disconnect();
+  }
+};
+
+// Uncomment the function you want to run
+// addExampleOffers();
+// removeExampleOffers();

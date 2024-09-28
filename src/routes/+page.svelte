@@ -14,12 +14,11 @@
   async function loadOffers(page = 1) {
     isLoading = true;
     try {
-      const result = await getAllOffers(page);
+      const result = await getAllOffers(page, 6);
       offers = result.offers;
       currentPage = result.currentPage;
       totalPages = result.totalPages;
       totalOffers = result.totalOffers;
-      console.log('Offers:', offers);
       isLoading = false;
     } catch (err) {
       console.error('Error fetching offers:', err);

@@ -74,23 +74,23 @@
 </script>
 
 <div class="flex flex-col min-h-screen">
-  <nav class="bg-gray-800 text-white p-4">
-    <div class="container mx-auto flex justify-between items-center">
-      <a href="/" class="text-2xl font-bold">Preez</a>
-      <ul class="flex space-x-4 items-center">
-        <li><a href="/" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/'}>Home</a></li>
-        <li><a href="/about" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/about'}>About</a></li>
-        <li><a href="/contact" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/contact'}>Contact</a></li>
+  <nav class="bg-gray-800 text-white p-2 sm:p-4">
+    <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center">
+      <a href="/" class="text-2xl font-bold mb-2 sm:mb-0">Preez</a>
+      <ul class="flex flex-wrap justify-center sm:space-x-4 items-center text-sm sm:text-base">
+        <li class="mx-2 my-1"><a href="/" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/'}>Home</a></li>
+        <li class="mx-2 my-1"><a href="/about" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/about'}>About</a></li>
+        <li class="mx-2 my-1"><a href="/contact" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/contact'}>Contact</a></li>
         {#if $isLoggedIn}
-          <li>
-            <span class="mr-4">Welcome, {$auth.user?.username}!</span>
-            <button on:click={handleLogout} class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+          <li class="mx-2 my-1">
+            <span class="mr-2">Hi, {$auth.user?.username}!</span>
+            <button on:click={handleLogout} class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded text-xs sm:text-sm">
               Logout
             </button>
           </li>
         {:else}
-          <li>
-            <button on:click={openAuthForm} class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+          <li class="mx-2 my-1">
+            <button on:click={openAuthForm} class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded text-xs sm:text-sm">
               Login / Register
             </button>
           </li>

@@ -1,6 +1,6 @@
 <script>
   import { page } from '$app/stores';
-  import { isLoggedIn, token } from '../../../stores/auth';
+  import { isLoggedIn, auth } from '../../../stores/auth';
   import { onMount } from 'svelte';
   
   export let data;
@@ -16,7 +16,7 @@
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${$token}`
+            'Authorization': `Bearer ${$auth.accessToken}`
           }
         });
         const result = await response.json();

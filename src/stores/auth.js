@@ -30,6 +30,7 @@ const createAuthStore = () => {
       });
     },
     clearSession: () => {
+console.log('clearSession');
       store.update(state => {
         if (browser) {
           localStorage.removeItem('authToken');

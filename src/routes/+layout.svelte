@@ -15,18 +15,22 @@
         if (result.success) {
           //$isLoggedIn = true;
           auth.setSession({ accessToken: result.accessToken, refreshToken: $auth.refreshToken, user: result.user });
+console.log('success');
         } else {
           //$isLoggedIn = false;
           auth.clearSession();
+console.log('failed');
         }
       } catch (error) {
         //$isLoggedIn = false;
         console.error('Failed to validate token and fetch user data:', error);
         auth.clearSession();
+console.log('error');
       }
     } else {
       //$isLoggedIn = false;
       auth.clearSession();
+console.log('no token');
     }
   }
 

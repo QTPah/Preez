@@ -86,13 +86,19 @@
             <button on:click={() => showDropdown = !showDropdown} class="focus:outline-none">
               <img src={defaultProfile} alt="Profile" class="w-10 h-10 rounded-full">
             </button>
-            {#if showDropdown}
-              <div class="absolute right-0 top-full mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 transition-all duration-200 ease-in-out transform origin-top-right" class:scale-95={!showDropdown} class:scale-100={showDropdown}>
+            <div class="absolute right-0 top-full mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 transition-all duration-200 ease-in-out transform origin-top-right"
+                 class:scale-95={!showDropdown}
+                 class:scale-100={showDropdown}
+                 class:opacity-0={!showDropdown}
+                 class:opacity-100={showDropdown}
+                 class:pointer-events-none={!showDropdown}
+                 class:pointer-events-auto={showDropdown}>
+              {#if showDropdown}
                 <a href="/dashboard" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</a>
                 <a href="/settings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
                 <button on:click={handleLogout} class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
-              </div>
-            {/if}
+              {/if}
+            </div>
           </li>
         {:else}
           <li class="mx-2 my-1">

@@ -82,9 +82,9 @@
         <li class="mx-2 my-1"><a href="/about" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/about'}>About</a></li>
         <li class="mx-2 my-1"><a href="/contact" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/contact'}>Contact</a></li>
         {#if $isLoggedIn}
-          <li class="mx-2 my-1 relative">
+          <li class="mx-2 relative flex items-center">
             <button on:click={() => showDropdown = !showDropdown} class="focus:outline-none">
-              <img src={defaultProfile} alt="Profile" class="w-8 h-8 rounded-full">
+              <img src={defaultProfile} alt="Profile" class="w-10 h-10 rounded-full">
             </button>
             {#if showDropdown}
               <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">

@@ -6,6 +6,7 @@ const path = require('path');
 const authRoutes = require('./routes/auth');
 const offerRoutes = require('./routes/offers');
 const notificationRoutes = require('./routes/notifications');
+
 require('dotenv').config();
 
 const app = express();
@@ -34,13 +35,9 @@ app.use('/api/offers', offerRoutes);
 app.use('/api/notifications', notificationRoutes);
 
 if (PROD_MODE) {
-  // Serve static files from the SvelteKit build
-  app.use(express.static(path.join(__dirname, '../build')));
+  const handler = require('../build/handler').handler;
 
-  // Handle SvelteKit routes
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../build/index.html'));
-  });
+  app.use(handler);
 }
 
 app.listen(PORT, () => {

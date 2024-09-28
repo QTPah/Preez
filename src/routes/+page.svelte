@@ -1,16 +1,31 @@
 <script>
+  import { onMount } from 'svelte';
   import OfferCard from '$lib/components/OfferCard.svelte';
-  import { recommendedOffers } from '../data/offers';
 
+  let offers = [];
   let searchQuery = '';
 
+  onMount(async () => {
+    try {
+      const response = await fetch('/api/offers');
+      const data = await response.json();
+      if (data.success) {
+        offers = data.offers;
+      } else {
+        console.error('Failed to fetch offers:', data.message);
+      }
+    } catch (error) {
+      console.error('Error fetching offers:', error);
+    }
+  });
+
   $: filteredOffers = searchQuery
-    ? recommendedOffers.filter(offer =>
-        offer.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())) ||
+    ? offers.filter(offer =>
         offer.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        offer.description.toLowerCase().includes(searchQuery.toLowerCase())
+        offer.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        offer.category.toLowerCase().includes(searchQuery.toLowerCase())
       )
-    : recommendedOffers;
+    : offers;
 </script>
 
 <main class="px-4 py-8">

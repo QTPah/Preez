@@ -35,9 +35,12 @@ app.use('/api/offers', offerRoutes);
 app.use('/api/notifications', notificationRoutes);
 
 if (PROD_MODE) {
-  const handler = require('../build/handler').handler;
-
+  const { handler } = require('../build/handler');
   app.use(handler);
+} else {
+  app.use((req, res) => {
+    res.status(404).send('Not found');
+  });
 }
 
 app.listen(PORT, () => {

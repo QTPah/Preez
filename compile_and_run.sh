@@ -15,5 +15,3 @@ cd server
 # Install server dependencies
 npm install
 
-# Run the server in production mode
-node server.js --prod

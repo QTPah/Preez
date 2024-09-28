@@ -85,5 +85,5 @@ const removeExampleOffers = async () => {
 };
 
 // Uncomment the function you want to run
-// addExampleOffers();
-// removeExampleOffers();
+addExampleOffers();
+//removeExampleOffers();

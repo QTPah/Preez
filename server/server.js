@@ -26,7 +26,11 @@ app.use(cors());
 app.use(express.json());
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
+const username = encodeURIComponent(process.env.MONGODB_USERNAME);
+const password = encodeURIComponent(process.env.MONGODB_PASSWORD);
+const uri = `mongodb://${username}:${password}@${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_DATABASE}`;
+
+mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })

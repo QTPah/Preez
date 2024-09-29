@@ -7,7 +7,7 @@ import logger from '../utils/logger.js';
 const router = express.Router();
 
 const generateTokens = (user) => {
-  logger.info('Generating tokens for user:', user._id);
+  logger.info('Generating tokens for user: ' + user._id);
   const payload = {
     userId: user._id,
     permissions: user.permissions
@@ -18,12 +18,12 @@ const generateTokens = (user) => {
 };
 
 router.post('/register', async (req, res) => {
-  logger.info('Register attempt:', req.body);
+  logger.info('Register attempt: ' + JSON.stringify(req.body));
   try {
     const { username, email, password } = req.body;
     const user = new User({ username, email, password });
     await user.save();
-    logger.info('User registered:', user._id);
+    logger.info('User registered: ' + user._id);
     const { accessToken, refreshToken } = generateTokens(user);
     res.status(201).json({
       success: true,
@@ -39,7 +39,7 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-  logger.info('Login attempt:', req.body.username);
+  logger.info('Login attempt: ' + req.body.username);
   try {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
@@ -47,7 +47,7 @@ router.post('/login', async (req, res) => {
       logger.warn('Login failed: Invalid credentials');
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
-    logger.info('User logged in:', user._id);
+    logger.info('User logged in: ' + user._id);
     const { accessToken, refreshToken } = generateTokens(user);
     res.json({
       success: true,
@@ -62,7 +62,7 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/logout', authMiddleware, (req, res) => {
-  logger.info('User logged out:', req.user.id);
+  logger.info('User logged out: ' + req.user.id);
   // In a real-world scenario, you might want to invalidate the tokens here
   res.json({ success: true, message: 'Logged out successfully' });
 });
@@ -77,7 +77,7 @@ router.post('/refresh-token', async (req, res) => {
 
   try {
     const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
-    logger.info('Refresh token valid for user:', decoded.userId);
+    logger.info('Refresh token valid for user: ' + decoded.userId);
     const { accessToken, refreshToken: newRefreshToken } = generateTokens({ _id: decoded.userId });
     res.json({ success: true, accessToken, refreshToken: newRefreshToken });
   } catch (error) {
@@ -87,14 +87,14 @@ router.post('/refresh-token', async (req, res) => {
 });
 
 router.get('/validate-token', authMiddleware, async (req, res) => {
-  logger.info('Token validation attempt for user:', req.user.id);
+  logger.info('Token validation attempt for user: ' + req.user.id);
   try {
     const user = await User.findById(req.user.id).select('-password');
     if (!user) {
       logger.warn('User not found during token validation');
       return res.status(404).json({ success: false, message: 'User not found' });
     }
-    logger.info('Token validated successfully for user:', user._id);
+    logger.info('Token validated successfully for user: ' + user._id);
     res.json({ success: true, user, accessToken: req.headers.authorization.split(' ')[1] });
   } catch (error) {
     logger.error('Token validation error:', error);
@@ -106,7 +106,7 @@ router.get('/settings', authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('settings');
     if (!user) {
-      logger.warn('User not found when fetching settings:', req.user.id);
+      logger.warn('User not found when fetching settings: ' + req.user.id);
       return res.status(404).json({ success: false, message: 'User not found' });
     }
     logger.info('Settings fetched for user:', req.user.id);
@@ -121,7 +121,7 @@ router.put('/settings', authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
     if (!user) {
-      logger.warn('User not found when updating settings:', req.user.id);
+      logger.warn('User not found when updating settings: ' + req.user.id);
       return res.status(404).json({ success: false, message: 'User not found' });
     }
     user.settings = { ...user.settings, ...req.body };
@@ -139,17 +139,17 @@ router.put('/change-password', authMiddleware, async (req, res) => {
     const { currentPassword, newPassword } = req.body;
     const user = await User.findById(req.user.id);
     if (!user) {
-      logger.warn('User not found when changing password:', req.user.id);
+      logger.warn('User not found when changing password: ' + req.user.id);
       return res.status(404).json({ success: false, message: 'User not found' });
     }
     const isMatch = await user.comparePassword(currentPassword);
     if (!isMatch) {
-      logger.warn('Incorrect current password for user:', req.user.id);
+      logger.warn('Incorrect current password for user: ' + req.user.id);
       return res.status(400).json({ success: false, message: 'Current password is incorrect' });
     }
     user.password = newPassword;
     await user.save();
-    logger.info('Password changed successfully for user:', req.user.id);
+    logger.info('Password changed successfully for user: ' + req.user.id);
     res.json({ success: true, message: 'Password changed successfully' });
   } catch (error) {
     logger.error('Error changing password:', error);
@@ -162,13 +162,13 @@ router.put('/profile', authMiddleware, async (req, res) => {
     const { username, email } = req.body;
     const user = await User.findById(req.user.id);
     if (!user) {
-      logger.warn('User not found when updating profile:', req.user.id);
+      logger.warn('User not found when updating profile: ' + req.user.id);
       return res.status(404).json({ success: false, message: 'User not found' });
     }
     user.username = username;
     user.email = email;
     await user.save();
-    logger.info('Profile updated successfully for user:', req.user.id);
+    logger.info('Profile updated successfully for user: ' + req.user.id);
     res.json({ success: true, message: 'Profile updated successfully', user: { id: user._id, username: user.username, email: user.email } });
   } catch (error) {
     logger.error('Error updating profile:', error);

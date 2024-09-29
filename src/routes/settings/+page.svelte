@@ -1,11 +1,12 @@
 <script>
   import { auth } from '../../stores/auth';
   import { onMount } from 'svelte';
-  import { updateUserSettings, changePassword } from '$lib/api/auth';
+  import { updateUserSettings, changePassword, updateUserProfile } from '$lib/api/auth';
 
   let activeSection = 'profile';
   let username = $auth.user?.username || '';
   let email = $auth.user?.email || '';
+  let bio = $auth.user?.bio || '';
   let settings = {
     profileVisibility: 'public',
     showEmail: false,
@@ -88,17 +89,25 @@
 
   async function handleProfileSave() {
     try {
-      const result = await updateUserProfile({ username, email });
+      const result = await updateUserProfile({ username, email, bio });
       if (result.success) {
         message = 'Profile updated successfully!';
-        auth.updateUser({ ...auth.user, username, email });
+        messageType = 'success';
+        auth.updateUser({ ...auth.user, username, email, bio });
       } else {
         throw new Error(result.message);
       }
     } catch (error) {
       console.error('Error updating profile:', error);
       message = 'Failed to update profile. Please try again.';
+      messageType = 'error';
     }
+    
+    // Clear the message after 3 seconds
+    setTimeout(() => {
+      message = '';
+      messageType = '';
+    }, 3000);
   }
 </script>
 
@@ -151,6 +160,21 @@
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
+          <div class="mb-4">
+            <label for="bio" class="block text-sm font-medium text-gray-700 mb-1">Bio</label>
+            <textarea
+              id="bio"
+              bind:value={bio}
+              rows="4"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            ></textarea>
+          </div>
+          <button
+            on:click={handleProfileSave}
+            class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            Save Profile
+          </button>
         {:else if activeSection === 'account'}
           <h2 class="text-2xl font-semibold mb-4">Account Settings</h2>
           <div class="mb-4">

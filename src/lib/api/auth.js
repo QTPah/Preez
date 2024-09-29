@@ -127,7 +127,12 @@ export const changePassword = async (currentPassword, newPassword) => {
 
 export const updateUserProfile = async (profileData) => {
   try {
-    const response = await api.put('/profile', profileData);
+    const accessToken = localStorage.getItem('authToken');
+    const response = await api.put('/profile', profileData, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
     return response.data;
   } catch (error) {
     console.error('Update profile error:', error);

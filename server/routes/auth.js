@@ -159,7 +159,7 @@ router.put('/change-password', authMiddleware, async (req, res) => {
 
 router.put('/profile', authMiddleware, async (req, res) => {
   try {
-    const { username, email } = req.body;
+    const { username, email, bio } = req.body;
     const user = await User.findById(req.user.id);
     if (!user) {
       logger.warn('User not found when updating profile: ' + req.user.id);
@@ -167,9 +167,10 @@ router.put('/profile', authMiddleware, async (req, res) => {
     }
     user.username = username;
     user.email = email;
+    user.bio = bio;
     await user.save();
     logger.info('Profile updated successfully for user: ' + req.user.id);
-    res.json({ success: true, message: 'Profile updated successfully', user: { id: user._id, username: user.username, email: user.email } });
+    res.json({ success: true, message: 'Profile updated successfully', user: { id: user._id, username: user.username, email: user.email, bio: user.bio } });
   } catch (error) {
     logger.error('Error updating profile:', error);
     res.status(400).json({ success: false, message: error.message });

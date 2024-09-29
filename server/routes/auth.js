@@ -186,13 +186,6 @@ router.put('/profile', authMiddleware, upload.single('profilePicture'), async (r
     user.email = email;
     user.bio = bio;
     if (req.file) {
-      // If there's an existing profile picture, delete it
-      if (user.profilePicture) {
-        const oldFilePath = path.join(process.cwd(), user.profilePicture);
-        fs.unlink(oldFilePath, (err) => {
-          if (err) logger.error('Error deleting old profile picture: ' + err);
-        });
-      }
       user.profilePicture = req.file.path;
     } else if (deleteProfilePicture) {
       if (user.profilePicture) {

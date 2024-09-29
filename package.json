@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
     "update": "git pull origin main; npm install; npm run build;cd server; npm install",
-		"dev": "VITE_API_URL=http://localhost:5000 vite dev",
+		"dev": "VITE_API_URL=http://localhost:5000 vite dev --host",
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",

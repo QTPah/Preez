@@ -12,8 +12,6 @@ import logger from './utils/logger.js';
 
 dotenv.config();
 
-logger.info('Environment variables loaded:', process.env);
-
 const isProduction = process.argv.includes('--prod');
 logger.info('Is production mode:', isProduction);
 
@@ -24,6 +22,12 @@ const options = {
 };
 
 const app = express();
+
+
+// Serve static files 
+const directory = path.resolve('uploads');
+logger.info('Serving static files from: ' + directory);
+app.use('/uploads', express.static(directory));
 
 // Middleware
 app.use(cors());
@@ -49,7 +53,7 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 443;
-logger.info('Server port:', PORT);
+logger.info('Server port: ' + PORT);
 
 if(isProduction) {
   app.use(handler);

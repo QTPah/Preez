@@ -49,29 +49,35 @@
     }
   }
 
-  async function editUser(user) {
+  let showUserModal = false;
+
+  function editUser(user) {
     editingUser = { ...user };
-    // Open a modal or form to edit the user
+    showUserModal = true;
   }
 
   async function saveUser() {
     try {
-      await updateUser(editingUser._id, editingUser);
+      if (editingUser._id) {
+        await updateUser(editingUser._id, editingUser);
+      } else {
+        await addUser(editingUser);
+      }
       loadUsers();
-      editingUser = null;
+      closeUserModal();
     } catch (error) {
-      console.error('Error updating user:', error);
+      console.error('Error saving user:', error);
     }
   }
 
-  async function addNewUser() {
-    try {
-      await addUser(editingUser);
-      loadUsers();
-      editingUser = null;
-    } catch (error) {
-      console.error('Error adding user:', error);
-    }
+  function addNewUser() {
+    editingUser = { username: '', email: '', permissions: [] };
+    showUserModal = true;
+  }
+
+  function closeUserModal() {
+    showUserModal = false;
+    editingUser = null;
   }
 
   async function deleteUserConfirm(userId) {
@@ -145,15 +151,54 @@
                 </td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
                   <button on:click={() => editUser(user)} class="text-blue-600 hover:text-blue-900">Edit</button>
-                  <button on:click={() => deleteUser(user._id)} class="ml-2 text-red-600 hover:text-red-900">Delete</button>
+                  <button on:click={() => deleteUserConfirm(user._id)} class="ml-2 text-red-600 hover:text-red-900">Delete</button>
                 </td>
               </tr>
             {/each}
           </tbody>
         </table>
-        <button on:click={addUser} class="mt-4 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+        <button on:click={addNewUser} class="mt-4 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
           Add User
         </button>
+      {/if}
+
+      {#if showUserModal}
+        <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" on:click={closeUserModal}>
+          <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white"
+               on:click|stopPropagation>
+            <div class="mt-3 text-center">
+              <h3 class="text-lg leading-6 font-medium text-gray-900">{editingUser._id ? 'Edit User' : 'Add New User'}</h3>
+              <div class="mt-2 px-7 py-3">
+                <input type="text" placeholder="Username" bind:value={editingUser.username}
+                       class="mb-3 px-3 py-2 border rounded-lg w-full" />
+                <input type="email" placeholder="Email" bind:value={editingUser.email}
+                       class="mb-3 px-3 py-2 border rounded-lg w-full" />
+                <div class="mb-3">
+                  <label class="block text-gray-700 text-sm font-bold mb-2">Permissions</label>
+                  {#each ['manageUsers', 'manageOffers', 'manageCategories', 'viewReports', 'manageSettings'] as permission}
+                    <label class="inline-flex items-center mt-3">
+                      <input type="checkbox" 
+                             bind:group={editingUser.permissions} 
+                             value={permission}
+                             class="form-checkbox h-5 w-5 text-gray-600" />
+                      <span class="ml-2 text-gray-700">{permission}</span>
+                    </label>
+                  {/each}
+                </div>
+                {#if !editingUser._id}
+                  <input type="password" placeholder="Password" bind:value={editingUser.password}
+                         class="mb-3 px-3 py-2 border rounded-lg w-full" />
+                {/if}
+              </div>
+              <div class="items-center px-4 py-3">
+                <button on:click={saveUser}
+                        class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                  {editingUser._id ? 'Update User' : 'Add User'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       {/if}
     {:else if activeTab === 'offers' && hasPermission('manageOffers')}
       <h2 class="text-2xl font-bold mb-4">Offer Management</h2>

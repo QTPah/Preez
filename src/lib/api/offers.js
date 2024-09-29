@@ -25,3 +25,23 @@ export const getOfferById = async (id) => {
     throw error;
   }
 };
+
+export const updateOffer = async (id, offerData) => {
+  try {
+    const response = await api.put(`/offers/${id}`, offerData);
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating offer with id ${id}:`, error);
+    throw error;
+  }
+};
+
+export const deleteOffer = async (id) => {
+  try {
+    const response = await api.delete(`/offers/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error deleting offer with id ${id}:`, error);
+    throw error;
+  }
+};

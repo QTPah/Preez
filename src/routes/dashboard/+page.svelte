@@ -2,13 +2,15 @@
   import { onMount } from 'svelte';
   import { auth } from '../../stores/auth';
   import { getAllUsers, addUser, updateUser, deleteUser } from '$lib/api/users';
-  import { getAllOffers } from '$lib/api/offers';
+  import { getAllOffers, updateOffer, deleteOffer } from '$lib/api/offers';
 
   let activeTab = 'overview';
   let users = [];
   let offers = [];
   let loading = false;
   let editingUser = null;
+  let editingOffer = null;
+  let showOfferModal = false;
 
   const tabs = [
     { id: 'overview', name: 'Overview', permission: null },
@@ -92,6 +94,37 @@
         loadUsers();
       } catch (error) {
         console.error('Error deleting user:', error);
+      }
+    }
+  }
+
+  function editOffer(offer) {
+    editingOffer = { ...offer };
+    showOfferModal = true;
+  }
+
+  async function saveOffer() {
+    try {
+      await updateOffer(editingOffer._id, editingOffer);
+      loadOffers();
+      closeOfferModal();
+    } catch (error) {
+      console.error('Error saving offer:', error);
+    }
+  }
+
+  function closeOfferModal() {
+    showOfferModal = false;
+    editingOffer = null;
+  }
+
+  async function deleteOfferConfirm(offerId) {
+    if (confirm('Are you sure you want to delete this offer?')) {
+      try {
+        await deleteOffer(offerId);
+        loadOffers();
+      } catch (error) {
+        console.error('Error deleting offer:', error);
       }
     }
   }
@@ -225,6 +258,33 @@
           </div>
         </div>
       {/if}
+
+      {#if showOfferModal}
+        <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" on:click={closeOfferModal}>
+          <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white"
+               on:click|stopPropagation>
+            <div class="mt-3 text-center">
+              <h3 class="text-lg leading-6 font-medium text-gray-900">Edit Offer</h3>
+              <div class="mt-2 px-7 py-3">
+                <input type="text" placeholder="Title" bind:value={editingOffer.title}
+                       class="mb-3 px-3 py-2 border rounded-lg w-full" />
+                <input type="number" placeholder="Price" bind:value={editingOffer.price}
+                       class="mb-3 px-3 py-2 border rounded-lg w-full" />
+                <input type="text" placeholder="Category" bind:value={editingOffer.category}
+                       class="mb-3 px-3 py-2 border rounded-lg w-full" />
+                <textarea placeholder="Description" bind:value={editingOffer.description}
+                          class="mb-3 px-3 py-2 border rounded-lg w-full" rows="3"></textarea>
+              </div>
+              <div class="items-center px-4 py-3">
+                <button on:click={saveOffer}
+                        class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                  Update Offer
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      {/if}
     {:else if activeTab === 'offers' && hasPermission('manageOffers')}
       <h2 class="text-2xl font-bold mb-4">Offer Management</h2>
       {#if loading}
@@ -246,8 +306,8 @@
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">${offer.price}</td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{offer.category}</td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
-                  <button class="text-blue-600 hover:text-blue-900">Edit</button>
-                  <button class="ml-2 text-red-600 hover:text-red-900">Delete</button>
+                  <button on:click={() => editOffer(offer)} class="text-blue-600 hover:text-blue-900">Edit</button>
+                  <button on:click={() => deleteOfferConfirm(offer._id)} class="ml-2 text-red-600 hover:text-red-900">Delete</button>
                 </td>
               </tr>
             {/each}

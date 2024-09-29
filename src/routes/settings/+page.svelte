@@ -44,6 +44,13 @@
   let messageType = '';
 
   async function handleSave() {
+    if(activeSection == 'profile') {
+      handleProfileSave();
+      return;
+    } else if(activeSection == 'account') {
+      handlePasswordChange();
+      return;
+    }
     try {
       const result = await updateUserSettings(settings);
       if (result.success) {
@@ -169,12 +176,6 @@
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             ></textarea>
           </div>
-          <button
-            on:click={handleProfileSave}
-            class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Save Profile
-          </button>
         {:else if activeSection === 'account'}
           <h2 class="text-2xl font-semibold mb-4">Account Settings</h2>
           <div class="mb-4">
@@ -204,12 +205,6 @@
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
-          <button
-            on:click={handlePasswordChange}
-            class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Change Password
-          </button>
         {:else if activeSection === 'notifications'}
           <h2 class="text-2xl font-semibold mb-4">Notification Preferences</h2>
           <div class="mb-4">

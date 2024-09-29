@@ -14,7 +14,7 @@ const getAuthHeader = () => {
 export const getAllOffers = async (page = 1, limit = 10) => {
   try {
     const response = await api.get('/offers', {
-      params: { page, limit },
+      params: { page, limit, populate: 'seller' },
       headers: getAuthHeader()
     });
     return response.data;

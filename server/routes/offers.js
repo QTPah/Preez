@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
     const total = await Offer.countDocuments();
     console.log(`Total offers: ${total}`);
     const offers = await Offer.find()
-      .populate('seller', 'username')
+      .populate('seller', 'username _id')
       .sort({ createdAt: -1 })
       .skip(startIndex)
       .limit(limit);

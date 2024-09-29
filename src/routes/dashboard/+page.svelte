@@ -132,6 +132,13 @@
     }
   }
 
+  function navigateToUser(userId) {
+    activeTab = 'users';
+    // You might want to implement a way to scroll to or highlight the specific user
+    // For now, we'll just switch to the users tab
+    loadUsers();
+  }
+
   $: if (activeTab === 'users' && hasPermission('manageUsers')) {
     loadUsers();
   }
@@ -331,6 +338,7 @@
               <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Title</th>
               <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Price</th>
               <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Category</th>
+              <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Seller</th>
               <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
@@ -340,6 +348,14 @@
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{offer.title}</td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">${offer.price}</td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{offer.category}</td>
+                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
+                  <button 
+                    on:click={() => navigateToUser(offer.seller._id)} 
+                    class="text-blue-600 hover:text-blue-900"
+                  >
+                    {offer.seller.username}
+                  </button>
+                </td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
                   <button on:click={() => editOffer(offer)} class="text-blue-600 hover:text-blue-900">Edit</button>
                   <button on:click={() => deleteOfferConfirm(offer._id)} class="ml-2 text-red-600 hover:text-red-900">Delete</button>

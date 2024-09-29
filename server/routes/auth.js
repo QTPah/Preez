@@ -11,7 +11,7 @@ const router = express.Router();
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const dir = './public/uploads/';
+    const dir = './uploads/';
     fs.mkdirSync(dir, { recursive: true });
     cb(null, dir);
   },
@@ -175,7 +175,7 @@ router.put('/change-password', authMiddleware, async (req, res) => {
 
 router.put('/profile', authMiddleware, upload.single('profilePicture'), async (req, res) => {
   try {
-    const { username, email, bio } = req.body;
+    const { username, email, bio, deleteProfilePicture } = req.body;
     const user = await User.findById(req.user.id);
     if (!user) {
       logger.warn('User not found when updating profile: ' + req.user.id);
@@ -189,11 +189,20 @@ router.put('/profile', authMiddleware, upload.single('profilePicture'), async (r
       if (user.profilePicture) {
         const oldFilePath = path.join(process.cwd(), user.profilePicture);
         fs.unlink(oldFilePath, (err) => {
-          if (err) logger.error('Error deleting old profile picture:', err);
+          if (err) logger.error('Error deleting old profile picture: ' + err);
         });
       }
       user.profilePicture = req.file.path;
+    } else if (deleteProfilePicture) {
+      if (user.profilePicture) {
+        const filePath = path.join(process.cwd(), user.profilePicture);
+        fs.unlink(filePath, (err) => {
+          if (err) logger.error('Error deleting profile picture: ' + err);
+        });
+        user.profilePicture = '';
+      }
     }
+
     await user.save();
     logger.info('Profile updated successfully for user: ' + req.user.id);
     res.json({ 

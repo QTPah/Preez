@@ -175,7 +175,7 @@ router.put('/change-password', authMiddleware, async (req, res) => {
 
 router.put('/profile', authMiddleware, upload.single('profilePicture'), async (req, res) => {
   try {
-    const { username, email, bio, deleteProfilePicture } = req.body;
+    const { username, email, bio } = req.body;
     const user = await User.findById(req.user.id);
     if (!user) {
       logger.warn('User not found when updating profile: ' + req.user.id);
@@ -184,16 +184,7 @@ router.put('/profile', authMiddleware, upload.single('profilePicture'), async (r
     user.username = username;
     user.email = email;
     user.bio = bio;
-    if (deleteProfilePicture === 'true') {
-      if (user.profilePicture) {
-        // Delete the file from the server
-        const filePath = path.join(process.cwd(), user.profilePicture);
-        fs.unlink(filePath, (err) => {
-          if (err) logger.error('Error deleting profile picture:', err);
-        });
-      }
-      user.profilePicture = '';
-    } else if (req.file) {
+    if (req.file) {
       // If there's an existing profile picture, delete it
       if (user.profilePicture) {
         const oldFilePath = path.join(process.cwd(), user.profilePicture);

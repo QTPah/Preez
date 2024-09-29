@@ -1,13 +1,14 @@
 <script>
   import { onMount } from 'svelte';
   import { auth } from '../../stores/auth';
-  import { getAllUsers } from '$lib/api/users';
+  import { getAllUsers, addUser, updateUser, deleteUser } from '$lib/api/users';
   import { getAllOffers } from '$lib/api/offers';
 
   let activeTab = 'overview';
   let users = [];
   let offers = [];
   let loading = false;
+  let editingUser = null;
 
   const tabs = [
     { id: 'overview', name: 'Overview', permission: null },
@@ -45,6 +46,42 @@
       console.error('Error loading offers:', error);
     } finally {
       loading = false;
+    }
+  }
+
+  async function editUser(user) {
+    editingUser = { ...user };
+    // Open a modal or form to edit the user
+  }
+
+  async function saveUser() {
+    try {
+      await updateUser(editingUser._id, editingUser);
+      loadUsers();
+      editingUser = null;
+    } catch (error) {
+      console.error('Error updating user:', error);
+    }
+  }
+
+  async function addNewUser() {
+    try {
+      await addUser(editingUser);
+      loadUsers();
+      editingUser = null;
+    } catch (error) {
+      console.error('Error adding user:', error);
+    }
+  }
+
+  async function deleteUserConfirm(userId) {
+    if (confirm('Are you sure you want to delete this user?')) {
+      try {
+        await deleteUser(userId);
+        loadUsers();
+      } catch (error) {
+        console.error('Error deleting user:', error);
+      }
     }
   }
 
@@ -92,6 +129,7 @@
             <tr>
               <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Username</th>
               <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Email</th>
+              <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Permissions</th>
               <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
@@ -101,13 +139,21 @@
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{user.username}</td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{user.email}</td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
-                  <button class="text-blue-600 hover:text-blue-900">Edit</button>
-                  <button class="ml-2 text-red-600 hover:text-red-900">Delete</button>
+                  {#each user.permissions as permission}
+                    <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">{permission}</span>
+                  {/each}
+                </td>
+                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
+                  <button on:click={() => editUser(user)} class="text-blue-600 hover:text-blue-900">Edit</button>
+                  <button on:click={() => deleteUser(user._id)} class="ml-2 text-red-600 hover:text-red-900">Delete</button>
                 </td>
               </tr>
             {/each}
           </tbody>
         </table>
+        <button on:click={addUser} class="mt-4 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+          Add User
+        </button>
       {/if}
     {:else if activeTab === 'offers' && hasPermission('manageOffers')}
       <h2 class="text-2xl font-bold mb-4">Offer Management</h2>

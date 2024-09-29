@@ -151,3 +151,18 @@ export const updateUserProfile = async (profileData) => {
   }
 };
 
+export const deleteProfilePicture = async () => {
+  try {
+    const accessToken = localStorage.getItem('authToken');
+    const response = await api.delete('/profile-picture', {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Delete profile picture error:', error);
+    throw error.response?.data || { success: false, message: 'An error occurred while deleting profile picture' };
+  }
+};
+

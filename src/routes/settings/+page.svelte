@@ -119,6 +119,30 @@
       messageType = '';
     }, 3000);
   }
+
+  async function handleDeleteProfilePicture() {
+    try {
+      const result = await deleteProfilePicture();
+      if (result.success) {
+        message = 'Profile picture deleted successfully!';
+        messageType = 'success';
+        auth.updateUser({ ...auth.user, profilePicture: '' });
+        profilePicture = null;
+      } else {
+        throw new Error(result.message);
+      }
+    } catch (error) {
+      console.error('Error deleting profile picture:', error);
+      message = 'Failed to delete profile picture. Please try again.';
+      messageType = 'error';
+    }
+    
+    // Clear the message after 3 seconds
+    setTimeout(() => {
+      message = '';
+      messageType = '';
+    }, 3000);
+  }
 </script>
 
 <div class="container mx-auto px-4 py-8">
@@ -198,10 +222,7 @@
               />
               <button
                 type="button"
-                on:click={() => {
-                  deleteProfilePicture = true;
-                  profilePicture = null;
-                }}
+                on:click={handleDeleteProfilePicture}
                 class="mt-2 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
               >
                 Delete Profile Picture

@@ -187,12 +187,20 @@ router.put('/profile', authMiddleware, upload.single('profilePicture'), async (r
     if (deleteProfilePicture === 'true') {
       if (user.profilePicture) {
         // Delete the file from the server
-        fs.unlink(user.profilePicture, (err) => {
+        const filePath = path.join(process.cwd(), user.profilePicture);
+        fs.unlink(filePath, (err) => {
           if (err) logger.error('Error deleting profile picture:', err);
         });
       }
       user.profilePicture = '';
     } else if (req.file) {
+      // If there's an existing profile picture, delete it
+      if (user.profilePicture) {
+        const oldFilePath = path.join(process.cwd(), user.profilePicture);
+        fs.unlink(oldFilePath, (err) => {
+          if (err) logger.error('Error deleting old profile picture:', err);
+        });
+      }
       user.profilePicture = req.file.path;
     }
     await user.save();
@@ -210,6 +218,39 @@ router.put('/profile', authMiddleware, upload.single('profilePicture'), async (r
     });
   } catch (error) {
     logger.error('Error updating profile:', error);
+    res.status(400).json({ success: false, message: error.message });
+  }
+});
+
+router.delete('/profile-picture', authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      logger.warn('User not found when deleting profile picture: ' + req.user.id);
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    if (user.profilePicture) {
+      const filePath = path.join(process.cwd(), user.profilePicture);
+      fs.unlink(filePath, (err) => {
+        if (err) logger.error('Error deleting profile picture:', err);
+      });
+      user.profilePicture = '';
+      await user.save();
+    }
+    logger.info('Profile picture deleted successfully for user: ' + req.user.id);
+    res.json({ 
+      success: true, 
+      message: 'Profile picture deleted successfully', 
+      user: { 
+        id: user._id, 
+        username: user.username, 
+        email: user.email, 
+        bio: user.bio,
+        profilePicture: user.profilePicture
+      } 
+    });
+  } catch (error) {
+    logger.error('Error deleting profile picture:', error);
     res.status(400).json({ success: false, message: error.message });
   }
 });

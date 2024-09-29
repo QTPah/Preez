@@ -25,3 +25,13 @@ export const getOfferById = async (id) => {
     throw error;
   }
 };
+
+export const getAllOffers = async () => {
+  try {
+    const response = await api.get('/offers');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching all offers:', error);
+    throw error;
+  }
+};

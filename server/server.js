@@ -7,6 +7,7 @@ import fs from 'fs';
 import path from 'path';
 import authRoutes from './routes/auth.js';
 import offerRoutes from './routes/offers.js';
+import userRoutes from './routes/users.js';
 import { handler } from '../build/handler.js';
 import logger from './utils/logger.js';
 
@@ -45,6 +46,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/offers', offerRoutes);
+app.use('/api/users', userRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

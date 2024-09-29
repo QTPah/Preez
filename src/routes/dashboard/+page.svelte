@@ -1,9 +1,14 @@
 <script>
   import { onMount } from 'svelte';
   import { auth } from '../../stores/auth';
+  import { getAllUsers } from '$lib/api/users';
+  import { getAllOffers } from '$lib/api/offers';
 
   let activeTab = 'overview';
   let userPermissions = {};
+  let users = [];
+  let offers = [];
+  let loading = false;
 
   const tabs = [
     { id: 'overview', name: 'Overview', permission: null },
@@ -20,6 +25,38 @@
 
   function hasPermission(permission) {
     return permission === null || userPermissions[permission];
+  }
+
+  async function loadUsers() {
+    loading = true;
+    try {
+      const response = await getAllUsers();
+      users = response.users;
+    } catch (error) {
+      console.error('Error loading users:', error);
+    } finally {
+      loading = false;
+    }
+  }
+
+  async function loadOffers() {
+    loading = true;
+    try {
+      const response = await getAllOffers();
+      offers = response.offers;
+    } catch (error) {
+      console.error('Error loading offers:', error);
+    } finally {
+      loading = false;
+    }
+  }
+
+  $: if (activeTab === 'users' && hasPermission('manageUsers')) {
+    loadUsers();
+  }
+
+  $: if (activeTab === 'offers' && hasPermission('manageOffers')) {
+    loadOffers();
   }
 </script>
 
@@ -50,10 +87,60 @@
       <p>Welcome to the dashboard. Here you can manage various aspects of the platform.</p>
     {:else if activeTab === 'users' && hasPermission('manageUsers')}
       <h2 class="text-2xl font-bold mb-4">User Management</h2>
-      <p>Manage user accounts, permissions, and activities.</p>
+      {#if loading}
+        <p>Loading users...</p>
+      {:else}
+        <table class="min-w-full">
+          <thead>
+            <tr>
+              <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Username</th>
+              <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Email</th>
+              <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {#each users as user}
+              <tr>
+                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{user.username}</td>
+                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{user.email}</td>
+                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
+                  <button class="text-blue-600 hover:text-blue-900">Edit</button>
+                  <button class="ml-2 text-red-600 hover:text-red-900">Delete</button>
+                </td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      {/if}
     {:else if activeTab === 'offers' && hasPermission('manageOffers')}
       <h2 class="text-2xl font-bold mb-4">Offer Management</h2>
-      <p>Review, edit, or remove offers from the platform.</p>
+      {#if loading}
+        <p>Loading offers...</p>
+      {:else}
+        <table class="min-w-full">
+          <thead>
+            <tr>
+              <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Title</th>
+              <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Price</th>
+              <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Category</th>
+              <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {#each offers as offer}
+              <tr>
+                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{offer.title}</td>
+                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">${offer.price}</td>
+                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{offer.category}</td>
+                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
+                  <button class="text-blue-600 hover:text-blue-900">Edit</button>
+                  <button class="ml-2 text-red-600 hover:text-red-900">Delete</button>
+                </td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      {/if}
     {:else if activeTab === 'categories' && hasPermission('manageCategories')}
       <h2 class="text-2xl font-bold mb-4">Category Management</h2>
       <p>Manage offer categories and subcategories.</p>

@@ -458,7 +458,56 @@
       <p>Manage offer categories and subcategories.</p>
     {:else if activeTab === 'reports' && hasPermission('viewReports')}
       <h2 class="text-2xl font-bold mb-4">Reports</h2>
-      <p>View and analyze platform statistics and user reports.</p>
+      {#if loading}
+        <p>Loading reports...</p>
+      {:else}
+        <div class="mb-6">
+          <h3 class="text-xl font-semibold mb-2">Offer Reports</h3>
+          <table class="min-w-full">
+            <thead>
+              <tr>
+                <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Offer</th>
+                <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reported By</th>
+                <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reason</th>
+                <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {#each reports.filter(report => report.type === 'offer') as report}
+                <tr>
+                  <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.targetId.title}</td>
+                  <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.reportedBy.username}</td>
+                  <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.reason}</td>
+                  <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.status}</td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <h3 class="text-xl font-semibold mb-2">User Reports</h3>
+          <table class="min-w-full">
+            <thead>
+              <tr>
+                <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">User</th>
+                <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reported By</th>
+                <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reason</th>
+                <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {#each reports.filter(report => report.type === 'user') as report}
+                <tr>
+                  <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.targetId.username}</td>
+                  <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.reportedBy.username}</td>
+                  <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.reason}</td>
+                  <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.status}</td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
+      {/if}
     {:else if activeTab === 'settings' && hasPermission('manageSettings')}
       <h2 class="text-2xl font-bold mb-4">Platform Settings</h2>
       <p>Configure global settings for the platform.</p>

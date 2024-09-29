@@ -102,7 +102,12 @@ export const logout = async () => {
 
 export const updateUserSettings = async (settings) => {
   try {
-    const response = await api.put('/settings', settings);
+    const accessToken = localStorage.getItem('authToken');
+    const response = await api.put('/settings', settings, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
     return response.data;
   } catch (error) {
     console.error('Update settings error:', error);

@@ -55,7 +55,7 @@ router.get('/:id', async (req, res) => {
 router.post('/', authMiddleware, async (req, res) => {
   console.log('POST /api/offers - Creating new offer');
   try {
-    if (!req.user.permissions.createOffer) {
+    if (!req.user.permissions.includes('createOffer')) {
       console.log(`User ${req.user.id} attempted to create offer without permission`);
       return res.status(403).json({ success: false, message: 'You do not have permission to create offers' });
     }
@@ -86,7 +86,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
       console.log(`Offer not found: ${req.params.id}`);
       return res.status(404).json({ success: false, message: 'Offer not found' });
     }
-    if (offer.seller.toString() !== req.user.id && !req.user.permissions.editAnyOffer) {
+    if (offer.seller.toString() !== req.user.id && !req.user.permissions.includes('editAnyOffer')) {
       console.log(`User ${req.user.id} attempted to update offer ${offer._id} without permission`);
       return res.status(403).json({ success: false, message: 'Not authorized to update this offer' });
     }
@@ -109,7 +109,7 @@ router.delete('/:id', authMiddleware, async (req, res) => {
       console.log(`Offer not found: ${req.params.id}`);
       return res.status(404).json({ success: false, message: 'Offer not found' });
     }
-    if (offer.seller.toString() !== req.user.id && !req.user.permissions.deleteAnyOffer) {
+    if (offer.seller.toString() !== req.user.id && !req.user.permissions.includes('deleteAnyOffer')) {
       console.log(`User ${req.user.id} attempted to delete offer ${offer._id} without permission`);
       return res.status(403).json({ success: false, message: 'Not authorized to delete this offer' });
     }

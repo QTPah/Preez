@@ -7,7 +7,7 @@ const router = express.Router();
 // Get all users (only accessible by admin)
 router.get('/', authMiddleware, async (req, res) => {
   try {
-    if (!req.user.permissions.manageUsers) {
+    if (!req.user.permissions.includes('manageUsers')) {
       return res.status(403).json({ success: false, message: 'Not authorized to view all users' });
     }
     const users = await User.find().select('-password');

@@ -7,17 +7,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   bio: { type: String, default: '' },
   profilePicture: { type: String, default: '' },
-  permissions: {
-    createOffer: { type: Boolean, default: true },
-    editAnyOffer: { type: Boolean, default: false },
-    deleteAnyOffer: { type: Boolean, default: false },
-    adminAccess: { type: Boolean, default: false },
-    manageUsers: { type: Boolean, default: false },
-    manageOffers: { type: Boolean, default: false },
-    manageCategories: { type: Boolean, default: false },
-    viewReports: { type: Boolean, default: false },
-    manageSettings: { type: Boolean, default: false }
-  },
+  permissions: [{ type: String }],
   settings: {
     profileVisibility: { type: String, default: 'public' },
     showEmail: { type: Boolean, default: false },

@@ -17,17 +17,7 @@ const updateUserPermissions = async () => {
       { permissions: { $exists: false } },
       {
         $set: {
-          permissions: {
-            createOffer: true,
-            editAnyOffer: false,
-            deleteAnyOffer: false,
-            adminAccess: false,
-            manageUsers: false,
-            manageOffers: false,
-            manageCategories: false,
-            viewReports: false,
-            manageSettings: false
-          }
+          permissions: ['createOffer']
         }
       }
     );

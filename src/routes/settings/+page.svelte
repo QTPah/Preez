@@ -79,6 +79,21 @@
       message = 'Failed to change password. Please try again.';
     }
   }
+
+  async function handleProfileSave() {
+    try {
+      const result = await updateUserProfile({ username, email });
+      if (result.success) {
+        message = 'Profile updated successfully!';
+        auth.updateUser({ ...auth.user, username, email });
+      } else {
+        throw new Error(result.message);
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      message = 'Failed to update profile. Please try again.';
+    }
+  }
 </script>
 
 <div class="container mx-auto px-4 py-8">

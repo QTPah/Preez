@@ -120,3 +120,13 @@ export const changePassword = async (currentPassword, newPassword) => {
   }
 };
 
+export const updateUserProfile = async (profileData) => {
+  try {
+    const response = await api.put('/profile', profileData);
+    return response.data;
+  } catch (error) {
+    console.error('Update profile error:', error);
+    throw error.response?.data || { success: false, message: 'An error occurred while updating profile' };
+  }
+};
+

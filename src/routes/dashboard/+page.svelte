@@ -159,6 +159,22 @@
   $: if (activeTab === 'offers' && hasPermission('manageOffers')) {
     loadOffers();
   }
+
+  $: if (activeTab === 'reports' && hasPermission('viewReports')) {
+    loadReports();
+  }
+
+  async function loadReports() {
+    loading = true;
+    try {
+      const response = await getReports();
+      reports = response.reports;
+    } catch (error) {
+      console.error('Error loading reports:', error);
+    } finally {
+      loading = false;
+    }
+  }
 </script>
 
 <div class="container mx-auto px-4 py-8">

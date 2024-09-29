@@ -1,12 +1,15 @@
 import axios from 'axios';
+import { auth } from '../../stores/auth.js';
 
 const api = axios.create({
   baseURL: '/api'
-});
+})
 
 export const getAllUsers = async () => {
   try {
-    const response = await api.get('/users');
+    const response = await api.get('/users', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
     return response.data;
   } catch (error) {
     console.error('Error fetching users:', error);

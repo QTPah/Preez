@@ -13,16 +13,28 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 const updateUserPermissions = async () => {
   try {
+    const allPermissions = [
+      'createOffer',
+      'editAnyOffer',
+      'deleteAnyOffer',
+      'manageUsers',
+      'manageOffers',
+      'manageCategories',
+      'viewReports',
+      'manageSettings',
+      'adminAccess'
+    ];
+
     const result = await User.updateMany(
-      { permissions: { $exists: false } },
+      {},
       {
         $set: {
-          permissions: ['createOffer']
+          permissions: allPermissions
         }
       }
     );
 
-    console.log(`Updated ${result.modifiedCount} users with default permissions`);
+    console.log(`Updated ${result.modifiedCount} users with all available permissions`);
     process.exit(0);
   } catch (error) {
     console.error('Error updating user permissions:', error);

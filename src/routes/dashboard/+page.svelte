@@ -20,7 +20,7 @@
   ];
 
   onMount(() => {
-    userPermissions = $auth.user?.permissions || {};
+    userPermissions = $auth.user?.permissions;
   });
 
   function hasPermission(permission) {

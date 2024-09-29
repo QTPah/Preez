@@ -8,6 +8,7 @@
   let email = $auth.user?.email || '';
   let bio = $auth.user?.bio || '';
   let profilePicture = null;
+  let deleteProfilePicture = false;
   let settings = {
     profileVisibility: 'public',
     showEmail: false,
@@ -97,11 +98,12 @@
 
   async function handleProfileSave() {
     try {
-      const result = await updateUserProfile({ username, email, bio, profilePicture });
+      const result = await updateUserProfile({ username, email, bio, profilePicture, deleteProfilePicture });
       if (result.success) {
         message = 'Profile updated successfully!';
         messageType = 'success';
         auth.updateUser({ ...auth.user, username, email, bio, profilePicture: result.user.profilePicture });
+        deleteProfilePicture = false;
       } else {
         throw new Error(result.message);
       }
@@ -194,6 +196,16 @@
                 alt="Profile Picture Preview"
                 class="w-32 h-32 object-cover rounded-full"
               />
+              <button
+                type="button"
+                on:click={() => {
+                  deleteProfilePicture = true;
+                  profilePicture = null;
+                }}
+                class="mt-2 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+              >
+                Delete Profile Picture
+              </button>
             </div>
           {/if}
         {:else if activeSection === 'account'}

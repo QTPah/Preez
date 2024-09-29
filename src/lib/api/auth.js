@@ -132,6 +132,8 @@ export const updateUserProfile = async (profileData) => {
     Object.keys(profileData).forEach(key => {
       if (key === 'profilePicture' && profileData[key] instanceof File) {
         formData.append(key, profileData[key]);
+      } else if (key === 'deleteProfilePicture') {
+        formData.append(key, profileData[key].toString());
       } else {
         formData.append(key, profileData[key]);
       }

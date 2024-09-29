@@ -10,6 +10,7 @@
 
   let showAuthForm = false;
   let showDropdown = false;
+  let profilePicture = defaultProfile;
 
   async function validateToken() {
     if ($auth.accessToken) {
@@ -17,15 +18,19 @@
         const result = await validateTokenAndFetchUser($auth.accessToken);
         if (result.success) {
           auth.setSession({ accessToken: result.accessToken, refreshToken: $auth.refreshToken, user: result.user });
+          profilePicture = result.user.profilePicture || defaultProfile;
         } else {
           auth.clearSession();
+          profilePicture = defaultProfile;
         }
       } catch (error) {
         console.error('Failed to validate token and fetch user data:', error);
         auth.clearSession();
+        profilePicture = defaultProfile;
       }
     } else {
       auth.clearSession();
+      profilePicture = defaultProfile;
     }
   }
 
@@ -37,6 +42,15 @@
   // Validate token on every navigation
   $: {
     validateToken();
+  }
+
+  // Update profile picture when auth state changes
+  $: {
+    if ($auth.user && $auth.user.profilePicture) {
+      profilePicture = $auth.user.profilePicture;
+    } else {
+      profilePicture = defaultProfile;
+    }
   }
 
   function openAuthForm() {
@@ -84,7 +98,7 @@
         {#if $isLoggedIn}
           <li class="mx-2 relative flex items-center">
             <button on:click={() => showDropdown = !showDropdown} class="focus:outline-none">
-              <img src={defaultProfile} alt="Profile" class="w-10 h-10 rounded-full">
+              <img src={profilePicture} alt="Profile" class="w-10 h-10 rounded-full object-cover">
             </button>
             <div class="absolute right-0 top-full mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 transition-all duration-200 ease-in-out transform origin-top-right"
                  class:scale-95={!showDropdown}

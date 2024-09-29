@@ -2,12 +2,14 @@
   import { page } from '$app/stores';
   import { isLoggedIn, auth } from '../../../stores/auth';
   import { onMount } from 'svelte';
+  import ReportModal from '$lib/components/ReportModal.svelte';
   
   export let data;
   
   $: offer = data.offer;
 
   let purchaseStatus = '';
+  let showReportModal = false;
 
   async function handleBuy() {
     if ($isLoggedIn) {
@@ -77,4 +79,18 @@
       </div>
     {/each}
   </dl>
+
+  <button
+    on:click={() => showReportModal = true}
+    class="mt-6 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+  >
+    Report Offer
+  </button>
+
+  {#if showReportModal}
+    <ReportModal 
+      offerId={offer._id} 
+      on:close={() => showReportModal = false} 
+    />
+  {/if}
 </div>

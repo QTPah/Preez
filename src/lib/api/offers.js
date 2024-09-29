@@ -59,3 +59,15 @@ export const deleteOffer = async (id) => {
     throw error;
   }
 };
+
+export const reportOffer = async (id, reportData) => {
+  try {
+    const response = await api.post(`/offers/${id}/report`, reportData, {
+      headers: getAuthHeader()
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Error reporting offer with id ${id}:`, error);
+    throw error;
+  }
+};

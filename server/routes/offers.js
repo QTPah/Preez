@@ -119,4 +119,27 @@ router.delete('/:id', authMiddleware, async (req, res) => {
   }
 });
 
+// Report an offer
+router.post('/:id/report', authMiddleware, async (req, res) => {
+  console.log(`POST /api/offers/${req.params.id}/report - Reporting offer`);
+  try {
+    const offer = await Offer.findById(req.params.id);
+    if (!offer) {
+      console.log(`Offer not found: ${req.params.id}`);
+      return res.status(404).json({ success: false, message: 'Offer not found' });
+    }
+    
+    const { reason, description } = req.body;
+    
+    // Here you would typically save the report to a database
+    // For now, we'll just log it
+    console.log(`Offer ${req.params.id} reported by user ${req.user.id}. Reason: ${reason}, Description: ${description}`);
+    
+    res.json({ success: true, message: 'Report submitted successfully' });
+  } catch (error) {
+    console.error(`Error reporting offer ${req.params.id}:`, error);
+    res.status(400).json({ success: false, message: error.message });
+  }
+});
+
 export default router;

@@ -20,7 +20,6 @@
   let password = '';
   let newPassword = '';
   let confirmPassword = '';
-  let message = '';
 
   const sections = [
     { id: 'profile', name: 'Profile' },

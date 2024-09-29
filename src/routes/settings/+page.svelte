@@ -40,6 +40,9 @@
     }
   });
 
+  let message = '';
+  let messageType = '';
+
   async function handleSave() {
     try {
       const updatedSettings = {
@@ -49,6 +52,7 @@
       const result = await updateUserSettings(updatedSettings);
       if (result.success) {
         message = 'Settings saved successfully!';
+        messageType = 'success';
         auth.updateUser({ ...auth.user, settings: updatedSettings });
       } else {
         throw new Error(result.message);
@@ -56,7 +60,14 @@
     } catch (error) {
       console.error('Error saving settings:', error);
       message = 'Failed to save settings. Please try again.';
+      messageType = 'error';
     }
+    
+    // Clear the message after 3 seconds
+    setTimeout(() => {
+      message = '';
+      messageType = '';
+    }, 3000);
   }
 
   async function handlePasswordChange() {
@@ -98,6 +109,12 @@
 
 <div class="container mx-auto px-4 py-8">
   <h1 class="text-3xl font-bold mb-6">Settings</h1>
+  
+  {#if message}
+    <div class={`mb-4 p-2 rounded ${messageType === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+      {message}
+    </div>
+  {/if}
 
   <div class="flex flex-col md:flex-row gap-6">
     <div class="w-full md:w-1/4">

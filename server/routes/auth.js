@@ -120,7 +120,6 @@ router.get('/settings', authMiddleware, async (req, res) => {
 router.put('/settings', authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
-    console.log('user', user);
     if (!user) {
       logger.warn('User not found when updating settings:', req.user.id);
       return res.status(404).json({ success: false, message: 'User not found' });

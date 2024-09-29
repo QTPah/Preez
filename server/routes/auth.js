@@ -126,7 +126,7 @@ router.put('/settings', authMiddleware, async (req, res) => {
     }
     user.settings = { ...user.settings, ...req.body };
     await user.save();
-    logger.info('Settings updated for user:', req.user.id);
+    logger.info('Settings updated for user: ' + req.user.id);
     res.json({ success: true, message: 'Settings updated successfully', settings: user.settings });
   } catch (error) {
     logger.error('Error updating user settings:', error);

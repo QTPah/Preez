@@ -6,21 +6,18 @@ const router = express.Router();
 
 // Get all offers
 router.get('/', async (req, res) => {
-  console.log('GET /api/offers - Fetching all offers');
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const startIndex = (page - 1) * limit;
 
     const total = await Offer.countDocuments();
-    console.log(`Total offers: ${total}`);
     const offers = await Offer.find()
       .populate('seller', 'username _id')
       .sort({ createdAt: -1 })
       .skip(startIndex)
       .limit(limit);
 
-    console.log(`Fetched ${offers.length} offers for page ${page}`);
     res.json({
       success: true,
       offers,

@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   bio: { type: String, default: '' },
+  profilePicture: { type: String, default: '' },
   permissions: {
     createOffer: { type: Boolean, default: true },
     editAnyOffer: { type: Boolean, default: false },

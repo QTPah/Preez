@@ -128,9 +128,18 @@ export const changePassword = async (currentPassword, newPassword) => {
 export const updateUserProfile = async (profileData) => {
   try {
     const accessToken = localStorage.getItem('authToken');
-    const response = await api.put('/profile', profileData, {
+    const formData = new FormData();
+    Object.keys(profileData).forEach(key => {
+      if (key === 'profilePicture' && profileData[key] instanceof File) {
+        formData.append(key, profileData[key]);
+      } else {
+        formData.append(key, profileData[key]);
+      }
+    });
+    const response = await api.put('/profile', formData, {
       headers: {
-        'Authorization': `Bearer ${accessToken}`
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'multipart/form-data'
       }
     });
     return response.data;

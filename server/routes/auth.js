@@ -1,10 +1,26 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
 import User from '../models/User.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 import logger from '../utils/logger.js';
 
 const router = express.Router();
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const dir = './uploads/';
+    fs.mkdirSync(dir, { recursive: true });
+    cb(null, dir);
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ storage: storage });
 
 const generateTokens = (user) => {
   logger.info('Generating tokens for user: ' + user._id);
@@ -157,7 +173,7 @@ router.put('/change-password', authMiddleware, async (req, res) => {
   }
 });
 
-router.put('/profile', authMiddleware, async (req, res) => {
+router.put('/profile', authMiddleware, upload.single('profilePicture'), async (req, res) => {
   try {
     const { username, email, bio } = req.body;
     const user = await User.findById(req.user.id);
@@ -168,9 +184,22 @@ router.put('/profile', authMiddleware, async (req, res) => {
     user.username = username;
     user.email = email;
     user.bio = bio;
+    if (req.file) {
+      user.profilePicture = req.file.path;
+    }
     await user.save();
     logger.info('Profile updated successfully for user: ' + req.user.id);
-    res.json({ success: true, message: 'Profile updated successfully', user: { id: user._id, username: user.username, email: user.email, bio: user.bio } });
+    res.json({ 
+      success: true, 
+      message: 'Profile updated successfully', 
+      user: { 
+        id: user._id, 
+        username: user.username, 
+        email: user.email, 
+        bio: user.bio,
+        profilePicture: user.profilePicture
+      } 
+    });
   } catch (error) {
     logger.error('Error updating profile:', error);
     res.status(400).json({ success: false, message: error.message });

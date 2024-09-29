@@ -1,12 +1,13 @@
 <script>
   import { onMount } from 'svelte';
   import { auth } from '../../stores/auth';
-  import { getAllUsers, addUser, updateUser, deleteUser } from '$lib/api/users';
+  import { getAllUsers, addUser, updateUser, deleteUser, getReports } from '$lib/api/users';
   import { getAllOffers, updateOffer, deleteOffer } from '$lib/api/offers';
 
   let activeTab = 'overview';
   let users = [];
   let offers = [];
+  let reports = [];
   let loading = false;
   let editingUser = null;
   let editingOffer = null;
@@ -20,6 +21,18 @@
     { id: 'reports', name: 'Reports', permission: 'viewReports' },
     { id: 'settings', name: 'Settings', permission: 'manageSettings' }
   ];
+
+  async function loadReports() {
+    loading = true;
+    try {
+      const response = await getReports();
+      reports = response.reports;
+    } catch (error) {
+      console.error('Error loading reports:', error);
+    } finally {
+      loading = false;
+    }
+  }
 
   function hasPermission(permission) {
     if (!permission) return true;

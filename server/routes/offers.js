@@ -119,6 +119,10 @@ router.delete('/:id', authMiddleware, async (req, res) => {
   }
 });
 
+import Report from '../models/Report.js';
+
+// ... (keep existing code)
+
 // Report an offer
 router.post('/:id/report', authMiddleware, async (req, res) => {
   console.log(`POST /api/offers/${req.params.id}/report - Reporting offer`);
@@ -131,9 +135,17 @@ router.post('/:id/report', authMiddleware, async (req, res) => {
     
     const { reason, description } = req.body;
     
-    // Here you would typically save the report to a database
-    // For now, we'll just log it
-    console.log(`Offer ${req.params.id} reported by user ${req.user.id}. Reason: ${reason}, Description: ${description}`);
+    const report = new Report({
+      type: 'offer',
+      targetId: offer._id,
+      reportedBy: req.user.id,
+      reason,
+      description
+    });
+    
+    await report.save();
+    
+    console.log(`Offer ${req.params.id} reported by user ${req.user.id}. Report ID: ${report._id}`);
     
     res.json({ success: true, message: 'Report submitted successfully' });
   } catch (error) {

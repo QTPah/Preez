@@ -80,4 +80,53 @@ router.delete('/:id', authMiddleware, async (req, res) => {
   }
 });
 
+import Report from '../models/Report.js';
+
+// ... (keep existing code)
+
+// Report a user
+router.post('/:id/report', authMiddleware, async (req, res) => {
+  try {
+    const userToReport = await User.findById(req.params.id);
+    if (!userToReport) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    
+    const { reason, description } = req.body;
+    
+    const report = new Report({
+      type: 'user',
+      targetId: userToReport._id,
+      reportedBy: req.user.id,
+      reason,
+      description
+    });
+    
+    await report.save();
+    
+    console.log(`User ${req.params.id} reported by user ${req.user.id}. Report ID: ${report._id}`);
+    
+    res.json({ success: true, message: 'Report submitted successfully' });
+  } catch (error) {
+    console.error(`Error reporting user ${req.params.id}:`, error);
+    res.status(400).json({ success: false, message: error.message });
+  }
+});
+
+// Get all reports (only accessible by admin)
+router.get('/reports', authMiddleware, async (req, res) => {
+  try {
+    if (!req.user.permissions.includes('viewReports')) {
+      return res.status(403).json({ success: false, message: 'Not authorized to view reports' });
+    }
+    const reports = await Report.find()
+      .populate('reportedBy', 'username')
+      .populate('targetId', 'username title');
+    res.json({ success: true, reports });
+  } catch (error) {
+    console.error('Error fetching reports:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
 export default router;

@@ -58,3 +58,15 @@ export const deleteUser = async (userId) => {
     throw error;
   }
 };
+
+export const getReports = async () => {
+  try {
+    const response = await api.get('/users/reports', {
+      headers: getAuthHeader()
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching reports:', error);
+    throw error;
+  }
+};

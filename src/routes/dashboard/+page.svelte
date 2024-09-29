@@ -50,6 +50,7 @@
   }
 
   let showUserModal = false;
+  let newPermission = '';
 
   function editUser(user) {
     editingUser = { ...user };
@@ -58,10 +59,14 @@
 
   async function saveUser() {
     try {
+      const userData = { ...editingUser };
+      if (newPermission && !userData.permissions.includes(newPermission)) {
+        userData.permissions.push(newPermission);
+      }
       if (editingUser._id) {
-        await updateUser(editingUser._id, editingUser);
+        await updateUser(editingUser._id, userData);
       } else {
-        await addUser(editingUser);
+        await addUser(userData);
       }
       loadUsers();
       closeUserModal();
@@ -175,15 +180,35 @@
                        class="mb-3 px-3 py-2 border rounded-lg w-full" />
                 <div class="mb-3">
                   <label class="block text-gray-700 text-sm font-bold mb-2">Permissions</label>
-                  {#each ['manageUsers', 'manageOffers', 'manageCategories', 'viewReports', 'manageSettings'] as permission}
-                    <label class="inline-flex items-center mt-3">
-                      <input type="checkbox" 
-                             bind:group={editingUser.permissions} 
-                             value={permission}
-                             class="form-checkbox h-5 w-5 text-gray-600" />
-                      <span class="ml-2 text-gray-700">{permission}</span>
-                    </label>
-                  {/each}
+                  <div class="flex flex-wrap">
+                    {#each editingUser.permissions as permission}
+                      <span 
+                        class="bg-blue-100 text-blue-800 text-sm font-medium mr-2 mb-2 px-2.5 py-0.5 rounded cursor-pointer hover:line-through"
+                        on:click={() => editingUser.permissions = editingUser.permissions.filter(p => p !== permission)}
+                      >
+                        {permission}
+                      </span>
+                    {/each}
+                  </div>
+                  <div class="flex mt-2">
+                    <input 
+                      type="text" 
+                      placeholder="Add new permission" 
+                      class="flex-grow mr-2 px-3 py-2 border rounded-lg"
+                      bind:value={newPermission}
+                    />
+                    <button 
+                      on:click={() => {
+                        if (newPermission && !editingUser.permissions.includes(newPermission)) {
+                          editingUser.permissions = [...editingUser.permissions, newPermission];
+                          newPermission = '';
+                        }
+                      }}
+                      class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+                    >
+                      Add
+                    </button>
+                  </div>
                 </div>
                 {#if !editingUser._id}
                   <input type="password" placeholder="Password" bind:value={editingUser.password}

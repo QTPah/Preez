@@ -41,7 +41,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
     if (!req.user.permissions.includes('manageUsers')) {
       return res.status(403).json({ success: false, message: 'Not authorized to update users' });
     }
-    const { username, email, permissions } = req.body;
+    const { username, email, permissions, newPermission } = req.body;
     const user = await User.findById(req.params.id);
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
@@ -49,6 +49,9 @@ router.put('/:id', authMiddleware, async (req, res) => {
     user.username = username;
     user.email = email;
     user.permissions = permissions;
+    if (newPermission && !user.permissions.includes(newPermission)) {
+      user.permissions.push(newPermission);
+    }
     if (req.body.password) {
       user.password = await bcrypt.hash(req.body.password, 10);
     }

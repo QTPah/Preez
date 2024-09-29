@@ -1,4 +1,4 @@
-import { writable, derived } from 'svelte/store';
+import { writable, derived, get } from 'svelte/store';
 import { browser } from '$app/environment';
 
 const initialState = {
@@ -71,9 +71,10 @@ const createAuthStore = () => {
       });
     },
     getUserSettings: async () => {
+      const { accessToken } = get(auth);
       const response = await fetch('/api/auth/settings', {
         headers: {
-          'Authorization': `Bearer ${$auth.accessToken}`
+          'Authorization': `Bearer ${accessToken}`
         }
       });
       if (!response.ok) {

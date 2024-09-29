@@ -21,10 +21,13 @@
 
   onMount(() => {
     userPermissions = $auth.user?.permissions;
+    console.log('User permissions:', userPermissions);
   });
 
   function hasPermission(permission) {
-    return permission === null || userPermissions[permission];
+    console.log('Checking permission:', permission);
+    console.log('User permissions:', permission == null || userPermissions[permission.trim()]);
+    return permission === null || userPermissions[permission.trim()];
   }
 
   async function loadUsers() {

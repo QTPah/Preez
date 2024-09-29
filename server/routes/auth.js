@@ -70,7 +70,22 @@ router.post('/login', async (req, res) => {
       success: true,
       accessToken,
       refreshToken,
-      user: { id: user._id, username: user.username, email: user.email, permissions: user.permissions }
+      user: { 
+        id: user._id, 
+        username: user.username, 
+        email: user.email, 
+        permissions: {
+          createOffer: user.permissions.createOffer,
+          editAnyOffer: user.permissions.editAnyOffer,
+          deleteAnyOffer: user.permissions.deleteAnyOffer,
+          adminAccess: user.permissions.adminAccess,
+          manageUsers: user.permissions.manageUsers,
+          manageOffers: user.permissions.manageOffers,
+          manageCategories: user.permissions.manageCategories,
+          viewReports: user.permissions.viewReports,
+          manageSettings: user.permissions.manageSettings
+        }
+      }
     });
   } catch (error) {
     console.error('Login error:', error);

@@ -21,7 +21,12 @@ const updateUserPermissions = async () => {
             createOffer: true,
             editAnyOffer: false,
             deleteAnyOffer: false,
-            adminAccess: false
+            adminAccess: false,
+            manageUsers: false,
+            manageOffers: false,
+            manageCategories: false,
+            viewReports: false,
+            manageSettings: false
           }
         }
       }

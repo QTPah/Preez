@@ -122,8 +122,10 @@
 
   async function handleDeleteProfilePicture() {
     try {
-      const result = await deleteProfilePicture();
-      
+      deleteProfilePicture = true;
+      const result = await updateUserProfile({ username, email, bio, profilePicture, deleteProfilePicture });
+ 
+
       if (result.success) {
         message = 'Profile picture deleted successfully!';
         messageType = 'success';

@@ -274,6 +274,38 @@
                        class="mb-3 px-3 py-2 border rounded-lg w-full" />
                 <textarea placeholder="Description" bind:value={editingOffer.description}
                           class="mb-3 px-3 py-2 border rounded-lg w-full" rows="3"></textarea>
+                <div class="mb-3">
+                  <label class="block text-gray-700 text-sm font-bold mb-2">Tags</label>
+                  <div class="flex flex-wrap">
+                    {#each editingOffer.tags as tag}
+                      <span 
+                        class="bg-green-100 text-green-800 text-sm font-medium mr-2 mb-2 px-2.5 py-0.5 rounded cursor-pointer hover:line-through"
+                        on:click={() => editingOffer.tags = editingOffer.tags.filter(t => t !== tag)}
+                      >
+                        {tag}
+                      </span>
+                    {/each}
+                  </div>
+                  <div class="flex mt-2">
+                    <input 
+                      type="text" 
+                      placeholder="Add new tag" 
+                      class="flex-grow mr-2 px-3 py-2 border rounded-lg"
+                      bind:value={newTag}
+                    />
+                    <button 
+                      on:click={() => {
+                        if (newTag && !editingOffer.tags.includes(newTag)) {
+                          editingOffer.tags = [...editingOffer.tags, newTag];
+                          newTag = '';
+                        }
+                      }}
+                      class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
               </div>
               <div class="items-center px-4 py-3">
                 <button on:click={saveOffer}

@@ -73,7 +73,7 @@ const createAuthStore = () => {
     getUserSettings: async () => {
       const response = await fetch('/api/auth/settings', {
         headers: {
-          'Authorization': `Bearer ${get(auth).accessToken}`
+          'Authorization': `Bearer ${$auth.accessToken}`
         }
       });
       if (!response.ok) {

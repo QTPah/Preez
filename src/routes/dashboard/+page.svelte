@@ -5,7 +5,6 @@
   import { getAllOffers } from '$lib/api/offers';
 
   let activeTab = 'overview';
-  let userPermissions = {};
   let users = [];
   let offers = [];
   let loading = false;
@@ -19,15 +18,9 @@
     { id: 'settings', name: 'Settings', permission: 'manageSettings' }
   ];
 
-  onMount(() => {
-    userPermissions = $auth.user?.permissions;
-    console.log('User permissions:', userPermissions);
-  });
-
   function hasPermission(permission) {
-    console.log('Checking permission:', permission);
-    console.log('User permissions:', permission == null || userPermissions[permission.trim()]);
-    return permission === null || userPermissions[permission.trim()];
+    if (!permission) return true;
+    return $auth.user?.permissions?.includes(permission);
   }
 
   async function loadUsers() {

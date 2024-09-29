@@ -20,6 +20,7 @@
 
   function hasPermission(permission) {
     if (!permission) return true;
+    console.log($auth.user);
     return $auth.user?.permissions?.includes(permission);
   }
 

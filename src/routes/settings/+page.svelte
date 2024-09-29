@@ -6,16 +6,14 @@
   let activeSection = 'profile';
   let username = $auth.user?.username || '';
   let email = $auth.user?.email || '';
-  let notificationPreferences = {
+  let settings = {
+    profileVisibility: 'public',
+    showEmail: false,
+    allowMessaging: true,
     emailNotifications: true,
     pushNotifications: false,
     offerUpdates: true,
     marketingEmails: false
-  };
-  let privacySettings = {
-    profileVisibility: 'public',
-    showEmail: false,
-    allowMessaging: true
   };
   let password = '';
   let newPassword = '';
@@ -31,8 +29,10 @@
   onMount(async () => {
     try {
       const userSettings = await auth.getUserSettings();
-      notificationPreferences = { ...notificationPreferences, ...userSettings.notificationPreferences };
-      privacySettings = { ...privacySettings, ...userSettings.privacySettings };
+      console.log('User settings:', userSettings);
+      if (userSettings) {
+        settings = userSettings.settings;
+      }
     } catch (error) {
       console.error('Error fetching user settings:', error);
       message = 'Failed to load user settings. Please try again.';
@@ -44,15 +44,11 @@
 
   async function handleSave() {
     try {
-      const updatedSettings = {
-        notificationPreferences,
-        privacySettings
-      };
-      const result = await updateUserSettings(updatedSettings);
+      const result = await updateUserSettings(settings);
       if (result.success) {
         message = 'Settings saved successfully!';
         messageType = 'success';
-        auth.updateUser({ ...auth.user, settings: updatedSettings });
+        auth.updateUser({ ...auth.user, settings });
       } else {
         throw new Error(result.message);
       }
@@ -194,25 +190,25 @@
           <h2 class="text-2xl font-semibold mb-4">Notification Preferences</h2>
           <div class="mb-4">
             <label class="flex items-center">
-              <input type="checkbox" bind:checked={notificationPreferences.emailNotifications} class="mr-2">
+              <input type="checkbox" bind:checked={settings.emailNotifications} class="mr-2">
               Receive email notifications
             </label>
           </div>
           <div class="mb-4">
             <label class="flex items-center">
-              <input type="checkbox" bind:checked={notificationPreferences.pushNotifications} class="mr-2">
+              <input type="checkbox" bind:checked={settings.pushNotifications} class="mr-2">
               Receive push notifications
             </label>
           </div>
           <div class="mb-4">
             <label class="flex items-center">
-              <input type="checkbox" bind:checked={notificationPreferences.offerUpdates} class="mr-2">
+              <input type="checkbox" bind:checked={settings.offerUpdates} class="mr-2">
               Receive updates about your offers
             </label>
           </div>
           <div class="mb-4">
             <label class="flex items-center">
-              <input type="checkbox" bind:checked={notificationPreferences.marketingEmails} class="mr-2">
+              <input type="checkbox" bind:checked={settings.marketingEmails} class="mr-2">
               Receive marketing emails
             </label>
           </div>
@@ -222,7 +218,7 @@
             <label for="profile-visibility" class="block text-sm font-medium text-gray-700 mb-1">Profile Visibility</label>
             <select
               id="profile-visibility"
-              bind:value={privacySettings.profileVisibility}
+              bind:value={settings.profileVisibility}
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="public">Public</option>
@@ -232,13 +228,13 @@
           </div>
           <div class="mb-4">
             <label class="flex items-center">
-              <input type="checkbox" bind:checked={privacySettings.showEmail} class="mr-2">
+              <input type="checkbox" bind:checked={settings.showEmail} class="mr-2">
               Show email on profile
             </label>
           </div>
           <div class="mb-4">
             <label class="flex items-center">
-              <input type="checkbox" bind:checked={privacySettings.allowMessaging} class="mr-2">
+              <input type="checkbox" bind:checked={settings.allowMessaging} class="mr-2">
               Allow other users to message you
             </label>
           </div>

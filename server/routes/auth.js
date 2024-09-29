@@ -109,7 +109,7 @@ router.get('/settings', authMiddleware, async (req, res) => {
       logger.warn('User not found when fetching settings: ' + req.user.id);
       return res.status(404).json({ success: false, message: 'User not found' });
     }
-    logger.info('Settings fetched for user:', req.user.id);
+    logger.info('Settings fetched for user: ' + req.user.id);
     res.json({ success: true, settings: user.settings });
   } catch (error) {
     logger.error('Error fetching user settings:', error);

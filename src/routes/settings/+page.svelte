@@ -294,6 +294,12 @@
               Receive marketing emails
             </label>
           </div>
+          <div class="mb-4">
+            <label class="flex items-center">
+              <input type="checkbox" bind:checked={settings.darkMode} class="mr-2">
+              Dark Mode
+            </label>
+          </div>
         {:else if activeSection === 'privacy'}
           <h2 class="text-2xl font-semibold mb-4">Privacy Settings</h2>
           <div class="mb-4">

@@ -15,7 +15,8 @@ const userSchema = new mongoose.Schema({
     emailNotifications: { type: Boolean, default: true },
     pushNotifications: { type: Boolean, default: false },
     offerUpdates: { type: Boolean, default: true },
-    marketingEmails: { type: Boolean, default: false }
+    marketingEmails: { type: Boolean, default: false },
+    darkMode: { type: Boolean, default: false }
   },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }

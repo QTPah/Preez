@@ -3,6 +3,7 @@
   import { page } from '$app/stores';
   import { onMount } from 'svelte';
   import { auth, isLoggedIn } from '../stores/auth';
+  import { theme } from '../stores/theme';
   import { login, register, logout, validateTokenAndFetchUser } from '$lib/api/auth';
   import AuthForm from '$lib/components/AuthForm.svelte';
   import { clickOutside } from '$lib/actions/clickOutside';
@@ -87,7 +88,7 @@
   }
 </script>
 
-<div class="flex flex-col min-h-screen">
+<div class="flex flex-col min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
   <nav class="bg-gray-800 text-white p-2 sm:p-4" use:clickOutside on:click_outside={() => showDropdown = false}>
     <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center">
       <a href="/" class="text-2xl font-bold mb-2 sm:mb-0">Preez</a>
@@ -100,7 +101,7 @@
             <button on:click={() => showDropdown = !showDropdown} class="focus:outline-none">
               <img src={profilePicture} alt="Profile" class="w-10 h-10 rounded-full object-cover">
             </button>
-            <div class="absolute right-0 top-full mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 transition-all duration-200 ease-in-out transform origin-top-right"
+            <div class="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-10 transition-all duration-200 ease-in-out transform origin-top-right"
                  class:scale-95={!showDropdown}
                  class:scale-100={showDropdown}
                  class:opacity-0={!showDropdown}
@@ -109,10 +110,10 @@
                  class:pointer-events-auto={showDropdown}>
               {#if showDropdown}
                 {#if $auth.user?.permissions?.includes('viewDashboard')}
-                  <a href="/dashboard" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</a>
+                  <a href="/dashboard" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Dashboard</a>
                 {/if}
-                <a href="/settings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
-                <button on:click={handleLogout} class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
+                <a href="/settings" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Settings</a>
+                <button on:click={handleLogout} class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Logout</button>
               {/if}
             </div>
           </li>
@@ -123,6 +124,11 @@
             </button>
           </li>
         {/if}
+        <li class="mx-2 my-1">
+          <button on:click={theme.toggleTheme} class="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100">
+            {$theme === 'dark' ? '☀️' : '🌙'}
+          </button>
+        </li>
       </ul>
     </div>
   </nav>

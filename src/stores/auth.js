@@ -81,6 +81,22 @@ const createAuthStore = () => {
         throw new Error('Failed to fetch user settings');
       }
       return response.json();
+    },
+    toggleDarkMode: () => {
+      update(state => {
+        const newDarkMode = !state.user.settings.darkMode;
+        const newUser = {
+          ...state.user,
+          settings: {
+            ...state.user.settings,
+            darkMode: newDarkMode
+          }
+        };
+        if (browser) {
+          localStorage.setItem('authUser', JSON.stringify(newUser));
+        }
+        return { ...state, user: newUser };
+      });
     }
   };
 };

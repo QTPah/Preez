@@ -48,7 +48,10 @@
   <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
     {#each tabs as tab}
       {#if activeTab === tab.id && hasPermission(tab.permission)}
-        <svelte:component this={tab.component} />
+        <svelte:component 
+          this={tab.component} 
+          userId={tab.id === 'users' ? $page.url.searchParams.get('userId') : null}
+        />
       {/if}
     {/each}
   </div>

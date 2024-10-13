@@ -74,7 +74,7 @@ export const reportOffer = async (id, reportData) => {
 
 export const getAllOfferReports = async () => {
   try {
-    const response = await api.get('/reports/offers', {
+    const response = await api.get('/offers/reports/offers', {
       headers: getAuthHeader()
     });
     return response.data;
@@ -86,7 +86,7 @@ export const getAllOfferReports = async () => {
 
 export const updateOfferReportStatus = async (reportId, action) => {
   try {
-    const response = await api.patch(`/reports/offers/${reportId}`, { action }, {
+    const response = await api.patch(`/offers/reports/offers/${reportId}`, { action }, {
       headers: getAuthHeader()
     });
     return response.data;

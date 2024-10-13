@@ -127,7 +127,7 @@ export const changePassword = async (currentPassword, newPassword) => {
 
 export const getAllUserReports = async () => {
   try {
-    const response = await api.get('/reports/users', {
+    const response = await api.get('/auth/reports/users', {
       headers: getAuthHeader()
     });
     return response.data;
@@ -139,7 +139,7 @@ export const getAllUserReports = async () => {
 
 export const updateUserReportStatus = async (reportId, action) => {
   try {
-    const response = await api.patch(`/reports/users/${reportId}`, { action }, {
+    const response = await api.patch(`/auth/reports/users/${reportId}`, { action }, {
       headers: getAuthHeader()
     });
     return response.data;

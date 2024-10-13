@@ -71,3 +71,27 @@ export const reportOffer = async (id, reportData) => {
     throw error;
   }
 };
+
+export const getAllOfferReports = async () => {
+  try {
+    const response = await api.get('/reports/offers', {
+      headers: getAuthHeader()
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching offer reports:', error);
+    throw error;
+  }
+};
+
+export const updateOfferReportStatus = async (reportId, action) => {
+  try {
+    const response = await api.patch(`/reports/offers/${reportId}`, { action }, {
+      headers: getAuthHeader()
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error updating offer report status:', error);
+    throw error;
+  }
+};

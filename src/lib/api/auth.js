@@ -1,10 +1,17 @@
 import axios from 'axios';
+import { auth } from '../../stores/auth';
+import { get } from 'svelte/store';
 
 const API_URL = '/api/auth';
 
 const api = axios.create({
   baseURL: API_URL,
 });
+
+const getAuthHeader = () => {
+  const authStore = get(auth);
+  return { Authorization: `Bearer ${authStore.accessToken}` };
+};
 
 let refreshTokenRequest = null;
 
@@ -127,7 +134,7 @@ export const changePassword = async (currentPassword, newPassword) => {
 
 export const getAllUserReports = async () => {
   try {
-    const response = await api.get('/auth/reports/users', {
+    const response = await api.get('/reports/users', {
       headers: getAuthHeader()
     });
     return response.data;
@@ -139,7 +146,7 @@ export const getAllUserReports = async () => {
 
 export const updateUserReportStatus = async (reportId, action) => {
   try {
-    const response = await api.patch(`/auth/reports/users/${reportId}`, { action }, {
+    const response = await api.patch(`/reports/users/${reportId}`, { action }, {
       headers: getAuthHeader()
     });
     return response.data;

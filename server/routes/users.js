@@ -129,4 +129,35 @@ router.get('/reports', authMiddleware, async (req, res) => {
   }
 });
 
+// Update report status
+router.patch('/reports/:reportId', authMiddleware, async (req, res) => {
+  try {
+    if (!req.user.permissions.includes('manageReports')) {
+      return res.status(403).json({ success: false, message: 'Not authorized to manage reports' });
+    }
+
+    const { reportId } = req.params;
+    const { action } = req.body;
+
+    if (!['resolve', 'reject'].includes(action)) {
+      return res.status(400).json({ success: false, message: 'Invalid action' });
+    }
+
+    const report = await Report.findByIdAndUpdate(
+      reportId,
+      { status: action === 'resolve' ? 'resolved' : 'rejected' },
+      { new: true }
+    );
+
+    if (!report) {
+      return res.status(404).json({ success: false, message: 'Report not found' });
+    }
+
+    res.json({ success: true, report });
+  } catch (error) {
+    console.error('Error updating report status:', error);
+    res.status(500).json({ success: false, message: 'Error updating report status', error: error.message });
+  }
+});
+
 export default router;

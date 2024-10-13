@@ -154,4 +154,8 @@ router.post('/:id/report', authMiddleware, async (req, res) => {
   }
 });
 
+// New routes for offer reports
+router.get('/reports/offers', authMiddleware, getAllOfferReports);
+router.patch('/reports/offers/:reportId', authMiddleware, updateOfferReportStatus);
+
 export default router;

@@ -254,4 +254,8 @@ router.delete('/profile-picture', authMiddleware, async (req, res) => {
   }
 });
 
+// New routes for user reports
+router.get('/reports/users', authMiddleware, getAllUserReports);
+router.patch('/reports/users/:reportId', authMiddleware, updateUserReportStatus);
+
 export default router;

@@ -1,13 +1,12 @@
 <script>
   import { onMount } from 'svelte';
   import { auth } from '../../stores/auth';
-  import { getAllUsers, addUser, updateUser, deleteUser, getReports } from '$lib/api/users';
+  import { getAllUsers, addUser, updateUser, deleteUser } from '$lib/api/users';
   import { getAllOffers, updateOffer, deleteOffer } from '$lib/api/offers';
 
   let activeTab = 'overview';
   let users = [];
   let offers = [];
-  let reports = [];
   let loading = false;
   let editingUser = null;
   let editingOffer = null;
@@ -21,18 +20,6 @@
     { id: 'reports', name: 'Reports', permission: 'viewReports' },
     { id: 'settings', name: 'Settings', permission: 'manageSettings' }
   ];
-
-  async function loadReports() {
-    loading = true;
-    try {
-      const response = await getReports();
-      reports = response.reports;
-    } catch (error) {
-      console.error('Error loading reports:', error);
-    } finally {
-      loading = false;
-    }
-  }
 
   function hasPermission(permission) {
     if (!permission) return true;
@@ -145,35 +132,12 @@
     }
   }
 
-  function navigateToUser(userId) {
-    activeTab = 'users';
-    // You might want to implement a way to scroll to or highlight the specific user
-    // For now, we'll just switch to the users tab
-    loadUsers();
-  }
-
   $: if (activeTab === 'users' && hasPermission('manageUsers')) {
     loadUsers();
   }
 
   $: if (activeTab === 'offers' && hasPermission('manageOffers')) {
     loadOffers();
-  }
-
-  $: if (activeTab === 'reports' && hasPermission('viewReports')) {
-    loadReports();
-  }
-
-  async function loadReports() {
-    loading = true;
-    try {
-      const response = await getReports();
-      reports = response.reports;
-    } catch (error) {
-      console.error('Error loading reports:', error);
-    } finally {
-      loading = false;
-    }
   }
 </script>
 
@@ -367,7 +331,6 @@
               <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Title</th>
               <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Price</th>
               <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Category</th>
-              <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Seller</th>
               <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
@@ -377,14 +340,6 @@
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{offer.title}</td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">${offer.price}</td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{offer.category}</td>
-                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
-                  <button 
-                    on:click={() => navigateToUser(offer.seller._id)} 
-                    class="text-blue-600 hover:text-blue-900"
-                  >
-                    {offer.seller.username}
-                  </button>
-                </td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
                   <button on:click={() => editOffer(offer)} class="text-blue-600 hover:text-blue-900">Edit</button>
                   <button on:click={() => deleteOfferConfirm(offer._id)} class="ml-2 text-red-600 hover:text-red-900">Delete</button>
@@ -458,56 +413,7 @@
       <p>Manage offer categories and subcategories.</p>
     {:else if activeTab === 'reports' && hasPermission('viewReports')}
       <h2 class="text-2xl font-bold mb-4">Reports</h2>
-      {#if loading}
-        <p>Loading reports...</p>
-      {:else}
-        <div class="mb-6">
-          <h3 class="text-xl font-semibold mb-2">Offer Reports</h3>
-          <table class="min-w-full">
-            <thead>
-              <tr>
-                <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Offer</th>
-                <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reported By</th>
-                <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reason</th>
-                <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {#each reports.filter(report => report.type === 'offer') as report}
-                <tr>
-                  <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.targetId.title}</td>
-                  <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.reportedBy.username}</td>
-                  <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.reason}</td>
-                  <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.status}</td>
-                </tr>
-              {/each}
-            </tbody>
-          </table>
-        </div>
-        <div>
-          <h3 class="text-xl font-semibold mb-2">User Reports</h3>
-          <table class="min-w-full">
-            <thead>
-              <tr>
-                <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">User</th>
-                <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reported By</th>
-                <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reason</th>
-                <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {#each reports.filter(report => report.type === 'user') as report}
-                <tr>
-                  <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.targetId.username}</td>
-                  <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.reportedBy.username}</td>
-                  <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.reason}</td>
-                  <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.status}</td>
-                </tr>
-              {/each}
-            </tbody>
-          </table>
-        </div>
-      {/if}
+      <p>View and analyze platform statistics and user reports.</p>
     {:else if activeTab === 'settings' && hasPermission('manageSettings')}
       <h2 class="text-2xl font-bold mb-4">Platform Settings</h2>
       <p>Configure global settings for the platform.</p>

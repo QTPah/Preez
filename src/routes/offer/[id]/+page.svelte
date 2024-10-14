@@ -11,6 +11,20 @@
   let purchaseStatus = '';
   let showReportModal = false;
 
+  const tagColors = [
+    'bg-blue-500',
+    'bg-green-500',
+    'bg-purple-500',
+    'bg-red-500',
+    'bg-yellow-500',
+    'bg-indigo-500',
+    'bg-pink-500',
+  ];
+
+  function getTagColor(index) {
+    return tagColors[index % tagColors.length];
+  }
+
   async function handleBuy() {
     if ($isLoggedIn) {
       try {
@@ -47,8 +61,10 @@
   <h1 class="text-3xl font-bold mb-4">{offer.title}</h1>
   
   <div class="flex flex-wrap gap-2 mb-4">
-    {#each offer.tags as tag}
-      <span class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-sm dark:bg-gray-800 dark:text-white">{tag}</span>
+    {#each offer.tags as tag, index}
+      <span class="{getTagColor(index)} text-white text-xs font-semibold px-2 py-1 rounded">
+        {tag}
+      </span>
     {/each}
   </div>
   

@@ -1,25 +1,34 @@
 import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
-import { auth } from './auth';
 
 function createThemeStore() {
-  const { subscribe, set } = writable(browser && localStorage.getItem('theme') || 'light');
+  const storedTheme = browser && localStorage.getItem('theme');
+  const initialTheme = storedTheme || 'light';
+  
+  if (browser) {
+    document.documentElement.classList.toggle('dark', initialTheme === 'dark');
+  }
 
-  auth.subscribe(($auth) => {
-    if ($auth.user && $auth.user.settings) {
-      const theme = $auth.user.settings.darkMode ? 'dark' : 'light';
-      set(theme);
-      if (browser) {
-        localStorage.setItem('theme', theme);
-        document.documentElement.classList.toggle('dark', theme === 'dark');
-      }
-    }
-  });
+  const { subscribe, set, update } = writable(initialTheme);
 
   return {
     subscribe,
     toggleTheme: () => {
-      auth.toggleDarkMode();
+      update(currentTheme => {
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        if (browser) {
+          localStorage.setItem('theme', newTheme);
+          document.documentElement.classList.toggle('dark', newTheme === 'dark');
+        }
+        return newTheme;
+      });
+    },
+    setTheme: (newTheme) => {
+      set(newTheme);
+      if (browser) {
+        localStorage.setItem('theme', newTheme);
+        document.documentElement.classList.toggle('dark', newTheme === 'dark');
+      }
     }
   };
 }

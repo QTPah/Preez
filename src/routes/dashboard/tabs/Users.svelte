@@ -105,21 +105,21 @@
 
 {#if showUserModal}
   <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" on:click={closeUserModal}>
-    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white"
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-gray-900"
          on:click|stopPropagation>
       <div class="mt-3 text-center">
-        <h3 class="text-lg leading-6 font-medium text-gray-900">{editingUser._id ? 'Edit User' : 'Add New User'}</h3>
+        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">{editingUser._id ? 'Edit User' : 'Add New User'}</h3>
         <div class="mt-2 px-7 py-3">
           <input type="text" placeholder="Username" bind:value={editingUser.username}
-                 class="mb-3 px-3 py-2 border rounded-lg w-full" />
+                 class="mb-3 px-3 py-2 border rounded-lg w-full dark:bg-gray-800 dark:text-white" />
           <input type="email" placeholder="Email" bind:value={editingUser.email}
-                 class="mb-3 px-3 py-2 border rounded-lg w-full" />
+                 class="mb-3 px-3 py-2 border rounded-lg w-full dark:bg-gray-800 dark:text-white" />
           <div class="mb-3">
-            <label class="block text-gray-700 text-sm font-bold mb-2">Permissions</label>
+            <label class="block text-gray-700 dark:text-gray-400 text-sm font-bold mb-2">Permissions</label>
             <div class="flex flex-wrap">
               {#each editingUser.permissions as permission}
                 <span 
-                  class="bg-blue-100 text-blue-800 text-sm font-medium mr-2 mb-2 px-2.5 py-0.5 rounded cursor-pointer hover:line-through"
+                  class="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 text-sm font-medium mr-2 mb-2 px-2.5 py-0.5 rounded cursor-pointer hover:line-through"
                   on:click={() => editingUser.permissions = editingUser.permissions.filter(p => p !== permission)}
                 >
                   {permission}
@@ -130,7 +130,7 @@
               <input 
                 type="text" 
                 placeholder="Add new permission" 
-                class="flex-grow mr-2 px-3 py-2 border rounded-lg"
+                class="flex-grow mr-2 px-3 py-2 border rounded-lg dark:bg-gray-800 dark:text-white"
                 bind:value={newPermission}
               />
               <button 
@@ -148,7 +148,7 @@
           </div>
           {#if !editingUser._id}
             <input type="password" placeholder="Password" bind:value={editingUser.password}
-                   class="mb-3 px-3 py-2 border rounded-lg w-full" />
+                   class="mb-3 px-3 py-2 border rounded-lg w-full dark:bg-gray-800 dark:text-white" />
           {/if}
         </div>
         <div class="items-center px-4 py-3">

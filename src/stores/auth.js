@@ -81,8 +81,7 @@ const createAuthStore = () => {
         throw new Error('Failed to fetch user settings');
       }
       return response.json();
-    },
-    // Remove toggleDarkMode function
+    }
   };
 };
 

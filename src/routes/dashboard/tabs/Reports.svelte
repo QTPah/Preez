@@ -7,6 +7,7 @@
   let userReports = [];
   let offerReports = [];
   let loading = false;
+  let sortOrder = 'newest';
 
   onMount(loadReports);
 
@@ -29,11 +30,29 @@
         console.error('Error loading offer details:', error);
       }
 
+      sortReports();
     } catch (error) {
       console.error('Error loading reports:', error);
     } finally {
       loading = false;
     }
+  }
+
+  function sortReports() {
+    const sortFn = (a, b) => {
+      if (a.status !== 'pending' && b.status === 'pending') return 1;
+      if (a.status === 'pending' && b.status !== 'pending') return -1;
+      return sortOrder === 'newest' 
+        ? new Date(b.createdAt) - new Date(a.createdAt)
+        : new Date(a.createdAt) - new Date(b.createdAt);
+    };
+    userReports = userReports.sort(sortFn);
+    offerReports = offerReports.sort(sortFn);
+  }
+
+  function handleSortChange(event) {
+    sortOrder = event.target.value;
+    sortReports();
   }
 
   function redirectToUser(userId) {
@@ -60,6 +79,14 @@
 
 <h2 class="text-2xl font-bold mb-4">Reports</h2>
 
+<div class="mb-4">
+  <label for="sort-order" class="mr-2">Sort by:</label>
+  <select id="sort-order" on:change={handleSortChange} class="border rounded p-1">
+    <option value="newest">Newest</option>
+    <option value="oldest">Oldest</option>
+  </select>
+</div>
+
 {#if loading}
   <p>Loading reports...</p>
 {:else}
@@ -70,6 +97,8 @@
         <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reported User</th>
         <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reporter</th>
         <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reason</th>
+        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Description</th>
+        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Date</th>
         <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Status</th>
         <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Actions</th>
       </tr>
@@ -94,6 +123,8 @@
             </button>
           </td>
           <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.reason}</td>
+          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.description}</td>
+          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{new Date(report.createdAt).toLocaleDateString()}</td>
           <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.status}</td>
           <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
             {#if report.status === 'pending'}
@@ -125,6 +156,8 @@
         <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reported Offer</th>
         <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reporter</th>
         <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reason</th>
+        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Description</th>
+        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Date</th>
         <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Status</th>
         <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Actions</th>
       </tr>
@@ -149,6 +182,8 @@
             </button>
           </td>
           <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.reason}</td>
+          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.description}</td>
+          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{new Date(report.createdAt).toLocaleDateString()}</td>
           <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.status}</td>
           <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
             {#if report.status === 'pending'}

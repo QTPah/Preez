@@ -48,7 +48,7 @@
   
   <div class="flex flex-wrap gap-2 mb-4">
     {#each offer.tags as tag}
-      <span class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-sm">{tag}</span>
+      <span class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-sm dark:bg-gray-800 dark:text-white">{tag}</span>
     {/each}
   </div>
   

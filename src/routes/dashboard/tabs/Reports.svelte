@@ -3,11 +3,21 @@
   import { getAllUserReports, updateUserReportStatus } from '$lib/api/users';
   import { getAllOfferReports, updateOfferReportStatus, getOfferById } from '$lib/api/offers';
   import { goto } from '$app/navigation';
+  import ReportReviewModal from '$lib/components/ReportReviewModal.svelte';
 
   let userReports = [];
   let offerReports = [];
   let loading = false;
   let sortOrder = 'newest';
+  let showModal = false;
+  let selectedReport = null;
+  let selectedReportType = '';
+
+  function showReviewModal(report, type) {
+    selectedReport = report;
+    selectedReportType = type;
+    showModal = true;
+  }
 
   onMount(loadReports);
 
@@ -97,7 +107,6 @@
         <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reported User</th>
         <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reporter</th>
         <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reason</th>
-        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Description</th>
         <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Date</th>
         <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Status</th>
         <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Actions</th>
@@ -123,26 +132,15 @@
             </button>
           </td>
           <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.reason}</td>
-          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.description}</td>
           <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{new Date(report.createdAt).toLocaleDateString()}</td>
           <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.status}</td>
           <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
-            {#if report.status === 'pending'}
-              <button 
-                on:click={() => handleReportAction(report._id, 'resolve', 'user')}
-                class="bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-2 rounded mr-2"
-              >
-                Resolve
-              </button>
-              <button 
-                on:click={() => handleReportAction(report._id, 'reject', 'user')}
-                class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded"
-              >
-                Reject
-              </button>
-            {:else}
-              <span class="text-gray-500">No actions available</span>
-            {/if}
+            <button 
+              on:click={() => showReviewModal(report, 'user')}
+              class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded"
+            >
+              Review
+            </button>
           </td>
         </tr>
       {/each}
@@ -156,7 +154,6 @@
         <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reported Offer</th>
         <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reporter</th>
         <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reason</th>
-        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Description</th>
         <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Date</th>
         <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Status</th>
         <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Actions</th>
@@ -182,29 +179,28 @@
             </button>
           </td>
           <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.reason}</td>
-          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.description}</td>
           <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{new Date(report.createdAt).toLocaleDateString()}</td>
           <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.status}</td>
           <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
-            {#if report.status === 'pending'}
-              <button 
-                on:click={() => handleReportAction(report._id, 'resolve', 'offer')}
-                class="bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-2 rounded mr-2"
-              >
-                Resolve
-              </button>
-              <button 
-                on:click={() => handleReportAction(report._id, 'reject', 'offer')}
-                class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded"
-              >
-                Reject
-              </button>
-            {:else}
-              <span class="text-gray-500">No actions available</span>
-            {/if}
+            <button 
+              on:click={() => showReviewModal(report, 'offer')}
+              class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded"
+            >
+              Review
+            </button>
           </td>
         </tr>
       {/each}
     </tbody>
   </table>
+{/if}
+
+{#if showModal}
+  <ReportReviewModal
+    report={selectedReport}
+    reportType={selectedReportType}
+    on:close={() => showModal = false}
+    on:resolve={(event) => handleReportAction(event.detail.reportId, 'resolve', selectedReportType)}
+    on:reject={(event) => handleReportAction(event.detail.reportId, 'reject', selectedReportType)}
+  />
 {/if}

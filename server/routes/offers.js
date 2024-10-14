@@ -1,8 +1,14 @@
 import express from 'express';
 import Offer from '../models/Offer.js';
 import authMiddleware from '../middleware/authMiddleware.js';
+import { getAllOfferReports, updateOfferReportStatus } from '../controllers/offerController.js';
 
 const router = express.Router();
+
+
+// New routes for offer reports
+router.get('/reports', authMiddleware, getAllOfferReports);
+router.patch('/reports/:reportId', authMiddleware, updateOfferReportStatus);
 
 // Get all offers
 router.get('/', async (req, res) => {
@@ -136,7 +142,7 @@ router.post('/:id/report', authMiddleware, async (req, res) => {
     const { reason, description } = req.body;
     
     const report = new Report({
-      type: 'offer',
+      reportType: 'offer',
       targetId: offer._id,
       reportedBy: req.user.id,
       reason,
@@ -153,9 +159,5 @@ router.post('/:id/report', authMiddleware, async (req, res) => {
     res.status(400).json({ success: false, message: error.message });
   }
 });
-
-// New routes for offer reports
-router.get('/reports/offers', authMiddleware, getAllOfferReports);
-router.patch('/reports/offers/:reportId', authMiddleware, updateOfferReportStatus);
 
 export default router;

@@ -3,7 +3,7 @@ import { auth } from '../../stores/auth.js';
 import { get } from 'svelte/store';
 
 const api = axios.create({
-  baseURL: '/api'
+  baseURL: '/api/users'
 });
 
 const getAuthHeader = () => {
@@ -13,7 +13,7 @@ const getAuthHeader = () => {
 
 export const getAllUsers = async () => {
   try {
-    const response = await api.get('/users', {
+    const response = await api.get('/', {
       headers: getAuthHeader()
     });
     return response.data;
@@ -25,7 +25,7 @@ export const getAllUsers = async () => {
 
 export const addUser = async (userData) => {
   try {
-    const response = await api.post('/users', userData, {
+    const response = await api.post('/', userData, {
       headers: getAuthHeader()
     });
     return response.data;
@@ -37,7 +37,7 @@ export const addUser = async (userData) => {
 
 export const updateUser = async (userId, userData) => {
   try {
-    const response = await api.put(`/users/${userId}`, userData, {
+    const response = await api.put(`/${userId}`, userData, {
       headers: getAuthHeader()
     });
     return response.data;
@@ -49,7 +49,7 @@ export const updateUser = async (userId, userData) => {
 
 export const deleteUser = async (userId) => {
   try {
-    const response = await api.delete(`/users/${userId}`, {
+    const response = await api.delete(`/${userId}`, {
       headers: getAuthHeader()
     });
     return response.data;
@@ -59,14 +59,26 @@ export const deleteUser = async (userId) => {
   }
 };
 
-export const getReports = async () => {
+export const getAllUserReports = async () => {
   try {
-    const response = await api.get('/users/reports', {
+    const response = await api.get('/reports', {
       headers: getAuthHeader()
     });
     return response.data;
   } catch (error) {
-    console.error('Error fetching reports:', error);
+    console.error('Error fetching user reports:', error);
+    throw error;
+  }
+};
+
+export const updateUserReportStatus = async (reportId, action) => {
+  try {
+    const response = await api.patch(`/reports/${reportId}`, { action }, {
+      headers: getAuthHeader()
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error updating user report status:', error);
     throw error;
   }
 };

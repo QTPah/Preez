@@ -132,30 +132,6 @@ export const changePassword = async (currentPassword, newPassword) => {
   }
 };
 
-export const getAllUserReports = async () => {
-  try {
-    const response = await api.get('/reports/users', {
-      headers: getAuthHeader()
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching user reports:', error);
-    throw error;
-  }
-};
-
-export const updateUserReportStatus = async (reportId, action) => {
-  try {
-    const response = await api.patch(`/reports/users/${reportId}`, { action }, {
-      headers: getAuthHeader()
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Error updating user report status:', error);
-    throw error;
-  }
-};
-
 export const updateUserProfile = async (profileData) => {
   try {
     const accessToken = localStorage.getItem('authToken');

@@ -136,8 +136,7 @@
               <button 
                 on:click={() => {
                   if (newPermission && !editingUser.permissions.includes(newPermission)) {
-                    editingUser.permissions = [...editingUser.permissions, newPerm
-ission];
+                    editingUser.permissions = [...editingUser.permissions, newPermission];
                     newPermission = '';
                   }
                 }}

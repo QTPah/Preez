@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
-  import { getAllUserReports, updateUserReportStatus } from '$lib/api/auth';
-  import { getAllOfferReports, updateOfferReportStatus } from '$lib/api/offers';
+  import { getAllUserReports, updateUserReportStatus } from '$lib/api/users';
+  import { getAllOfferReports, updateOfferReportStatus, getOfferById } from '$lib/api/offers';
   import { goto } from '$app/navigation';
 
   let userReports = [];
@@ -19,6 +19,16 @@
       ]);
       userReports = userResponse.reports;
       offerReports = offerResponse.reports;
+      
+      try {
+        for (const report of offerReports) {
+          const offer = await getOfferById(report.targetId);
+          report.reportedOffer = offer.offer;
+        }
+      } catch (error) {
+        console.error('Error loading offer details:', error);
+      }
+
     } catch (error) {
       console.error('Error loading reports:', error);
     } finally {
@@ -77,10 +87,10 @@
           </td>
           <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
             <button 
-              on:click={() => redirectToUser(report.reporter._id)}
+              on:click={() => redirectToUser(report.reportedBy._id)}
               class="text-blue-600 hover:text-blue-900"
             >
-              {report.reporter.username}
+              {report.reportedBy.username}
             </button>
           </td>
           <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.reason}</td>
@@ -124,7 +134,7 @@
         <tr>
           <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
             <button 
-              on:click={() => redirectToOffer(report.reportedOffer._id)}
+              on:click={() => redirectToOffer(report.targetId)}
               class="text-blue-600 hover:text-blue-900"
             >
               {report.reportedOffer.title}
@@ -132,10 +142,10 @@
           </td>
           <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
             <button 
-              on:click={() => redirectToUser(report.reporter._id)}
+              on:click={() => redirectToUser(report.reportedBy._id)}
               class="text-blue-600 hover:text-blue-900"
             >
-              {report.reporter.username}
+              {report.reportedBy.username}
             </button>
           </td>
           <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.reason}</td>

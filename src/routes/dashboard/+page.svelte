@@ -6,6 +6,7 @@
   import Categories from './tabs/Categories.svelte';
   import Reports from './tabs/Reports.svelte';
   import Settings from './tabs/Settings.svelte';
+  import { page } from '$app/stores';
 
   let activeTab = 'overview';
 

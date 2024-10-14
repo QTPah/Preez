@@ -3,7 +3,7 @@ import { auth } from '../../stores/auth';
 import { get } from 'svelte/store';
 
 const api = axios.create({
-  baseURL: '/api'
+  baseURL: '/api/offers'
 });
 
 const getAuthHeader = () => {
@@ -13,7 +13,7 @@ const getAuthHeader = () => {
 
 export const getAllOffers = async (page = 1, limit = 10) => {
   try {
-    const response = await api.get('/offers', {
+    const response = await api.get('/', {
       params: { page, limit, populate: 'seller' },
       headers: getAuthHeader()
     });
@@ -26,7 +26,7 @@ export const getAllOffers = async (page = 1, limit = 10) => {
 
 export const getOfferById = async (id) => {
   try {
-    const response = await api.get(`/offers/${id}`, {
+    const response = await api.get(`/${id}`, {
       headers: getAuthHeader()
     });
     return response.data;
@@ -38,7 +38,7 @@ export const getOfferById = async (id) => {
 
 export const updateOffer = async (id, offerData) => {
   try {
-    const response = await api.put(`/offers/${id}`, offerData, {
+    const response = await api.put(`/${id}`, offerData, {
       headers: getAuthHeader()
     });
     return response.data;
@@ -50,7 +50,7 @@ export const updateOffer = async (id, offerData) => {
 
 export const deleteOffer = async (id) => {
   try {
-    const response = await api.delete(`/offers/${id}`, {
+    const response = await api.delete(`/${id}`, {
       headers: getAuthHeader()
     });
     return response.data;
@@ -62,7 +62,7 @@ export const deleteOffer = async (id) => {
 
 export const reportOffer = async (id, reportData) => {
   try {
-    const response = await api.post(`/offers/${id}/report`, reportData, {
+    const response = await api.post(`/${id}/report`, reportData, {
       headers: getAuthHeader()
     });
     return response.data;
@@ -74,7 +74,7 @@ export const reportOffer = async (id, reportData) => {
 
 export const getAllOfferReports = async () => {
   try {
-    const response = await api.get('/offers/reports/offers', {
+    const response = await api.get('/reports', {
       headers: getAuthHeader()
     });
     return response.data;
@@ -86,7 +86,7 @@ export const getAllOfferReports = async () => {
 
 export const updateOfferReportStatus = async (reportId, action) => {
   try {
-    const response = await api.patch(`/offers/reports/offers/${reportId}`, { action }, {
+    const response = await api.patch(`/reports/${reportId}`, { action }, {
       headers: getAuthHeader()
     });
     return response.data;

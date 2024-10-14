@@ -2,8 +2,13 @@ import express from 'express';
 import User from '../models/User.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 import bcrypt from 'bcryptjs';
+import { getAllUserReports, updateUserReportStatus } from '../controllers/usersController.js';
 
 const router = express.Router();
+
+// New routes for user view
+router.get('/reports', authMiddleware, getAllUserReports);
+router.patch('/reports/:reportId', authMiddleware, updateUserReportStatus);
 
 // Get all users (only accessible by admin)
 router.get('/', authMiddleware, async (req, res) => {
@@ -95,7 +100,7 @@ router.post('/:id/report', authMiddleware, async (req, res) => {
     const { reason, description } = req.body;
     
     const report = new Report({
-      type: 'user',
+      reportType: 'user',
       targetId: userToReport._id,
       reportedBy: req.user.id,
       reason,

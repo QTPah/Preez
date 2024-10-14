@@ -1,9 +1,8 @@
-import User from '../models/User.js';
 import Report from '../models/Report.js';
 
 export const getAllUserReports = async (req, res) => {
   try {
-    const reports = await Report.find({ type: 'user' }).populate('targetId reportedBy', 'username');
+    const reports = await Report.find({ reportType: 'user' }).populate('targetId reportedBy', 'username');
     res.json({ success: true, reports });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error fetching user reports', error: error.message });

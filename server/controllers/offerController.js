@@ -1,9 +1,8 @@
-import Offer from '../models/Offer.js';
 import Report from '../models/Report.js';
 
 export const getAllOfferReports = async (req, res) => {
   try {
-    const reports = await Report.find({ type: 'offer' }).populate('targetId reportedBy', 'title username');
+    const reports = await Report.find({ reportType: 'offer' }).populate('targetId reportedBy', 'title username');
     res.json({ success: true, reports });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error fetching offer reports', error: error.message });

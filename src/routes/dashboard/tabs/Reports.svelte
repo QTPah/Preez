@@ -134,7 +134,7 @@
           <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.reason}</td>
           <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{new Date(report.createdAt).toLocaleDateString()}</td>
           <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
-            <span class={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+            <span class={`px-2 py-1 text-xs font-semibold rounded-full 
               ${report.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
                 report.status === 'resolved' ? 'bg-green-100 text-green-800' : 
                 'bg-red-100 text-red-800'}`}>
@@ -187,7 +187,14 @@
           </td>
           <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.reason}</td>
           <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{new Date(report.createdAt).toLocaleDateString()}</td>
-          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.status}</td>
+          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
+            <span class={`px-2 py-1 text-xs font-semibold rounded-full 
+              ${report.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
+                report.status === 'resolved' ? 'bg-green-100 text-green-800' : 
+                'bg-red-100 text-red-800'}`}>
+              {report.status}
+            </span>
+          </td>
           <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
             <button 
               on:click={() => showReviewModal(report, 'offer')}

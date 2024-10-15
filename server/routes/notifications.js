@@ -52,8 +52,8 @@ router.get('/presets', authMiddleware, async (req, res) => {
 // Create a new notification preset
 router.post('/presets', authMiddleware, async (req, res) => {
   try {
-    const { type, title, message, defaultEnabled } = req.body;
-    const preset = new NotificationPreset({ type, title, message, defaultEnabled });
+    const { type, title, message, defaultEnabled, redirectLink } = req.body;
+    const preset = new NotificationPreset({ type, title, message, defaultEnabled, redirectLink });
     await preset.save();
     res.status(201).json({ success: true, preset });
   } catch (error) {
@@ -114,7 +114,8 @@ router.put('/preferences', authMiddleware, async (req, res) => {
 // Send a manual notification
 router.post('/send', authMiddleware, async (req, res) => {
   try {
-    const { type, title, message, recipients } = req.body;
+    const { type, title, message } = req.body;
+    const recipients = req.body.recipients.split(',').map(id => id.trim());
     
     if (!Array.isArray(recipients) || recipients.length === 0) {
       return res.status(400).json({ success: false, message: 'Recipients must be a non-empty array of user IDs' });

@@ -35,7 +35,7 @@
           <li class="-mb-px mr-1">
             <a
               href="#{tab.id}"
-              class="bg-white inline-block py-2 px-4 font-semibold {activeTab === tab.id ? 'border-l border-t border-r rounded-t text-blue-700' : 'text-blue-500 hover:text-blue-800'}"
+              class="bg-white inline-block py-2 px-4 font-semibold {activeTab === tab.id ? 'border-l border-t border-r rounded-t text-blue-700' : 'text-blue-500 hover:text-blue-800'} dark:bg-gray-900"
               on:click|preventDefault={() => activeTab = tab.id}
             >
               {tab.name}
@@ -46,7 +46,7 @@
     </ul>
   </div>
 
-  <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+  <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 dark:bg-gray-800">
     {#each tabs as tab}
       {#if activeTab === tab.id && hasPermission(tab.permission)}
         <svelte:component 

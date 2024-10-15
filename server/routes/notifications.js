@@ -128,7 +128,7 @@ router.post('/send', authMiddleware, checkPermission('sendNotifications'), async
 
     res.json({ success: true, message: 'Notifications sent successfully' });
   } catch (error) {
-    logger.error('Error sending manual notification:', error);
+    logger.error('Error sending manual notification: '+ error);
     res.status(500).json({ success: false, message: error.message });
   }
 });

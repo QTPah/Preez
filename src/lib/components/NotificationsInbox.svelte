@@ -1,77 +1,3 @@
-<script>
-  import { onMount } from 'svelte';
-  import { auth } from '../../stores/auth';
-  import { getNotifications, markNotificationAsRead, getNotificationPresets } from '$lib/api/notifications';
-  import { clickOutside } from '$lib/actions/clickOutside';
-
-  let notifications = [];
-  let unreadCount = 0;
-  let showInbox = false;
-  let searchTerm = '';
-
-  onMount(async () => {
-    if ($auth.accessToken) {
-      await fetchNotifications();
-    }
-  });
-
-  $: {
-    if ($auth.accessToken) {
-      fetchNotifications();
-    }
-  }
-
-  $: filteredNotifications = notifications.filter(notification =>
-    notification.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    notification.message.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  async function fetchNotifications() {
-    try {
-      const response = await getNotifications();
-      notifications = response.notifications;
-      unreadCount = notifications.filter(n => !n.read).length;
-    } catch (error) {
-      console.error('Error fetching notifications:', error);
-    }
-  }
-
-  async function handleNotificationClick(notification) {
-    try {
-      const presets = await getNotificationPresets();
-      const preset = presets.presets.find(p => p.type === notification.type);
-      if (preset && preset.redirectLink) {
-        window.location.href = preset.redirectLink;
-      }
-      await markNotificationAsRead(notification._id);
-      await fetchNotifications();
-    } catch (error) {
-      console.error('Error handling notification click:', error);
-    }
-  }
-
-  async function handleMarkAllAsRead() {
-    try {
-      await Promise.all(notifications.filter(n => !n.read).map(n => markNotificationAsRead(n._id)));
-      await fetchNotifications();
-    } catch (error) {
-      console.error('Error marking all notifications as read:', error);
-    }
-  }
-
-  function toggleInbox() {
-    showInbox = !showInbox;
-    if (showInbox) {
-      setTimeout(() => document.getElementById('notification-search').focus(), 0);
-    }
-  }
-
-  function handleClickOutside() {
-    showInbox = false;
-    searchTerm = '';
-  }
-</script>
-
 <div class="relative" use:clickOutside on:click_outside={handleClickOutside}>
   <button on:click={toggleInbox} class="flex items-center relative">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -121,7 +47,7 @@
                 {#if !notification.read}
                   <button 
                     on:click|stopPropagation={() => markNotificationAsRead(notification._id)}
-                    class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2"
+                    class="text-s text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2"
                   >
                     ×
                   </button>

@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { auth } from '../../stores/auth';
-  import { getNotifications, markNotificationAsRead } from '$lib/api/notifications';
+  import { getNotifications, markNotificationAsRead, getNotificationPresets } from '$lib/api/notifications';
   import { clickOutside } from '$lib/actions/clickOutside';
 
   let notifications = [];
@@ -36,15 +36,17 @@
     }
   }
 
-  async function handleMarkAsRead(notification) {
+  async function handleNotificationClick(notification) {
     try {
+      const presets = await getNotificationPresets();
+      const preset = presets.presets.find(p => p.type === notification.type);
+      if (preset && preset.redirectLink) {
+        window.location.href = preset.redirectLink;
+      }
       await markNotificationAsRead(notification._id);
       await fetchNotifications();
-      if (notification.redirectLink) {
-        window.location.href = notification.redirectLink;
-      }
     } catch (error) {
-      console.error('Error marking notification as read:', error);
+      console.error('Error handling notification click:', error);
     }
   }
 
@@ -110,7 +112,7 @@
           {#each filteredNotifications as notification}
             <div class="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 {notification.read ? 'opacity-50' : ''} flex justify-between items-start">
               <div class="flex justify-between items-start w-full">
-                <button on:click={() => handleMarkAsRead(notification)} class="text-left flex-grow">
+                <button on:click={() => handleNotificationClick(notification)} class="text-left flex-grow">
                   <div>
                     <h3 class="text-sm font-semibold">{notification.title}</h3>
                     <p class="text-xs text-gray-600 dark:text-gray-400">{notification.message}</p>
@@ -118,7 +120,7 @@
                 </button>
                 {#if !notification.read}
                   <button 
-                    on:click={() => handleMarkAsRead(notification)}
+                    on:click|stopPropagation={() => markNotificationAsRead(notification._id)}
                     class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2"
                   >
                     ×

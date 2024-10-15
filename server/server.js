@@ -5,12 +5,14 @@ import cors from 'cors';
 import https from 'https';
 import fs from 'fs';
 import path from 'path';
+import { WebSocketServer } from 'ws';
 import authRoutes from './routes/auth.js';
 import offerRoutes from './routes/offers.js';
 import userRoutes from './routes/users.js';
 import notificationRoutes from './routes/notifications.js';
 import { handler } from '../build/handler.js';
 import logger from './utils/logger.js';
+import { deleteOldReadNotifications } from './utils/notificationUtils.js';
 
 dotenv.config();
 
@@ -61,8 +63,29 @@ logger.info('Server port: ' + PORT);
 
 if(isProduction) {
   app.use(handler);
-  https.createServer(options, app).listen(PORT, '0.0.0.0', () => logger.info(`HTTPS Server running on port ${PORT}`));
+  const server = https.createServer(options, app);
+  const wss = new WebSocketServer({ server });
+  
+  wss.on('connection', (ws) => {
+    logger.info('New WebSocket connection');
+    ws.on('message', (message) => {
+      logger.info('Received:', message);
+    });
+  });
+
+  server.listen(PORT, '0.0.0.0', () => logger.info(`HTTPS Server running on port ${PORT}`));
 } else {
-  app.listen(PORT, () => logger.info(`HTTP Server running on port ${PORT}`));
+  const server = app.listen(PORT, () => logger.info(`HTTP Server running on port ${PORT}`));
+  const wss = new WebSocketServer({ server });
+  
+  wss.on('connection', (ws) => {
+    logger.info('New WebSocket connection');
+    ws.on('message', (message) => {
+      logger.info('Received:', message);
+    });
+  });
 }
+
+// Schedule deletion of old read notifications
+setInterval(deleteOldReadNotifications, 24 * 60 * 60 * 1000); // Run once a day
 

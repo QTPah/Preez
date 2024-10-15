@@ -77,7 +77,7 @@
     </svg>
     {#if unreadCount > 0}
       <span class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
-    </div>
+    {/if}
   </button>
 
   <div class="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-20 border border-gray-200 dark:border-white transition-all duration-200 ease-in-out transform origin-top-right"
@@ -124,6 +124,6 @@
           {/each}
         {/if}
       </div>
-    {/if}
+    </div>
   </div>
 </div>

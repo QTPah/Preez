@@ -118,12 +118,15 @@
   {:else}
     <h3 class="text-xl font-bold mb-4 dark:text-white">Send Manual Notification</h3>
     <form on:submit|preventDefault={handleManualNotificationSend} class="mb-6">
-      <input
-        type="text"
-        placeholder="Type"
+      <select
         bind:value={manualNotification.type}
         class="mb-2 p-2 border rounded w-full dark:bg-gray-700 dark:text-white dark:border-gray-600"
-      />
+      >
+        <option value="">Select a type</option>
+        {#each presets as preset}
+          <option value={preset.type}>{preset.type}</option>
+        {/each}
+      </select>
       <input
         type="text"
         placeholder="Title"

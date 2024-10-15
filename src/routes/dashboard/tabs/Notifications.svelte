@@ -1,10 +1,11 @@
 <script>
   import { onMount } from 'svelte';
   import { getNotificationPresets, createNotificationPreset, updateNotificationPreset, deleteNotificationPreset, sendManualNotification } from '$lib/api/notifications';
+  import NotificationPresetModal from '$lib/components/NotificationPresetModal.svelte';
 
   let activeSubTab = 'presets';
   let presets = [];
-  let newPreset = { type: '', title: '', message: '', defaultEnabled: true };
+  let showPresetModal = false;
   let editingPreset = null;
   let manualNotification = { type: '', title: '', message: '', recipients: [] };
 
@@ -19,15 +20,21 @@
     }
   }
 
-  async function handlePresetSubmit() {
+  function openPresetModal(preset = null) {
+    editingPreset = preset ? { ...preset } : null;
+    showPresetModal = true;
+  }
+
+  async function handlePresetSubmit(event) {
+    const preset = event.detail;
     try {
-      if (editingPreset) {
-        await updateNotificationPreset(editingPreset._id, editingPreset);
+      if (preset._id) {
+        await updateNotificationPreset(preset._id, preset);
       } else {
-        await createNotificationPreset(newPreset);
+        await createNotificationPreset(preset);
       }
       await loadPresets();
-      resetForm();
+      showPresetModal = false;
     } catch (error) {
       console.error('Error saving notification preset:', error);
     }
@@ -42,15 +49,6 @@
         console.error('Error deleting notification preset:', error);
       }
     }
-  }
-
-  function editPreset(preset) {
-    editingPreset = { ...preset };
-  }
-
-  function resetForm() {
-    newPreset = { type: '', title: '', message: '', defaultEnabled: true };
-    editingPreset = null;
   }
 
   async function handleManualNotificationSend() {
@@ -82,42 +80,15 @@
   </div>
 
   {#if activeSubTab === 'presets'}
-    <h3 class="text-xl font-bold mb-4 dark:text-white">Notification Presets</h3>
-    <form on:submit|preventDefault={handlePresetSubmit} class="mb-6">
-      <input
-        type="text"
-        placeholder="Type"
-        bind:value={newPreset.type}
-        class="mb-2 p-2 border rounded w-full dark:bg-gray-700 dark:text-white dark:border-gray-600"
-      />
-      <input
-        type="text"
-        placeholder="Title"
-        bind:value={newPreset.title}
-        class="mb-2 p-2 border rounded w-full dark:bg-gray-700 dark:text-white dark:border-gray-600"
-      />
-      <textarea
-        placeholder="Message"
-        bind:value={newPreset.message}
-        class="mb-2 p-2 border rounded w-full dark:bg-gray-700 dark:text-white dark:border-gray-600"
-      ></textarea>
-      <label class="flex items-center mb-2 dark:text-white">
-        <input
-          type="checkbox"
-          bind:checked={newPreset.defaultEnabled}
-          class="mr-2"
-        />
-        Default Enabled
-      </label>
-      <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-        {editingPreset ? 'Update Preset' : 'Create Preset'}
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-xl font-bold dark:text-white">Notification Presets</h3>
+      <button
+        on:click={() => openPresetModal()}
+        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+      >
+        New Preset
       </button>
-      {#if editingPreset}
-        <button type="button" on:click={resetForm} class="ml-2 bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500">
-          Cancel
-        </button>
-      {/if}
-    </form>
+    </div>
 
     <table class="w-full">
       <thead>
@@ -137,7 +108,7 @@
             <td class="py-2 dark:text-white">{preset.message}</td>
             <td class="py-2 dark:text-white">{preset.defaultEnabled ? 'Yes' : 'No'}</td>
             <td class="py-2">
-              <button on:click={() => editPreset(preset)} class="text-blue-500 hover:text-blue-600 mr-2 dark:text-blue-400 dark:hover:text-blue-300">Edit</button>
+              <button on:click={() => openPresetModal(preset)} class="text-blue-500 hover:text-blue-600 mr-2 dark:text-blue-400 dark:hover:text-blue-300">Edit</button>
               <button on:click={() => handlePresetDelete(preset._id)} class="text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300">Delete</button>
             </td>
           </tr>
@@ -176,3 +147,11 @@
     </form>
   {/if}
 </div>
+
+{#if showPresetModal}
+  <NotificationPresetModal
+    preset={editingPreset}
+    on:close={() => showPresetModal = false}
+    on:submit={handlePresetSubmit}
+  />
+{/if}

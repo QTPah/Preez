@@ -95,6 +95,54 @@ export const deleteNotificationPreset = async (presetId) => {
   }
 };
 
+export const getNotificationScripts = async () => {
+  try {
+    const response = await api.get('/scripts', {
+      headers: getAuthHeader()
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching notification scripts:', error);
+    throw error;
+  }
+};
+
+export const createNotificationScript = async (script) => {
+  try {
+    const response = await api.post('/scripts', script, {
+      headers: getAuthHeader()
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error creating notification script:', error);
+    throw error;
+  }
+};
+
+export const updateNotificationScript = async (scriptId, script) => {
+  try {
+    const response = await api.put(`/scripts/${scriptId}`, script, {
+      headers: getAuthHeader()
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error updating notification script:', error);
+    throw error;
+  }
+};
+
+export const deleteNotificationScript = async (scriptId) => {
+  try {
+    const response = await api.delete(`/scripts/${scriptId}`, {
+      headers: getAuthHeader()
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting notification script:', error);
+    throw error;
+  }
+};
+
 export const sendManualNotification = async (notification) => {
   try {
     const response = await api.post('/send', notification, {

@@ -3,8 +3,9 @@ import authMiddleware from '../middleware/authMiddleware.js';
 import { checkPermission } from '../middleware/permissionMiddleware.js';
 import User from '../models/User.js';
 import NotificationPreset from '../models/NotificationPreset.js';
+import NotificationScript from '../models/NotificationScript.js';
 import logger from '../utils/logger.js';
-import { sendNotification } from '../utils/notificationUtils.js';
+import { sendNotification, executeNotificationScript } from '../utils/notificationUtils.js';
 
 const router = express.Router();
 
@@ -92,6 +93,63 @@ router.delete('/presets/:presetId', authMiddleware, checkPermission('devPresets'
     res.json({ success: true, message: 'Preset deleted successfully' });
   } catch (error) {
     logger.error('Error deleting notification preset:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Get all notification scripts
+router.get('/scripts', authMiddleware, checkPermission(['editPresets', 'devPresets']), async (req, res) => {
+  try {
+    const scripts = await NotificationScript.find().populate('createdBy', 'username');
+    res.json({ success: true, scripts });
+  } catch (error) {
+    logger.error('Error fetching notification scripts:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Create a new notification script
+router.post('/scripts', authMiddleware, checkPermission('devPresets'), async (req, res) => {
+  try {
+    const { name, description, code } = req.body;
+    const script = new NotificationScript({ name, description, code, createdBy: req.user.id });
+    await script.save();
+    res.status(201).json({ success: true, script });
+  } catch (error) {
+    logger.error('Error creating notification script:', error);
+    res.status(400).json({ success: false, message: error.message });
+  }
+});
+
+// Update a notification script
+router.put('/scripts/:scriptId', authMiddleware, checkPermission('devPresets'), async (req, res) => {
+  try {
+    const { name, description, code } = req.body;
+    const script = await NotificationScript.findByIdAndUpdate(
+      req.params.scriptId,
+      { name, description, code, updatedAt: Date.now() },
+      { new: true }
+    );
+    if (!script) {
+      return res.status(404).json({ success: false, message: 'Script not found' });
+    }
+    res.json({ success: true, script });
+  } catch (error) {
+    logger.error('Error updating notification script:', error);
+    res.status(400).json({ success: false, message: error.message });
+  }
+});
+
+// Delete a notification script
+router.delete('/scripts/:scriptId', authMiddleware, checkPermission('devPresets'), async (req, res) => {
+  try {
+    const script = await NotificationScript.findByIdAndDelete(req.params.scriptId);
+    if (!script) {
+      return res.status(404).json({ success: false, message: 'Script not found' });
+    }
+    res.json({ success: true, message: 'Script deleted successfully' });
+  } catch (error) {
+    logger.error('Error deleting notification script:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 });

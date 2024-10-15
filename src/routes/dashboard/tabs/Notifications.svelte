@@ -68,13 +68,13 @@
 <div>
   <div class="mb-4">
     <button
-      class="mr-2 px-4 py-2 {activeSubTab === 'presets' ? 'bg-blue-500 text-white' : 'bg-gray-200'}"
+      class="mr-2 px-4 py-2 {activeSubTab === 'presets' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} dark:text-white dark:bg-gray-700 rounded"
       on:click={() => activeSubTab = 'presets'}
     >
       Notification Presets
     </button>
     <button
-      class="px-4 py-2 {activeSubTab === 'manual' ? 'bg-blue-500 text-white' : 'bg-gray-200'}"
+      class="px-4 py-2 {activeSubTab === 'manual' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} dark:text-white dark:bg-gray-700 rounded"
       on:click={() => activeSubTab = 'manual'}
     >
       Send Manual Notification
@@ -82,26 +82,26 @@
   </div>
 
   {#if activeSubTab === 'presets'}
-    <h3 class="text-xl font-bold mb-4">Notification Presets</h3>
+    <h3 class="text-xl font-bold mb-4 dark:text-white">Notification Presets</h3>
     <form on:submit|preventDefault={handlePresetSubmit} class="mb-6">
       <input
         type="text"
         placeholder="Type"
-        bind:value={newPreset}
-        class="mb-2 p-2 border rounded w-full"
+        bind:value={newPreset.type}
+        class="mb-2 p-2 border rounded w-full dark:bg-gray-700 dark:text-white dark:border-gray-600"
       />
       <input
         type="text"
         placeholder="Title"
         bind:value={newPreset.title}
-        class="mb-2 p-2 border rounded w-full"
+        class="mb-2 p-2 border rounded w-full dark:bg-gray-700 dark:text-white dark:border-gray-600"
       />
       <textarea
         placeholder="Message"
         bind:value={newPreset.message}
-        class="mb-2 p-2 border rounded w-full"
+        class="mb-2 p-2 border rounded w-full dark:bg-gray-700 dark:text-white dark:border-gray-600"
       ></textarea>
-      <label class="flex items-center mb-2">
+      <label class="flex items-center mb-2 dark:text-white">
         <input
           type="checkbox"
           bind:checked={newPreset.defaultEnabled}
@@ -109,11 +109,11 @@
         />
         Default Enabled
       </label>
-      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">
+      <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
         {editingPreset ? 'Update Preset' : 'Create Preset'}
       </button>
       {#if editingPreset}
-        <button type="button" on:click={resetForm} class="ml-2 bg-gray-300 px-4 py-2 rounded">
+        <button type="button" on:click={resetForm} class="ml-2 bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500">
           Cancel
         </button>
       {/if}
@@ -122,55 +122,55 @@
     <table class="w-full">
       <thead>
         <tr>
-          <th class="text-left">Type</th>
-          <th class="text-left">Title</th>
-          <th class="text-left">Message</th>
-          <th class="text-left">Default Enabled</th>
-          <th class="text-left">Actions</th>
+          <th class="text-left dark:text-white">Type</th>
+          <th class="text-left dark:text-white">Title</th>
+          <th class="text-left dark:text-white">Message</th>
+          <th class="text-left dark:text-white">Default Enabled</th>
+          <th class="text-left dark:text-white">Actions</th>
         </tr>
       </thead>
       <tbody>
         {#each presets as preset}
-          <tr>
-            <td>{preset.type}</td>
-            <td>{preset.title}</td>
-            <td>{preset.message}</td>
-            <td>{preset.defaultEnabled ? 'Yes' : 'No'}</td>
-            <td>
-              <button on:click={() => editPreset(preset)} class="text-blue-500 mr-2">Edit</button>
-              <button on:click={() => handlePresetDelete(preset._id)} class="text-red-500">Delete</button>
+          <tr class="border-b dark:border-gray-700">
+            <td class="py-2 dark:text-white">{preset.type}</td>
+            <td class="py-2 dark:text-white">{preset.title}</td>
+            <td class="py-2 dark:text-white">{preset.message}</td>
+            <td class="py-2 dark:text-white">{preset.defaultEnabled ? 'Yes' : 'No'}</td>
+            <td class="py-2">
+              <button on:click={() => editPreset(preset)} class="text-blue-500 hover:text-blue-600 mr-2 dark:text-blue-400 dark:hover:text-blue-300">Edit</button>
+              <button on:click={() => handlePresetDelete(preset._id)} class="text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300">Delete</button>
             </td>
           </tr>
         {/each}
       </tbody>
     </table>
   {:else}
-    <h3 class="text-xl font-bold mb-4">Send Manual Notification</h3>
+    <h3 class="text-xl font-bold mb-4 dark:text-white">Send Manual Notification</h3>
     <form on:submit|preventDefault={handleManualNotificationSend} class="mb-6">
       <input
         type="text"
         placeholder="Type"
         bind:value={manualNotification.type}
-        class="mb-2 p-2 border rounded w-full"
+        class="mb-2 p-2 border rounded w-full dark:bg-gray-700 dark:text-white dark:border-gray-600"
       />
       <input
         type="text"
         placeholder="Title"
         bind:value={manualNotification.title}
-        class="mb-2 p-2 border rounded w-full"
+        class="mb-2 p-2 border rounded w-full dark:bg-gray-700 dark:text-white dark:border-gray-600"
       />
       <textarea
         placeholder="Message"
         bind:value={manualNotification.message}
-        class="mb-2 p-2 border rounded w-full"
+        class="mb-2 p-2 border rounded w-full dark:bg-gray-700 dark:text-white dark:border-gray-600"
       ></textarea>
       <input
         type="text"
         placeholder="Recipients (comma-separated user IDs)"
         bind:value={manualNotification.recipients}
-        class="mb-2 p-2 border rounded w-full"
+        class="mb-2 p-2 border rounded w-full dark:bg-gray-700 dark:text-white dark:border-gray-600"
       />
-      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">
+      <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
         Send Notification
       </button>
     </form>

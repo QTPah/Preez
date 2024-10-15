@@ -8,8 +8,10 @@
   import Settings from './tabs/Settings.svelte';
   import Notifications from './tabs/Notifications.svelte';
   import { page } from '$app/stores';
+  import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
 
-  let activeTab = 'overview';
+  let activeTab;
 
   const tabs = [
     { id: 'overview', name: 'Overview', permission: null, component: Overview },
@@ -25,6 +27,22 @@
     if (!permission) return true;
     return $auth.user?.permissions?.includes(permission);
   }
+
+  function setActiveTab(tabId) {
+    if (hasPermission(tabs.find(tab => tab.id === tabId)?.permission)) {
+      activeTab = tabId;
+      goto(`/dashboard?tab=${tabId}`, { replaceState: true });
+    }
+  }
+
+  onMount(() => {
+    const tabFromUrl = $page.url.searchParams.get('tab');
+    if (tabFromUrl && tabs.some(tab => tab.id === tabFromUrl && hasPermission(tab.permission))) {
+      activeTab = tabFromUrl;
+    } else {
+      activeTab = 'overview';
+    }
+  });
 </script>
 
 <div class="container mx-auto px-4 py-8">
@@ -36,9 +54,9 @@
         {#if hasPermission(tab.permission)}
           <li class="-mb-px mr-1">
             <a
-              href="#{tab.id}"
+              href="/dashboard?tab={tab.id}"
               class="bg-white inline-block py-2 px-4 font-semibold {activeTab === tab.id ? 'border-l border-t border-r rounded-t text-blue-700' : 'text-blue-500 hover:text-blue-800'} dark:bg-gray-900"
-              on:click|preventDefault={() => activeTab = tab.id}
+              on:click|preventDefault={() => setActiveTab(tab.id)}
             >
               {tab.name}
             </a>

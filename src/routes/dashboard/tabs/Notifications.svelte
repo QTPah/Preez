@@ -2,12 +2,14 @@
   import { onMount } from 'svelte';
   import { getNotificationPresets, createNotificationPreset, updateNotificationPreset, deleteNotificationPreset, sendManualNotification } from '$lib/api/notifications';
   import NotificationPresetModal from '$lib/components/NotificationPresetModal.svelte';
+  import UserSearch from '$lib/components/UserSearch.svelte';
 
   let activeSubTab = 'presets';
   let presets = [];
   let showPresetModal = false;
   let editingPreset = null;
   let manualNotification = { type: '', title: '', message: '', recipients: [] };
+  let selectedUsers = [];
 
   onMount(loadPresets);
 
@@ -53,13 +55,22 @@
 
   async function handleManualNotificationSend() {
     try {
-      await sendManualNotification(manualNotification);
+      const recipientIds = selectedUsers.map(user => user._id);
+      await sendManualNotification({
+        ...manualNotification,
+        recipients: recipientIds.join(',')
+      });
       alert('Notification sent successfully!');
       manualNotification = { type: '', title: '', message: '', recipients: [] };
+      selectedUsers = [];
     } catch (error) {
       console.error('Error sending manual notification:', error);
       alert('Failed to send notification. Please try again.');
     }
+  }
+
+  function handleUserSelect(event) {
+    selectedUsers = event.detail.users;
   }
 </script>
 
@@ -138,13 +149,12 @@
         bind:value={manualNotification.message}
         class="mb-2 p-2 border rounded w-full dark:bg-gray-700 dark:text-white dark:border-gray-600"
       ></textarea>
-      <input
-        type="text"
-        placeholder="Recipients (comma-separated user IDs)"
-        bind:value={manualNotification.recipients}
-        class="mb-2 p-2 border rounded w-full dark:bg-gray-700 dark:text-white dark:border-gray-600"
+      <UserSearch 
+        bind:selectedUsers
+        on:select={handleUserSelect}
+        placeholder="Search recipients..."
       />
-      <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+      <button type="submit" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
         Send Notification
       </button>
     </form>

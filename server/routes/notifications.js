@@ -131,4 +131,40 @@ router.post('/send', authMiddleware, async (req, res) => {
   }
 });
 
+router.post('/presets/:presetId/mute', authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    if (!user.mutedPresets.includes(req.params.presetId)) {
+      user.mutedPresets.push(req.params.presetId);
+      await user.save();
+    }
+
+    res.json({ success: true, message: 'Preset muted successfully' });
+  } catch (error) {
+    logger.error('Error muting preset:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+router.post('/presets/:presetId/unmute', authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    user.mutedPresets = user.mutedPresets.filter(id => id.toString() !== req.params.presetId);
+    await user.save();
+
+    res.json({ success: true, message: 'Preset unmuted successfully' });
+  } catch (error) {
+    logger.error('Error unmuting preset:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
 export default router;

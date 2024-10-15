@@ -106,3 +106,27 @@ export const sendManualNotification = async (notification) => {
     throw error;
   }
 };
+
+export const mutePreset = async (presetId) => {
+  try {
+    const response = await api.post(`/presets/${presetId}/mute`, {}, {
+      headers: getAuthHeader()
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error muting preset:', error);
+    throw error;
+  }
+};
+
+export const unmutePreset = async (presetId) => {
+  try {
+    const response = await api.post(`/presets/${presetId}/unmute`, {}, {
+      headers: getAuthHeader()
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error unmuting preset:', error);
+    throw error;
+  }
+};

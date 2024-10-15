@@ -87,7 +87,7 @@
       <input
         type="text"
         placeholder="Type"
-        bind:value={editingPreset ? editingPreset.type : newPreset.type}
+        bind:value={newPreset.type}
         class="mb-2 p-2 border rounded w-full"
       />
       <input

@@ -87,24 +87,24 @@
       <input
         type="text"
         placeholder="Type"
-        bind:value={newPreset.type}
+        bind:value={newPreset}
         class="mb-2 p-2 border rounded w-full"
       />
       <input
         type="text"
         placeholder="Title"
-        bind:value={editingPreset ? editingPreset.title : newPreset.title}
+        bind:value={newPreset.title}
         class="mb-2 p-2 border rounded w-full"
       />
       <textarea
         placeholder="Message"
-        bind:value={editingPreset ? editingPreset.message : newPreset.message}
+        bind:value={newPreset.message}
         class="mb-2 p-2 border rounded w-full"
       ></textarea>
       <label class="flex items-center mb-2">
         <input
           type="checkbox"
-          bind:checked={editingPreset ? editingPreset.defaultEnabled : newPreset.defaultEnabled}
+          bind:checked={newPreset.defaultEnabled}
           class="mr-2"
         />
         Default Enabled

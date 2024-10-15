@@ -45,6 +45,15 @@
     }
   }
 
+  async function handleMarkAllAsRead() {
+    try {
+      await Promise.all(notifications.filter(n => !n.read).map(n => markNotificationAsRead(n._id)));
+      await fetchNotifications();
+    } catch (error) {
+      console.error('Error marking all notifications as read:', error);
+    }
+  }
+
   function toggleInbox() {
     showInbox = !showInbox;
     if (showInbox) {
@@ -68,8 +77,14 @@
     {/if}
   </button>
 
-  {#if showInbox}
-    <div class="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-20 border border-gray-200 dark:border-white">
+  <div class="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-20 border border-gray-200 dark:border-white transition-all duration-200 ease-in-out transform origin-top-right"
+       class:scale-95={!showInbox}
+       class:scale-100={showInbox}
+       class:opacity-0={!showInbox}
+       class:opacity-100={showInbox}
+       class:pointer-events-none={!showInbox}
+       class:pointer-events-auto={showInbox}>
+    {#if showInbox}
       <div class="px-4 py-2">
         <input
           id="notification-search"
@@ -79,23 +94,31 @@
           class="w-full px-2 py-1 text-sm border rounded dark:bg-gray-700 dark:text-white dark:border-gray-600"
         />
       </div>
-      {#if filteredNotifications.length === 0}
-        <p class="px-4 py-2 text-gray-700 dark:text-gray-300">No notifications</p>
-      {:else}
-        {#each filteredNotifications as notification}
-          <div class="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 {notification.read ? 'opacity-50' : ''} flex justify-between items-start">
-            <div>
-              <h3 class="text-sm font-semibold">{notification.title}</h3>
-              <p class="text-xs text-gray-600 dark:text-gray-400">{notification.message}</p>
+      <button 
+        on:click={handleMarkAllAsRead}
+        class="w-full text-left px-4 py-2 text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
+      >
+        Mark all as read
+      </button>
+      <div class="max-h-60 overflow-y-auto">
+        {#if filteredNotifications.length === 0}
+          <p class="px-4 py-2 text-gray-700 dark:text-gray-300">No notifications</p>
+        {:else}
+          {#each filteredNotifications as notification}
+            <div class="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 {notification.read ? 'opacity-50' : ''} flex justify-between items-start">
+              <div>
+                <h3 class="text-sm font-semibold">{notification.title}</h3>
+                <p class="text-xs text-gray-600 dark:text-gray-400">{notification.message}</p>
+              </div>
+              {#if !notification.read}
+                <button on:click={() => handleMarkAsRead(notification._id)} class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                  ✕
+                </button>
+              {/if}
             </div>
-            {#if !notification.read}
-              <button on:click={() => handleMarkAsRead(notification._id)} class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                ✕
-              </button>
-            {/if}
-          </div>
-        {/each}
-      {/if}
-    </div>
-  {/if}
+          {/each}
+        {/if}
+      </div>
+    {/if}
+  </div>
 </div>

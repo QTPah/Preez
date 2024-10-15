@@ -105,7 +105,7 @@
             <button on:click={() => showDropdown = !showDropdown} class="focus:outline-none">
               <img src={profilePicture} alt="Profile" class="w-10 h-10 rounded-full object-cover">
             </button>
-            <div class="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-10 transition-all duration-200 ease-in-out transform origin-top-right"
+            <div class="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-10 transition-all duration-200 ease-in-out transform origin-top-right border border-gray-200 dark:border-white"
                  class:scale-95={!showDropdown}
                  class:scale-100={showDropdown}
                  class:opacity-0={!showDropdown}

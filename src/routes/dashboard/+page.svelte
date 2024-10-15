@@ -19,12 +19,15 @@
     { id: 'offers', name: 'Offers', permission: 'manageOffers', component: Offers },
     { id: 'categories', name: 'Categories', permission: 'manageCategories', component: Categories },
     { id: 'reports', name: 'Reports', permission: 'viewReports', component: Reports },
-    { id: 'notifications', name: 'Notifications', permission: ['editPresets', 'devPresets', 'sendNotifications'], component: Notifications },
+    { id: 'notifications', name: 'Notifications', permission: ['editPresets', 'devPresets', 'sendNotifications', 'viewNotifications'], component: Notifications },
     { id: 'settings', name: 'Settings', permission: 'manageSettings', component: Settings }
   ];
 
   function hasPermission(permission) {
     if (!permission) return true;
+    if (Array.isArray(permission)) {
+      return permission.some(perm => $auth.user?.permissions?.includes(perm));
+    }
     return $auth.user?.permissions?.includes(permission);
   }
 

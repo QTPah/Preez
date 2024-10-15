@@ -58,10 +58,16 @@
   async function handleManualNotificationSend() {
     try {
       const recipientIds = selectedUsers.map(user => user._id);
-      await sendManualNotification({
+      const selectedPreset = presets.find(preset => preset.type === manualNotification.type);
+      
+      const notificationToSend = {
         ...manualNotification,
+        title: manualNotification.title || selectedPreset?.title || '',
+        message: manualNotification.message || selectedPreset?.message || '',
         recipients: recipientIds.join(',')
-      });
+      };
+
+      await sendManualNotification(notificationToSend);
       alert('Notification sent successfully!');
       manualNotification = { type: '', title: '', message: '', recipients: [] };
       selectedUsers = [];

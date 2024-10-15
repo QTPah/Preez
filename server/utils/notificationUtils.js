@@ -25,6 +25,7 @@ export const sendNotification = async (userId, type, customData = {}) => {
       type,
       title: preset.title,
       message: preset.message,
+      redirectLink: preset.redirectLink,
       ...customData
     };
 

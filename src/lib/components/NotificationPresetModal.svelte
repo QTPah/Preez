@@ -9,6 +9,7 @@
   let title = preset?.title || '';
   let message = preset?.message || '';
   let defaultEnabled = preset?.defaultEnabled || true;
+  let redirectLink = preset?.redirectLink || '';
 
   function handleSubmit() {
     dispatch('submit', {
@@ -16,7 +17,8 @@
       type,
       title,
       message,
-      defaultEnabled
+      defaultEnabled,
+      redirectLink
     });
   }
 
@@ -48,6 +50,12 @@
         bind:value={message}
         class="mb-2 p-2 border rounded w-full dark:bg-gray-700 dark:text-white dark:border-gray-600"
       ></textarea>
+      <input
+        type="text"
+        placeholder="Redirect Link (optional)"
+        bind:value={redirectLink}
+        class="mb-2 p-2 border rounded w-full dark:bg-gray-700 dark:text-white dark:border-gray-600"
+      />
       <label class="flex items-center mb-2 dark:text-white">
         <input
           type="checkbox"

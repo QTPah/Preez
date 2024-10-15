@@ -36,10 +36,13 @@
     }
   }
 
-  async function handleMarkAsRead(notificationId) {
+  async function handleMarkAsRead(notification) {
     try {
-      await markNotificationAsRead(notificationId);
+      await markNotificationAsRead(notification._id);
       await fetchNotifications();
+      if (notification.redirectLink) {
+        window.location.href = notification.redirectLink;
+      }
     } catch (error) {
       console.error('Error marking notification as read:', error);
     }
@@ -74,7 +77,7 @@
     </svg>
     {#if unreadCount > 0}
       <span class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
-    {/if}
+    </div>
   </button>
 
   <div class="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-20 border border-gray-200 dark:border-white transition-all duration-200 ease-in-out transform origin-top-right"
@@ -84,7 +87,7 @@
        class:opacity-100={showInbox}
        class:pointer-events-none={!showInbox}
        class:pointer-events-auto={showInbox}>
-    {#if showInbox}
+    <div class="transition-all duration-200 ease-in-out" class:opacity-0={!showInbox} class:scale-95={!showInbox}>
       <div class="px-4 py-2">
         <input
           id="notification-search"
@@ -106,15 +109,17 @@
         {:else}
           {#each filteredNotifications as notification}
             <div class="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 {notification.read ? 'opacity-50' : ''} flex justify-between items-start">
-              <div>
-                <h3 class="text-sm font-semibold">{notification.title}</h3>
-                <p class="text-xs text-gray-600 dark:text-gray-400">{notification.message}</p>
-              </div>
-              {#if !notification.read}
-                <button on:click={() => handleMarkAsRead(notification._id)} class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                  ✕
-                </button>
-              {/if}
+              <button on:click={() => handleMarkAsRead(notification)} class="w-full text-left">
+                <div>
+                  <h3 class="text-sm font-semibold">{notification.title}</h3>
+                  <p class="text-xs text-gray-600 dark:text-gray-400">{notification.message}</p>
+                </div>
+                {#if !notification.read}
+                  <span class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                    Mark as read
+                  </span>
+                {/if}
+              </button>
             </div>
           {/each}
         {/if}

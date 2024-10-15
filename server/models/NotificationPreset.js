@@ -4,7 +4,8 @@ const notificationPresetSchema = new mongoose.Schema({
   type: { type: String, required: true, unique: true },
   title: { type: String, required: true },
   message: { type: String, required: true },
-  defaultEnabled: { type: Boolean, default: true }
+  defaultEnabled: { type: Boolean, default: true },
+  redirectLink: { type: String }
 });
 
 export default mongoose.model('NotificationPreset', notificationPresetSchema);

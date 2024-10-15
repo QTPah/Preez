@@ -112,13 +112,13 @@
                  class:opacity-100={showDropdown}
                  class:pointer-events-none={!showDropdown}
                  class:pointer-events-auto={showDropdown}>
-              {#if showDropdown}
+              <div class="transition-all duration-200 ease-in-out" class:opacity-0={!showDropdown} class:scale-95={!showDropdown}>
                 {#if $auth.user?.permissions?.includes('viewDashboard')}
                   <a href="/dashboard" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Dashboard</a>
                 {/if}
                 <a href="/settings" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Settings</a>
                 <button on:click={handleLogout} class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Logout</button>
-              {/if}
+              </div>
             </div>
           </li>
         {:else}

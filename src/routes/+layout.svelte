@@ -6,6 +6,7 @@
   import { theme } from '../stores/theme';
   import { login, register, logout, validateTokenAndFetchUser } from '$lib/api/auth';
   import AuthForm from '$lib/components/AuthForm.svelte';
+  import NotificationsInbox from '$lib/components/NotificationsInbox.svelte';
   import { clickOutside } from '$lib/actions/clickOutside';
   import defaultProfile from '$lib/assets/default-picture.jpeg';
 
@@ -97,6 +98,9 @@
         <li class="mx-2 my-1"><a href="/about" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/about'}>About</a></li>
         <li class="mx-2 my-1"><a href="/contact" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/contact'}>Contact</a></li>
         {#if $isLoggedIn}
+          <li class="mx-2 my-1">
+            <NotificationsInbox />
+          </li>
           <li class="mx-2 relative flex items-center">
             <button on:click={() => showDropdown = !showDropdown} class="focus:outline-none">
               <img src={profilePicture} alt="Profile" class="w-10 h-10 rounded-full object-cover">

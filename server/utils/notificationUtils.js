@@ -2,6 +2,12 @@ import User from '../models/User.js';
 import NotificationPreset from '../models/NotificationPreset.js';
 import logger from './logger.js';
 
+const replaceTemplateVariables = (text, variables) => {
+  return text.replace(/\{(\w+)\}/g, (match, key) => {
+    return variables[key] !== undefined ? variables[key] : match;
+  });
+};
+
 export const sendNotification = async (userId, type, customData = {}) => {
   try {
     const user = await User.findById(userId);
@@ -21,11 +27,20 @@ export const sendNotification = async (userId, type, customData = {}) => {
       return;
     }
 
+    const templateVariables = {
+      username: user.username,
+      email: user.email,
+      userId: user._id.toString(),
+      currentDate: new Date().toLocaleDateString(),
+      currentTime: new Date().toLocaleTimeString(),
+      ...customData
+    };
+
     const notification = {
       type,
-      title: preset.title,
-      message: preset.message,
-      redirectLink: preset.redirectLink,
+      title: replaceTemplateVariables(preset.title, templateVariables),
+      message: replaceTemplateVariables(preset.message, templateVariables),
+      redirectLink: replaceTemplateVariables(preset.redirectLink, templateVariables),
       ...customData
     };
 

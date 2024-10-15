@@ -3,6 +3,7 @@ import authMiddleware from '../middleware/authMiddleware.js';
 import User from '../models/User.js';
 import NotificationPreset from '../models/NotificationPreset.js';
 import logger from '../utils/logger.js';
+import { sendNotification } from '../utils/notificationUtils.js';
 
 const router = express.Router();
 
@@ -48,6 +49,52 @@ router.get('/presets', authMiddleware, async (req, res) => {
   }
 });
 
+// Create a new notification preset
+router.post('/presets', authMiddleware, async (req, res) => {
+  try {
+    const { type, title, message, defaultEnabled } = req.body;
+    const preset = new NotificationPreset({ type, title, message, defaultEnabled });
+    await preset.save();
+    res.status(201).json({ success: true, preset });
+  } catch (error) {
+    logger.error('Error creating notification preset:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Update a notification preset
+router.put('/presets/:presetId', authMiddleware, async (req, res) => {
+  try {
+    const { type, title, message, defaultEnabled } = req.body;
+    const preset = await NotificationPreset.findByIdAndUpdate(
+      req.params.presetId,
+      { type, title, message, defaultEnabled },
+      { new: true }
+    );
+    if (!preset) {
+      return res.status(404).json({ success: false, message: 'Preset not found' });
+    }
+    res.json({ success: true, preset });
+  } catch (error) {
+    logger.error('Error updating notification preset:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Delete a notification preset
+router.delete('/presets/:presetId', authMiddleware, async (req, res) => {
+  try {
+    const preset = await NotificationPreset.findByIdAndDelete(req.params.presetId);
+    if (!preset) {
+      return res.status(404).json({ success: false, message: 'Preset not found' });
+    }
+    res.json({ success: true, message: 'Preset deleted successfully' });
+  } catch (error) {
+    logger.error('Error deleting notification preset:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
 // Update user's notification preferences
 router.put('/preferences', authMiddleware, async (req, res) => {
   try {
@@ -60,6 +107,26 @@ router.put('/preferences', authMiddleware, async (req, res) => {
     res.json({ success: true, preferences: user.notificationPreferences });
   } catch (error) {
     logger.error('Error updating notification preferences:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Send a manual notification
+router.post('/send', authMiddleware, async (req, res) => {
+  try {
+    const { type, title, message, recipients } = req.body;
+    
+    if (!Array.isArray(recipients) || recipients.length === 0) {
+      return res.status(400).json({ success: false, message: 'Recipients must be a non-empty array of user IDs' });
+    }
+
+    for (const userId of recipients) {
+      await sendNotification(userId, type, { title, message });
+    }
+
+    res.json({ success: true, message: 'Notifications sent successfully' });
+  } catch (error) {
+    logger.error('Error sending manual notification:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 });

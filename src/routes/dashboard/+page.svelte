@@ -6,6 +6,7 @@
   import Categories from './tabs/Categories.svelte';
   import Reports from './tabs/Reports.svelte';
   import Settings from './tabs/Settings.svelte';
+  import Notifications from './tabs/Notifications.svelte';
   import { page } from '$app/stores';
 
   let activeTab = 'overview';
@@ -16,6 +17,7 @@
     { id: 'offers', name: 'Offers', permission: 'manageOffers', component: Offers },
     { id: 'categories', name: 'Categories', permission: 'manageCategories', component: Categories },
     { id: 'reports', name: 'Reports', permission: 'viewReports', component: Reports },
+    { id: 'notifications', name: 'Notifications', permission: 'manageNotifications', component: Notifications },
     { id: 'settings', name: 'Settings', permission: 'manageSettings', component: Settings }
   ];
 

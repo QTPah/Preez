@@ -3,8 +3,10 @@
   import { getNotificationPresets, createNotificationPreset, updateNotificationPreset, deleteNotificationPreset, sendManualNotification } from '$lib/api/notifications';
   import NotificationPresetModal from '$lib/components/NotificationPresetModal.svelte';
   import UserSearch from '$lib/components/UserSearch.svelte';
+  import { auth } from '../../../stores/auth';
 
   let activeSubTab = 'presets';
+  let userPermissions = $auth.user?.permissions || [];
   let presets = [];
   let showPresetModal = false;
   let editingPreset = null;
@@ -76,29 +78,35 @@
 
 <div>
   <div class="mb-4 flex w-full border-b dark:border-gray-700">
-    <button
-      class="flex-1 py-2 {activeSubTab === 'presets' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500 hover:text-gray-700'} dark:hover:text-white transition-colors duration-200"
-      on:click={() => activeSubTab = 'presets'}
-    >
-      Notification Presets
-    </button>
-    <button
-      class="flex-1 py-2 {activeSubTab === 'manual' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500 hover:text-gray-700'} dark:hover:text-white transition-colors duration-200"
-      on:click={() => activeSubTab = 'manual'}
-    >
-      Send Manual Notification
-    </button>
+    {#if userPermissions.includes('editPresets') || userPermissions.includes('devPresets')}
+      <button
+        class="flex-1 py-2 {activeSubTab === 'presets' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500 hover:text-gray-700'} dark:hover:text-white transition-colors duration-200"
+        on:click={() => activeSubTab = 'presets'}
+      >
+        Notification Presets
+      </button>
+    {/if}
+    {#if userPermissions.includes('sendNotifications')}
+      <button
+        class="flex-1 py-2 {activeSubTab === 'manual' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500 hover:text-gray-700'} dark:hover:text-white transition-colors duration-200"
+        on:click={() => activeSubTab = 'manual'}
+      >
+        Send Manual Notification
+      </button>
+    {/if}
   </div>
 
-  {#if activeSubTab === 'presets'}
+  {#if activeSubTab === 'presets' && (userPermissions.includes('editPresets') || userPermissions.includes('devPresets'))}
     <div class="flex justify-between items-center mb-4">
       <h3 class="text-xl font-bold dark:text-white">Notification Presets</h3>
-      <button
-        on:click={() => openPresetModal()}
-        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
-      >
-        New Preset
-      </button>
+      {#if userPermissions.includes('devPresets')}
+        <button
+          on:click={() => openPresetModal()}
+          class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+        >
+          New Preset
+        </button>
+      {/if}
     </div>
 
     <table class="w-full">
@@ -119,14 +127,18 @@
             <td class="py-2 dark:text-white">{preset.message}</td>
             <td class="py-2 dark:text-white">{preset.defaultEnabled ? 'Yes' : 'No'}</td>
             <td class="py-2">
-              <button on:click={() => openPresetModal(preset)} class="text-blue-500 hover:text-blue-600 mr-2 dark:text-blue-400 dark:hover:text-blue-300">Edit</button>
-              <button on:click={() => handlePresetDelete(preset._id)} class="text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300">Delete</button>
+              {#if userPermissions.includes('editPresets')}
+                <button on:click={() => openPresetModal(preset)} class="text-blue-500 hover:text-blue-600 mr-2 dark:text-blue-400 dark:hover:text-blue-300">Edit</button>
+              {/if}
+              {#if userPermissions.includes('devPresets')}
+                <button on:click={() => handlePresetDelete(preset._id)} class="text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300">Delete</button>
+              {/if}
             </td>
           </tr>
         {/each}
       </tbody>
     </table>
-  {:else}
+  {:else if activeSubTab === 'manual' && userPermissions.includes('sendNotifications')}
     <h3 class="text-xl font-bold mb-4 dark:text-white">Send Manual Notification</h3>
     <form on:submit|preventDefault={handleManualNotificationSend} class="mb-6">
       <select

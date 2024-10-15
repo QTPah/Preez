@@ -19,7 +19,7 @@
     { id: 'offers', name: 'Offers', permission: 'manageOffers', component: Offers },
     { id: 'categories', name: 'Categories', permission: 'manageCategories', component: Categories },
     { id: 'reports', name: 'Reports', permission: 'viewReports', component: Reports },
-    { id: 'notifications', name: 'Notifications', permission: 'manageNotifications', component: Notifications },
+    { id: 'notifications', name: 'Notifications', permission: ['editPresets', 'devPresets', 'sendNotifications'], component: Notifications },
     { id: 'settings', name: 'Settings', permission: 'manageSettings', component: Settings }
   ];
 

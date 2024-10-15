@@ -1,5 +1,6 @@
 import express from 'express';
 import authMiddleware from '../middleware/authMiddleware.js';
+import { checkPermission } from '../middleware/permissionMiddleware.js';
 import User from '../models/User.js';
 import NotificationPreset from '../models/NotificationPreset.js';
 import logger from '../utils/logger.js';
@@ -39,7 +40,7 @@ router.patch('/:notificationId', authMiddleware, async (req, res) => {
 });
 
 // Get all notification presets
-router.get('/presets', authMiddleware, async (req, res) => {
+router.get('/presets', authMiddleware, checkPermission(['editPresets', 'devPresets']), async (req, res) => {
   try {
     const presets = await NotificationPreset.find();
     res.json({ success: true, presets });
@@ -50,7 +51,7 @@ router.get('/presets', authMiddleware, async (req, res) => {
 });
 
 // Create a new notification preset
-router.post('/presets', authMiddleware, async (req, res) => {
+router.post('/presets', authMiddleware, checkPermission('devPresets'), async (req, res) => {
   try {
     const { type, title, message, defaultEnabled, redirectLink } = req.body;
     const preset = new NotificationPreset({ type, title, message, defaultEnabled, redirectLink });
@@ -63,7 +64,7 @@ router.post('/presets', authMiddleware, async (req, res) => {
 });
 
 // Update a notification preset
-router.put('/presets/:presetId', authMiddleware, async (req, res) => {
+router.put('/presets/:presetId', authMiddleware, checkPermission('editPresets'), async (req, res) => {
   try {
     const { type, title, message, defaultEnabled } = req.body;
     const preset = await NotificationPreset.findByIdAndUpdate(
@@ -82,7 +83,7 @@ router.put('/presets/:presetId', authMiddleware, async (req, res) => {
 });
 
 // Delete a notification preset
-router.delete('/presets/:presetId', authMiddleware, async (req, res) => {
+router.delete('/presets/:presetId', authMiddleware, checkPermission('devPresets'), async (req, res) => {
   try {
     const preset = await NotificationPreset.findByIdAndDelete(req.params.presetId);
     if (!preset) {
@@ -112,7 +113,7 @@ router.put('/preferences', authMiddleware, async (req, res) => {
 });
 
 // Send a manual notification
-router.post('/send', authMiddleware, async (req, res) => {
+router.post('/send', authMiddleware, checkPermission('sendNotifications'), async (req, res) => {
   try {
     const { type, title, message } = req.body;
     const recipients = req.body.recipients.split(',').map(id => id.trim());

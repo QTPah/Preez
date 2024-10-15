@@ -1,3 +1,54 @@
+<script>
+  import { onMount, onDestroy } from 'svelte';
+  import { notifications, initializeNotifications, cleanupNotifications, markAsRead } from '$lib/notifications';
+  import { auth } from '$lib/stores/auth';
+  import { clickOutside } from '$lib/actions/clickOutside';
+
+  let showInbox = false;
+  let searchTerm = '';
+  let unreadCount = 0;
+
+  $: filteredNotifications = $notifications.filter(notification => 
+    notification.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    notification.message.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  $: {
+    unreadCount = $notifications.filter(n => !n.read).length;
+  }
+
+  onMount(() => {
+    initializeNotifications($auth.accessToken);
+  });
+
+  onDestroy(() => {
+    cleanupNotifications();
+  });
+
+  function toggleInbox() {
+    showInbox = !showInbox;
+  }
+
+  function handleClickOutside() {
+    showInbox = false;
+  }
+
+  function handleNotificationClick(notification) {
+    if (!notification.read) {
+      markAsRead(notification._id);
+    }
+    // Add any additional logic for handling notification click
+  }
+
+  function handleMarkAllAsRead() {
+    $notifications.forEach(notification => {
+      if (!notification.read) {
+        markAsRead(notification._id);
+      }
+    });
+  }
+</script>
+
 <div class="relative" use:clickOutside on:click_outside={handleClickOutside}>
   <button on:click={toggleInbox} class="flex items-center relative">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -46,7 +97,7 @@
                 </button>
                 {#if !notification.read}
                   <button 
-                    on:click|stopPropagation={() => markNotificationAsRead(notification._id)}
+                    on:click|stopPropagation={() => markAsRead(notification._id)}
                     class="text-s text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2"
                   >
                     ×

@@ -85,26 +85,26 @@
 {/if}
 
 {#if showOfferModal}
-  <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" on:click={closeOfferModal}>
-    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white"
+  <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full dark:bg-gray-900 dark:bg-opacity-50" on:click={closeOfferModal}>
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-gray-800"
          on:click|stopPropagation>
       <div class="mt-3 text-center">
-        <h3 class="text-lg leading-6 font-medium text-gray-900">Edit Offer</h3>
+        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Edit Offer</h3>
         <div class="mt-2 px-7 py-3">
           <input type="text" placeholder="Title" bind:value={editingOffer.title}
-                 class="mb-3 px-3 py-2 border rounded-lg w-full" />
+                 class="mb-3 px-3 py-2 border rounded-lg w-full dark:bg-gray-700 dark:text-white dark:border-gray-600" />
           <input type="number" placeholder="Price" bind:value={editingOffer.price}
-                 class="mb-3 px-3 py-2 border rounded-lg w-full" />
+                 class="mb-3 px-3 py-2 border rounded-lg w-full dark:bg-gray-700 dark:text-white dark:border-gray-600" />
           <input type="text" placeholder="Category" bind:value={editingOffer.category}
-                 class="mb-3 px-3 py-2 border rounded-lg w-full" />
+                 class="mb-3 px-3 py-2 border rounded-lg w-full dark:bg-gray-700 dark:text-white dark:border-gray-600" />
           <textarea placeholder="Description" bind:value={editingOffer.description}
-                    class="mb-3 px-3 py-2 border rounded-lg w-full" rows="3"></textarea>
+                    class="mb-3 px-3 py-2 border rounded-lg w-full dark:bg-gray-700 dark:text-white dark:border-gray-600" rows="3"></textarea>
           <div class="mb-3">
-            <label class="block text-gray-700 text-sm font-bold mb-2">Tags</label>
+            <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Tags</label>
             <div class="flex flex-wrap">
               {#each editingOffer.tags as tag}
                 <span 
-                  class="bg-blue-100 text-blue-800 text-sm font-medium mr-2 mb-2 px-2.5 py-0.5 rounded cursor-pointer hover:line-through"
+                  class="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 text-sm font-medium mr-2 mb-2 px-2.5 py-0.5 rounded cursor-pointer hover:line-through"
                   on:click={() => editingOffer.tags = editingOffer.tags.filter(t => t !== tag)}
                 >
                   {tag}
@@ -115,7 +115,7 @@
               <input 
                 type="text" 
                 placeholder="Add new tag" 
-                class="flex-grow mr-2 px-3 py-2 border rounded-lg"
+                class="flex-grow mr-2 px-3 py-2 border rounded-lg dark:bg-gray-700 dark:text-white dark:border-gray-600"
                 bind:value={newTag}
               />
               <button 
@@ -125,7 +125,7 @@
                     newTag = '';
                   }
                 }}
-                class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+                class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded dark:bg-blue-600 dark:hover:bg-blue-700"
               >
                 Add
               </button>
@@ -134,7 +134,7 @@
         </div>
         <div class="items-center px-4 py-3">
           <button on:click={saveOffer}
-                  class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                  class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-500">
             Update Offer
           </button>
         </div>

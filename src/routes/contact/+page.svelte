@@ -17,40 +17,40 @@
 </script>
 
 <main class="container mx-auto px-4 py-8">
-  <h1 class="text-3xl font-bold mb-6">Contact Us</h1>
+  <h1 class="text-3xl font-bold mb-6 dark:text-white">Contact Us</h1>
   
   <form on:submit|preventDefault={handleSubmit} class="max-w-lg">
     <div class="mb-4">
-      <label for="name" class="block text-gray-700 font-bold mb-2">Name</label>
+      <label for="name" class="block text-gray-700 dark:text-gray-300 font-bold mb-2">Name</label>
       <input
         type="text"
         id="name"
         bind:value={name}
         required
-        class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500"
+        class="w-full px-3 py-2 text-gray-700 dark:text-white border rounded-lg focus:outline-none focus:border-blue-500 dark:border-gray-600 dark:bg-gray-700"
         placeholder="Your name"
       />
     </div>
     
     <div class="mb-4">
-      <label for="email" class="block text-gray-700 font-bold mb-2">Email</label>
+      <label for="email" class="block text-gray-700 dark:text-gray-300 font-bold mb-2">Email</label>
       <input
         type="email"
         id="email"
         bind:value={email}
         required
-        class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500"
+        class="w-full px-3 py-2 text-gray-700 dark:text-white border rounded-lg focus:outline-none focus:border-blue-500 dark:border-gray-600 dark:bg-gray-700"
         placeholder="Your email"
       />
     </div>
     
     <div class="mb-4">
-      <label for="message" class="block text-gray-700 font-bold mb-2">Message</label>
+      <label for="message" class="block text-gray-700 dark:text-gray-300 font-bold mb-2">Message</label>
       <textarea
         id="message"
         bind:value={message}
         required
-        class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500"
+        class="w-full px-3 py-2 text-gray-700 dark:text-white border rounded-lg focus:outline-none focus:border-blue-500 dark:border-gray-600 dark:bg-gray-700"
         rows="5"
         placeholder="Your message"
       ></textarea>
@@ -58,13 +58,13 @@
     
     <button
       type="submit"
-      class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline dark:bg-blue-600 dark:hover:bg-blue-700"
     >
       Send Message
     </button>
   </form>
   
   {#if submitStatus}
-    <p class="mt-4 text-green-600 font-semibold">{submitStatus}</p>
+    <p class="mt-4 text-green-600 dark:text-green-400 font-semibold">{submitStatus}</p>
   {/if}
 </main>

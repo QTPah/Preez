@@ -64,15 +64,15 @@
 </script>
 
 <div>
-  <div class="mb-4">
+  <div class="mb-4 flex w-full border-b dark:border-gray-700">
     <button
-      class="mr-2 px-4 py-2 {activeSubTab === 'presets' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} dark:text-white dark:bg-gray-700 rounded"
+      class="flex-1 py-2 {activeSubTab === 'presets' ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500 hover:text-gray-700'} dark:text-gray-400 dark:hover:text-white transition-colors duration-200"
       on:click={() => activeSubTab = 'presets'}
     >
       Notification Presets
     </button>
     <button
-      class="px-4 py-2 {activeSubTab === 'manual' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} dark:text-white dark:bg-gray-700 rounded"
+      class="flex-1 py-2 {activeSubTab === 'manual' ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500 hover:text-gray-700'} dark:text-gray-400 dark:hover:text-white transition-colors duration-200"
       on:click={() => activeSubTab = 'manual'}
     >
       Send Manual Notification

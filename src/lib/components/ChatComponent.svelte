@@ -7,15 +7,30 @@
 
   let messages = [];
   let newMessage = '';
+  let searchTerm = '';
+  let selectedUser = null;
+  let showUserDropdown = false;
+
+  // Mock user list - replace with actual data fetching in a real application
+  let users = [
+    { id: 1, name: 'Alice' },
+    { id: 2, name: 'Bob' },
+    { id: 3, name: 'Charlie' },
+    { id: 4, name: 'David' },
+  ];
+
+  $: filteredUsers = users.filter(user => 
+    user.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   function sendMessage() {
-    if (newMessage.trim()) {
-      messages = [...messages, { text: newMessage, sender: 'user' }];
+    if (newMessage.trim() && selectedUser) {
+      messages = [...messages, { text: newMessage, sender: 'user', recipient: selectedUser.name }];
       newMessage = '';
       // Here you would typically send the message to a backend
       // and then receive a response. For now, we'll simulate a response.
       setTimeout(() => {
-        messages = [...messages, { text: "Thanks for your message! This is a placeholder response.", sender: 'bot' }];
+        messages = [...messages, { text: `Thanks for your message to ${selectedUser.name}! This is a placeholder response.`, sender: 'bot' }];
       }, 1000);
     }
   }
@@ -27,14 +42,19 @@
     }
   }
 
+  function selectUser(user) {
+    selectedUser = user;
+    showUserDropdown = false;
+  }
+
   onMount(() => {
     if (isOpen) {
-      document.getElementById('chat-input').focus();
+      document.getElementById('user-search').focus();
     }
   });
 </script>
 
-<div class="absolute top-full right-0 mt-2 z-50" use:clickOutside on:click_outside={() => isOpen = false}>
+<div class="absolute top-full right-0 mt-2 z-50">
   {#if isOpen}
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-80 h-96 flex flex-col dark:border dark:border-white"
          in:fly="{{ y: -20, duration: 300 }}"
@@ -46,6 +66,33 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
         </button>
+      </div>
+      <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+        <div class="relative">
+          <input
+            type="text"
+            id="user-search"
+            bind:value={searchTerm}
+            on:focus={() => showUserDropdown = true}
+            placeholder="Search for a user..."
+            class="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          />
+          {#if showUserDropdown}
+            <div class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg max-h-40 overflow-y-auto">
+              {#each filteredUsers as user}
+                <button
+                  on:click={() => selectUser(user)}
+                  class="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-white"
+                >
+                  {user.name}
+                </button>
+              {/each}
+            </div>
+          {/if}
+        </div>
+        {#if selectedUser}
+          <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">Chatting with: {selectedUser.name}</p>
+        {/if}
       </div>
       <div class="flex-grow overflow-y-auto p-4">
         {#each messages as message}
@@ -65,8 +112,9 @@
             on:keydown={handleKeydown}
             placeholder="Type a message..."
             class="flex-grow mr-2 p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            disabled={!selectedUser}
           />
-          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Send</button>
+          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600" disabled={!selectedUser}>Send</button>
         </form>
       </div>
     </div>

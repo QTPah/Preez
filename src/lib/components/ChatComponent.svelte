@@ -13,10 +13,10 @@
 
   // Mock user list - replace with actual data fetching in a real application
   let users = [
-    { id: 1, name: 'Alice' },
-    { id: 2, name: 'Bob' },
-    { id: 3, name: 'Charlie' },
-    { id: 4, name: 'David' },
+    { id: 1, name: 'Alice', profilePicture: 'https://example.com/alice.jpg' },
+    { id: 2, name: 'Bob', profilePicture: 'https://example.com/bob.jpg' },
+    { id: 3, name: 'Charlie', profilePicture: 'https://example.com/charlie.jpg' },
+    { id: 4, name: 'David', profilePicture: 'https://example.com/david.jpg' },
   ];
 
   $: filteredUsers = users.filter(user => 
@@ -45,6 +45,11 @@
   function selectUser(user) {
     selectedUser = user;
     showUserDropdown = false;
+    searchTerm = '';
+  }
+
+  function handleClickOutside() {
+    showUserDropdown = false;
   }
 
   onMount(() => {
@@ -54,7 +59,7 @@
   });
 </script>
 
-<div class="absolute top-full right-0 mt-2 z-50">
+<div class="absolute top-full right-0 mt-2 z-50" use:clickOutside on:click_outside={handleClickOutside}>
   {#if isOpen}
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-80 h-96 flex flex-col dark:border dark:border-white"
          in:fly="{{ y: -20, duration: 300 }}"
@@ -82,8 +87,9 @@
               {#each filteredUsers as user}
                 <button
                   on:click={() => selectUser(user)}
-                  class="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-white"
+                  class="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-white flex items-center"
                 >
+                  <img src={user.profilePicture} alt={user.name} class="w-8 h-8 rounded-full mr-2">
                   {user.name}
                 </button>
               {/each}
@@ -91,7 +97,10 @@
           {/if}
         </div>
         {#if selectedUser}
-          <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">Chatting with: {selectedUser.name}</p>
+          <div class="mt-2 flex items-center">
+            <img src={selectedUser.profilePicture} alt={selectedUser.name} class="w-8 h-8 rounded-full mr-2">
+            <p class="text-sm text-gray-600 dark:text-gray-300">Chatting with: {selectedUser.name}</p>
+          </div>
         {/if}
       </div>
       <div class="flex-grow overflow-y-auto p-4">

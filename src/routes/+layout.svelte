@@ -151,7 +151,7 @@
     <AuthForm on:close={closeAuthForm} on:auth={handleAuth} />
   {/if}
 
-  <ChatComponent bind:isOpen={showChat} />
+  <ChatComponent bind:isOpen={showChat} userProfilePicture={profilePicture} />
 
   <main class="flex-grow">
     <slot />

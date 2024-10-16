@@ -4,6 +4,7 @@
   import { fade, fly } from 'svelte/transition';
   import defaultProfile from '$lib/assets/default-picture.jpeg';
   import { getUsers, sendMessage, getMessages } from '$lib/api/chat';
+  import { auth } from '../../stores/auth';
 
   export let isOpen = false;
   export let userProfilePicture = defaultProfile;
@@ -154,8 +155,8 @@
       </div>
       <div bind:this={messagesContainer} class="flex-grow overflow-y-auto p-4">
         {#each messages as message}
-          <div class="mb-2 {message.sender === 'user' ? 'text-right' : 'text-left'}">
-            <span class="inline-block p-2 rounded-lg {message.sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100'}">
+          <div class="mb-2 {message.sender === $auth.user._id ? 'text-right' : 'text-left'}">
+            <span class="inline-block p-2 rounded-lg {message.sender === $auth.user._id ? 'bg-blue-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100'}">
               {message.text}
             </span>
           </div>

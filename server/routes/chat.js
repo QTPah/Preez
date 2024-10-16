@@ -26,6 +26,13 @@ router.get('/messages/:userId', authMiddleware, async (req, res) => {
         { sender: req.params.userId, recipient: req.user.id }
       ]
     }).sort('createdAt');
+
+    // Mark messages as seen
+    await Message.updateMany(
+      { sender: req.params.userId, recipient: req.user.id, seen: false },
+      { $set: { seen: true, seenAt: new Date() } }
+    );
+
     res.json(messages);
   } catch (error) {
     console.error('Error fetching messages:', error);

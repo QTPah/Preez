@@ -156,9 +156,21 @@
       <div bind:this={messagesContainer} class="flex-grow overflow-y-auto p-4">
         {#each messages as message}
           <div class="mb-2 {message.sender === $auth.user._id ? 'text-right' : 'text-left'}">
-            <span class="inline-block p-2 rounded-lg {message.sender === $auth.user._id ? 'bg-blue-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100'}">
-              {message.text}
-            </span>
+            <div class="inline-block">
+              <span class="inline-block p-2 rounded-lg {message.sender === $auth.user._id ? 'bg-blue-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100'}">
+                {message.text}
+              </span>
+              <div class="text-xs text-gray-500 mt-1">
+                {new Date(message.createdAt).toLocaleTimeString()}
+                {#if message.sender === $auth.user._id}
+                  {#if message.seen}
+                    <span class="ml-1">✓✓</span>
+                  {:else}
+                    <span class="ml-1">✓</span>
+                  {/if}
+                {/if}
+              </div>
+            </div>
           </div>
         {/each}
       </div>

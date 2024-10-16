@@ -1,69 +1,87 @@
 <script>
-  import { onMount } from 'svelte';
+  import { onMount, afterUpdate } from 'svelte';
   import { clickOutside } from '$lib/actions/clickOutside';
   import { fade, fly } from 'svelte/transition';
   import defaultProfile from '$lib/assets/default-picture.jpeg';
+  import { getUsers, sendMessage, getMessages } from '$lib/api/chat';
 
   export let isOpen = false;
+  export let userProfilePicture = defaultProfile;
 
   let messages = [];
   let newMessage = '';
   let searchTerm = '';
   let selectedUser = null;
   let showUserDropdown = false;
-
-  // Mock user list - replace with actual data fetching in a real application
-  let users = [
-    { id: 1, name: 'Alice', profilePicture: defaultProfile },
-    { id: 2, name: 'Bob', profilePicture: defaultProfile },
-    { id: 3, name: 'Charlie', profilePicture: defaultProfile },
-    { id: 4, name: 'David', profilePicture: defaultProfile },
-  ];
+  let users = [];
+  let messagesContainer;
 
   $: filteredUsers = users.filter(user => 
     user.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  function sendMessage() {
+  async function fetchUsers() {
+    users = await getUsers();
+  }
+
+  async function fetchMessages() {
+    if (selectedUser) {
+      messages = await getMessages(selectedUser.id);
+      scrollToBottom();
+    }
+  }
+
+  async function handleSendMessage() {
     if (newMessage.trim() && selectedUser) {
-      messages = [...messages, { text: newMessage, sender: 'user', recipient: selectedUser.name }];
+      const sentMessage = await sendMessage(selectedUser.id, newMessage);
+      messages = [...messages, sentMessage];
       newMessage = '';
-      // Here you would typically send the message to a backend
-      // and then receive a response. For now, we'll simulate a response.
-      setTimeout(() => {
-        messages = [...messages, { text: `Thanks for your message to ${selectedUser.name}! This is a placeholder response.`, sender: 'bot' }];
-      }, 1000);
+      scrollToBottom();
     }
   }
 
   function handleKeydown(event) {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
-      sendMessage();
+      handleSendMessage();
     }
   }
 
-  function selectUser(user) {
+  async function selectUser(user) {
     selectedUser = user;
     showUserDropdown = false;
     searchTerm = '';
+    await fetchMessages();
   }
 
   function handleClickOutside() {
     showUserDropdown = false;
   }
 
-  onMount(() => {
+  function scrollToBottom() {
+    if (messagesContainer) {
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+  }
+
+  onMount(async () => {
+    await fetchUsers();
     if (isOpen) {
       document.getElementById('user-search').focus();
     }
   });
+
+  afterUpdate(() => {
+    if (isOpen) {
+      scrollToBottom();
+    }
+  });
 </script>
 
-<div class="absolute top-full right-0 mt-2 z-50" use:clickOutside on:click_outside={handleClickOutside}>
+<div class="absolute bottom-0 right-0 mb-2 mr-2 z-50" use:clickOutside on:click_outside={handleClickOutside}>
   {#if isOpen}
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-80 h-96 flex flex-col dark:border dark:border-white"
-         in:fly="{{ y: -20, duration: 300 }}"
+         in:fly="{{ y: 20, duration: 300 }}"
          out:fade="{{ duration: 200 }}">
       <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
         <h3 class="text-lg font-semibold">Chat</h3>
@@ -104,7 +122,7 @@
           </div>
         {/if}
       </div>
-      <div class="flex-grow overflow-y-auto p-4">
+      <div bind:this={messagesContainer} class="flex-grow overflow-y-auto p-4">
         {#each messages as message}
           <div class="mb-2 {message.sender === 'user' ? 'text-right' : 'text-left'}">
             <span class="inline-block p-2 rounded-lg {message.sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100'}">
@@ -114,7 +132,7 @@
         {/each}
       </div>
       <div class="p-4 border-t border-gray-200 dark:border-gray-700">
-        <form on:submit|preventDefault={sendMessage} class="flex">
+        <form on:submit|preventDefault={handleSendMessage} class="flex">
           <input
             type="text"
             id="chat-input"

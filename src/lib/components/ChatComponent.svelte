@@ -17,7 +17,7 @@
   let messagesContainer;
 
   $: filteredUsers = users.filter(user => 
-    user.name.toLowerCase().includes(searchTerm.toLowerCase())
+    user.username.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   async function fetchUsers() {
@@ -26,14 +26,14 @@
 
   async function fetchMessages() {
     if (selectedUser) {
-      messages = await getMessages(selectedUser.id);
+      messages = await getMessages(selectedUser._id);
       scrollToBottom();
     }
   }
 
   async function handleSendMessage() {
     if (newMessage.trim() && selectedUser) {
-      const sentMessage = await sendMessage(selectedUser.id, newMessage);
+      const sentMessage = await sendMessage(selectedUser._id, newMessage);
       messages = [...messages, sentMessage];
       newMessage = '';
       scrollToBottom();
@@ -76,9 +76,7 @@
       scrollToBottom();
     }
   });
-</script>
 
-<script>
   // ... existing script content ...
 
   let chatWindowRef;
@@ -140,8 +138,8 @@
                   on:click={() => selectUser(user)}
                   class="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-white flex items-center"
                 >
-                  <img src={user.profilePicture} alt={user.name} class="w-8 h-8 rounded-full mr-2">
-                  {user.name}
+                  <img src={user.profilePicture || defaultProfile} alt={user.username} class="w-8 h-8 rounded-full mr-2">
+                  {user.username}
                 </button>
               {/each}
             </div>
@@ -149,8 +147,8 @@
         </div>
         {#if selectedUser}
           <div class="mt-2 flex items-center">
-            <img src={selectedUser.profilePicture} alt={selectedUser.name} class="w-8 h-8 rounded-full mr-2">
-            <p class="text-sm text-gray-600 dark:text-gray-300">Chatting with: {selectedUser.name}</p>
+            <img src={selectedUser.profilePicture || defaultProfile} alt={selectedUser.username} class="w-8 h-8 rounded-full mr-2">
+            <p class="text-sm text-gray-600 dark:text-gray-300">Chatting with: {selectedUser.username}</p>
           </div>
         {/if}
       </div>

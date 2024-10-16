@@ -2,6 +2,7 @@ import express from 'express';
 import authMiddleware from '../middleware/authMiddleware.js';
 import User from '../models/User.js';
 import Message from '../models/Message.js';
+import { createNotification } from '../utils/notificationUtils.js';
 
 const router = express.Router();
 
@@ -42,6 +43,16 @@ router.post('/messages', authMiddleware, async (req, res) => {
       text
     });
     await message.save();
+
+    // Create a notification for the recipient
+    const sender = await User.findById(req.user.id);
+    await createNotification(
+      userId,
+      'message',
+      'New Message',
+      `You have a new message from ${sender.username}`
+    );
+
     res.status(201).json(message);
   } catch (error) {
     console.error('Error sending message:', error);

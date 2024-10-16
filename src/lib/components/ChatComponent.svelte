@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { clickOutside } from '$lib/actions/clickOutside';
+  import { fade, fly } from 'svelte/transition';
 
   export let isOpen = false;
 
@@ -33,9 +34,11 @@
   });
 </script>
 
-<div class="fixed bottom-4 right-4 z-50" use:clickOutside on:click_outside={() => isOpen = false}>
+<div class="absolute top-full right-0 mt-2 z-50" use:clickOutside on:click_outside={() => isOpen = false}>
   {#if isOpen}
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-80 h-96 flex flex-col">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-80 h-96 flex flex-col"
+         in:fly="{{ y: -20, duration: 300 }}"
+         out:fade="{{ duration: 200 }}">
       <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
         <h3 class="text-lg font-semibold">Chat</h3>
         <button on:click={() => isOpen = false} class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">

@@ -7,11 +7,13 @@
   import { login, register, logout, validateTokenAndFetchUser } from '$lib/api/auth';
   import AuthForm from '$lib/components/AuthForm.svelte';
   import NotificationsInbox from '$lib/components/NotificationsInbox.svelte';
+  import ChatComponent from '$lib/components/ChatComponent.svelte';
   import { clickOutside } from '$lib/actions/clickOutside';
   import defaultProfile from '$lib/assets/default-picture.jpeg';
 
   let showAuthForm = false;
   let showDropdown = false;
+  let showChat = false;
   let profilePicture = defaultProfile;
 
   async function validateToken() {
@@ -133,6 +135,13 @@
             {$theme === 'dark' ? '☀️' : '🌙'}
           </button>
         </li>
+        <li class="mx-2 my-1">
+          <button on:click={() => showChat = !showChat} class="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+            </svg>
+          </button>
+        </li>
       </ul>
     </div>
   </nav>
@@ -140,6 +149,8 @@
   {#if showAuthForm}
     <AuthForm on:close={closeAuthForm} on:auth={handleAuth} />
   {/if}
+
+  <ChatComponent bind:isOpen={showChat} />
 
   <main class="flex-grow">
     <slot />

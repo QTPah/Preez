@@ -36,7 +36,7 @@
 
 <div class="absolute top-full right-0 mt-2 z-50" use:clickOutside on:click_outside={() => isOpen = false}>
   {#if isOpen}
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-80 h-96 flex flex-col"
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-80 h-96 flex flex-col dark:border dark:border-white"
          in:fly="{{ y: -20, duration: 300 }}"
          out:fade="{{ duration: 200 }}">
       <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">

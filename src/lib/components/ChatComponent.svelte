@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { clickOutside } from '$lib/actions/clickOutside';
   import { fade, fly } from 'svelte/transition';
+  import defaultProfile from '$lib/assets/default-picture.jpeg';
 
   export let isOpen = false;
 
@@ -13,10 +14,10 @@
 
   // Mock user list - replace with actual data fetching in a real application
   let users = [
-    { id: 1, name: 'Alice', profilePicture: 'https://example.com/alice.jpg' },
-    { id: 2, name: 'Bob', profilePicture: 'https://example.com/bob.jpg' },
-    { id: 3, name: 'Charlie', profilePicture: 'https://example.com/charlie.jpg' },
-    { id: 4, name: 'David', profilePicture: 'https://example.com/david.jpg' },
+    { id: 1, name: 'Alice', profilePicture: defaultProfile },
+    { id: 2, name: 'Bob', profilePicture: defaultProfile },
+    { id: 3, name: 'Charlie', profilePicture: defaultProfile },
+    { id: 4, name: 'David', profilePicture: defaultProfile },
   ];
 
   $: filteredUsers = users.filter(user => 

@@ -6,8 +6,20 @@ const refreshToken = async () => {
   const authStore = get(auth);
   try {
     const response = await axios.post('/api/auth/refresh-token', { refreshToken: authStore.refreshToken });
-    auth.setSession(response.data);
-    return response.data.accessToken;
+    const newAccessToken = response.data.accessToken;
+    
+    // Validate the new token and fetch user data
+    const userDataResponse = await axios.get('/api/auth/validate-token', {
+      headers: { Authorization: `Bearer ${newAccessToken}` }
+    });
+    
+    auth.setSession({
+      accessToken: newAccessToken,
+      refreshToken: authStore.refreshToken,
+      user: userDataResponse.data.user
+    });
+    
+    return newAccessToken;
   } catch (error) {
     auth.clearSession();
     throw error;

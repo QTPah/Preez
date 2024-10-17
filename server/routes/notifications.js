@@ -1,11 +1,11 @@
 import express from 'express';
-import { authenticateToken } from '../middleware/auth.js';
+import authMiddleware from '../middleware/authMiddleware.js';
 import { createNotification, getUnreadNotifications, markNotificationAsRead } from '../utils/notificationUtils.js';
 import logger from '../utils/logger.js';
 
 const router = express.Router();
 
-router.get('/', authenticateToken, async (req, res) => {
+router.get('/', authMiddleware, async (req, res) => {
   try {
     const notifications = await getUnreadNotifications(req.user.id);
     res.json(notifications);
@@ -15,7 +15,7 @@ router.get('/', authenticateToken, async (req, res) => {
   }
 });
 
-router.post('/', authenticateToken, async (req, res) => {
+router.post('/', authMiddleware, async (req, res) => {
   const { type, title, message } = req.body;
   try {
     const notification = await createNotification(req.user.id, type, title, message);
@@ -26,7 +26,7 @@ router.post('/', authenticateToken, async (req, res) => {
   }
 });
 
-router.patch('/:id/read', authenticateToken, async (req, res) => {
+router.patch('/:id/read', authMiddleware, async (req, res) => {
   try {
     const notification = await markNotificationAsRead(req.params.id);
     res.json(notification);

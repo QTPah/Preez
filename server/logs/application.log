@@ -1589,3 +1589,9 @@
 {"level":30,"time":"2024-10-15T17:38:39.631Z","pid":71966,"hostname":"ubuntux","msg":"Login attempt: admin"}
 {"level":30,"time":"2024-10-15T17:38:39.718Z","pid":71966,"hostname":"ubuntux","msg":"User logged in: 66f84836b885ff9e93b2a406"}
 {"level":30,"time":"2024-10-15T17:38:39.718Z","pid":71966,"hostname":"ubuntux","msg":"Generating tokens for user: 66f84836b885ff9e93b2a406"}
+{"level":30,"time":"2024-10-17T18:37:01.449Z","pid":85092,"hostname":"ubuntux","msg":"Is production mode:"}
+{"level":30,"time":"2024-10-17T18:37:01.450Z","pid":85092,"hostname":"ubuntux","msg":"Serving static files from: /home/donsim/Desktop/Projects/preez/server/uploads"}
+{"level":30,"time":"2024-10-17T18:37:01.450Z","pid":85092,"hostname":"ubuntux","msg":"Attempting to connect to MongoDB..."}
+{"level":30,"time":"2024-10-17T18:37:01.461Z","pid":85092,"hostname":"ubuntux","msg":"Server port: 5000"}
+{"level":30,"time":"2024-10-17T18:37:01.467Z","pid":85092,"hostname":"ubuntux","msg":"HTTP Server running on port 5000"}
+{"level":30,"time":"2024-10-17T18:37:01.484Z","pid":85092,"hostname":"ubuntux","msg":"Connected to MongoDB"}

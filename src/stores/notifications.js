@@ -1,34 +1,43 @@
 import { writable } from 'svelte/store';
+import { browser } from '$app/environment';
 import { getNotifications, markNotificationAsRead, connectWebSocket, disconnectWebSocket } from '$lib/api/notifications';
 
-export const notifications = writable([]);
+function createNotificationsStore() {
+  const { subscribe, set, update } = writable([]);
 
-export const initializeNotifications = async (token) => {
-  try {
-    const response = await getNotifications();
-    notifications.set(response.data);
-    connectWebSocket(token);
-  } catch (error) {
-    console.error('Error initializing notifications:', error);
-  }
-};
+  return {
+    subscribe,
+    initialize: async (token) => {
+      try {
+        const response = await getNotifications();
+        set(response.data);
+        if (browser) {
+          connectWebSocket(token);
+        }
+      } catch (error) {
+        console.error('Error initializing notifications:', error);
+      }
+    },
+    add: (notification) => {
+      update(n => [notification, ...n]);
+    },
+    markAsRead: async (id) => {
+      try {
+        await markNotificationAsRead(id);
+        update(n => n.map(notification => 
+          notification._id === id ? { ...notification, read: true } : notification
+        ));
+      } catch (error) {
+        console.error('Error marking notification as read:', error);
+      }
+    },
+    cleanup: () => {
+      if (browser) {
+        disconnectWebSocket();
+      }
+      set([]);
+    }
+  };
+}
 
-export const addNotification = (notification) => {
-  notifications.update(n => [notification, ...n]);
-};
-
-export const markAsRead = async (id) => {
-  try {
-    await markNotificationAsRead(id);
-    notifications.update(n => n.map(notification => 
-      notification._id === id ? { ...notification, read: true } : notification
-    ));
-  } catch (error) {
-    console.error('Error marking notification as read:', error);
-  }
-};
-
-export const cleanupNotifications = () => {
-  disconnectWebSocket();
-  notifications.set([]);
-};
+export const notifications = createNotificationsStore();

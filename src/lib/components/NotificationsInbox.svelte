@@ -1,7 +1,7 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
   import { notifications, initializeNotifications, cleanupNotifications, markAsRead } from '$lib/notifications';
-  import { auth } from '$lib/stores/auth';
+  import { auth } from '../../stores/auth';
   import { clickOutside } from '$lib/actions/clickOutside';
 
   let showInbox = false;
@@ -18,7 +18,9 @@
   }
 
   onMount(() => {
+    console.log("1 " + $notifications);
     initializeNotifications($auth.accessToken);
+    console.log("2 " + $notifications);
   });
 
   onDestroy(() => {

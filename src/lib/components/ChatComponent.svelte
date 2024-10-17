@@ -17,9 +17,13 @@
   let users = [];
   let messagesContainer;
 
-  $: filteredUsers = users.filter(user => 
-    user.username.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  $: filteredUsers = users
+    .filter(user => user.username.toLowerCase().includes(searchTerm.toLowerCase()))
+    .sort((a, b) => {
+      if (a.unreadCount > 0 && b.unreadCount === 0) return -1;
+      if (a.unreadCount === 0 && b.unreadCount > 0) return 1;
+      return new Date(b.lastMessageAt) - new Date(a.lastMessageAt);
+    });
 
   $: if (isOpen) {
     document.body.style.overflow = 'hidden';

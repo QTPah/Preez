@@ -1,6 +1,6 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
-  import { notifications, initializeNotifications, cleanupNotifications, markAsRead } from '../../stores/notifications';
+  import { notifications } from '../../stores/notifications';
   import { auth } from '../../stores/auth';
   import { clickOutside } from '$lib/actions/clickOutside';
 
@@ -8,23 +8,21 @@
   let searchTerm = '';
   let unreadCount = 0;
 
-  $: filteredNotifications = $notifications.filter(notification => 
+  $: filteredNotifications = $notifications ? $notifications.filter(notification => 
     notification.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     notification.message.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  ) : [];
 
   $: {
-    unreadCount = $notifications.filter(n => !n.read).length;
+    unreadCount = $notifications ? $notifications.filter(n => !n.read).length : 0;
   }
 
   onMount(() => {
-    console.log("1 " + $notifications);
-    initializeNotifications($auth.accessToken);
-    console.log("2 " + $notifications);
+    notifications.initialize($auth.accessToken);
   });
 
   onDestroy(() => {
-    cleanupNotifications();
+    notifications.cleanup();
   });
 
   function toggleInbox() {
@@ -37,7 +35,7 @@
 
   function handleNotificationClick(notification) {
     if (!notification.read) {
-      markAsRead(notification._id);
+      notifications.markAsRead(notification._id);
     }
     // Add any additional logic for handling notification click
   }
@@ -45,7 +43,7 @@
   function handleMarkAllAsRead() {
     $notifications.forEach(notification => {
       if (!notification.read) {
-        markAsRead(notification._id);
+        notifications.markAsRead(notification._id);
       }
     });
   }
@@ -99,7 +97,7 @@
                 </button>
                 {#if !notification.read}
                   <button 
-                    on:click|stopPropagation={() => markAsRead(notification._id)}
+                    on:click|stopPropagation={() => $notifications.markAsRead(notification._id)}
                     class="text-s text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2"
                   >
                     ×

@@ -34,7 +34,7 @@ export const apiRequest = async (axiosInstance, method, url, data = null, config
     try {
       const authStore = get(auth);
       const headers = { ...config.headers, Authorization: `Bearer ${authStore.accessToken}` };
-      const response = await axiosInstance[method](url, data, { ...config, headers });
+      const response = await axiosInstance({ method, url, data, headers, ...config });  
       return response.data;
     } catch (error) {
       if (error.response && error.response.status === 401 && retries < maxRetries - 1) {

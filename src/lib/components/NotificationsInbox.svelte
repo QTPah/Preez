@@ -1,6 +1,6 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
-  import { notifications, initializeNotifications, cleanupNotifications, markAsRead } from '$lib/notifications';
+  import { notifications, initializeNotifications, cleanupNotifications, markAsRead } from '$lib/api/notifications';
   import { auth } from '../../stores/auth';
   import { clickOutside } from '$lib/actions/clickOutside';
 

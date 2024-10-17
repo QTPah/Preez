@@ -5,7 +5,7 @@ import { get } from 'svelte/store';
 const refreshToken = async () => {
   const authStore = get(auth);
   try {
-    const response = await axios.post('/api/auth/refresh', { refreshToken: authStore.refreshToken });
+    const response = await axios.post('/api/auth/refresh-token', { refreshToken: authStore.refreshToken });
     auth.setSession(response.data);
     return response.data.accessToken;
   } catch (error) {

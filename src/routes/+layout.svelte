@@ -98,10 +98,12 @@
       <ul class="flex flex-wrap justify-center sm:space-x-4 items-center text-sm sm:text-base">
         <li class="mx-2 my-1"><a href="/" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/'}>Home</a></li>
         <li class="mx-2 my-1"><a href="/about" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/about'}>About</a></li>
-        <li class="mx-2 my-1"><a href="/contact" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/contact'}>Contact</a></li>
         {#if $isLoggedIn}
           <li class="mx-2 my-1">
             <NotificationsInbox />
+          </li>
+          <li class="mx-2 my-1 relative">
+            <ChatComponent />
           </li>
           <li class="mx-2 relative flex items-center">
             <button on:click={() => showDropdown = !showDropdown} class="focus:outline-none">
@@ -134,9 +136,6 @@
           <button on:click={() => theme.toggleTheme()} class="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100">
             {$theme === 'dark' ? '☀️' : '🌙'}
           </button>
-        </li>
-        <li class="mx-2 my-1 relative">
-          <ChatComponent />
         </li>
       </ul>
     </div>

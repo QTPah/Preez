@@ -151,7 +151,7 @@
   }
 </script>
 
-<div class="container mx-auto px-4 py-8 dark:bg-gray-800">
+<div class="container mx-auto px-4 py-8 dark:bg-gray-900">
   <h1 class="text-3xl font-bold mb-6 dark:text-white">Settings</h1>
   
   {#if message}
@@ -162,7 +162,7 @@
 
   <div class="flex flex-col md:flex-row gap-6">
     <div class="w-full md:w-1/4">
-      <div class="bg-white dark:bg-gray-700 shadow rounded-lg p-4">
+      <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
         <ul>
           {#each sections as section}
             <li class="mb-2">
@@ -179,38 +179,38 @@
     </div>
 
     <div class="w-full md:w-3/4">
-      <div class="bg-white dark:bg-gray-700 shadow rounded-lg p-6">
-        <div class="mb-6 flex items-center">
-          <img
-            src={profilePicture ? URL.createObjectURL(profilePicture) : $auth.user?.profilePicture || '/path/to/default/image.jpg'}
-            alt="Profile Picture"
-            class="w-32 h-32 object-cover rounded-full mr-4"
-          />
-          <div>
-            <button
-              type="button"
-              on:click={handleEditProfilePicture}
-              class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mr-2"
-            >
-              Edit
-            </button>
-            <button
-              type="button"
-              on:click={handleDeleteProfilePicture}
-              class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
-            >
-              Delete
-            </button>
-          </div>
-        </div>
-        <input
-          type="file"
-          id="profilePicture"
-          accept="image/*"
-          on:change={(e) => profilePicture = e.target.files[0]}
-          class="hidden"
-        />
+      <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
         {#if activeSection === 'profile'}
+          <div class="mb-6 flex items-center">
+            <img
+              src={profilePicture ? URL.createObjectURL(profilePicture) : $auth.user?.profilePicture || '/path/to/default/image.jpg'}
+              alt="Profile Picture"
+              class="w-32 h-32 object-cover rounded-full mr-4"
+            />
+            <div>
+              <button
+                type="button"
+                on:click={handleEditProfilePicture}
+                class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mr-2"
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                on:click={handleDeleteProfilePicture}
+                class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+          <input
+            type="file"
+            id="profilePicture"
+            accept="image/*"
+            on:change={(e) => profilePicture = e.target.files[0]}
+            class="hidden"
+          />
           <h2 class="text-2xl font-semibold mb-4 dark:text-white">Profile Settings</h2>
           <div class="mb-4">
             <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Username</label>
@@ -218,7 +218,7 @@
               type="text"
               id="username"
               bind:value={username}
-              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-500 dark:text-white"
             />
           </div>
           <div class="mb-4">
@@ -227,7 +227,7 @@
               type="email"
               id="email"
               bind:value={email}
-              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-500 dark:text-white"
             />
           </div>
           <div class="mb-4">
@@ -236,7 +236,7 @@
               id="bio"
               bind:value={bio}
               rows="4"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-500 dark:text-white"
             ></textarea>
           </div>
         {:else if activeSection === 'account'}
@@ -247,7 +247,7 @@
               type="password"
               id="current-password"
               bind:value={password}
-              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-500 dark:text-white"
             />
           </div>
           <div class="mb-4">
@@ -256,7 +256,7 @@
               type="password"
               id="new-password"
               bind:value={newPassword}
-              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-500 dark:text-white"
             />
           </div>
           <div class="mb-4">
@@ -265,7 +265,7 @@
               type="password"
               id="confirm-password"
               bind:value={confirmPassword}
-              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-500 dark:text-white"
             />
           </div>
         {:else if activeSection === 'notifications'}
@@ -301,7 +301,7 @@
             <select
               id="profile-visibility"
               bind:value={settings.profileVisibility}
-              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-500 dark:text-white"
             >
               <option value="public">Public</option>
               <option value="private">Private</option>

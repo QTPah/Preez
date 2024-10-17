@@ -10,7 +10,7 @@ function createNotificationsStore() {
     initialize: async (token) => {
       try {
         const response = await getNotifications();
-        set(response.data);
+        set(response);
         if (browser) {
           connectWebSocket(token);
         }

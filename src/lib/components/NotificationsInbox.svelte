@@ -8,13 +8,13 @@
   let searchTerm = '';
   let unreadCount = 0;
 
-  $: filteredNotifications = $notifications ? $notifications.filter(notification => 
+  $: filteredNotifications = $notifications.filter(notification => 
     notification.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     notification.message.toLowerCase().includes(searchTerm.toLowerCase())
-  ) : [];
+  );
 
   $: {
-    unreadCount = $notifications ? $notifications.filter(n => !n.read).length : 0;
+    unreadCount = $notifications.filter(n => !n.read).length;
   }
 
   onMount(() => {

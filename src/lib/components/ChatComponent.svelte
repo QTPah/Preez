@@ -136,10 +136,15 @@
           {#each filteredUsers as user}
             <button
               on:click={() => selectUser(user)}
-              class="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-white flex items-center"
+              class="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-white flex items-center justify-between"
             >
-              <img src={user.profilePicture || defaultProfile} alt={user.username} class="w-8 h-8 rounded-full mr-2">
-              {user.username}
+              <div class="flex items-center">
+                <img src={user.profilePicture || defaultProfile} alt={user.username} class="w-8 h-8 rounded-full mr-2">
+                <span>{user.username}</span>
+              </div>
+              {#if user.unreadCount > 0}
+                <span class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">{user.unreadCount}</span>
+              {/if}
             </button>
           {/each}
         </div>

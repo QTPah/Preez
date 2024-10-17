@@ -2,6 +2,7 @@
   import { auth } from '../../stores/auth';
   import { onMount } from 'svelte';
   import { updateUserSettings, changePassword, updateUserProfile } from '$lib/api/auth';
+  import defaultProfile from '$lib/assets/default-picture.jpeg';
 
   let activeSection = 'profile';
   let username = $auth.user?.username || '';
@@ -183,7 +184,7 @@
         {#if activeSection === 'profile'}
           <div class="mb-6 flex items-center">
             <img
-              src={profilePicture ? URL.createObjectURL(profilePicture) : $auth.user?.profilePicture || '/path/to/default/image.jpg'}
+              src={profilePicture ? URL.createObjectURL(profilePicture) : $auth.user?.profilePicture || defaultProfile }
               alt="Profile Picture"
               class="w-32 h-32 object-cover rounded-full mr-4"
             />

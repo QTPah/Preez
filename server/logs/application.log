@@ -1641,3 +1641,36 @@
 {"level":30,"time":"2024-10-17T19:40:43.571Z","pid":91986,"hostname":"ubuntux","msg":"Token validated successfully for user: 66f84836b885ff9e93b2a406"}
 {"level":30,"time":"2024-10-17T19:40:43.579Z","pid":91986,"hostname":"ubuntux","msg":"Token validation attempt for user: 66f84836b885ff9e93b2a406"}
 {"level":30,"time":"2024-10-17T19:40:43.581Z","pid":91986,"hostname":"ubuntux","msg":"Token validated successfully for user: 66f84836b885ff9e93b2a406"}
+{"level":30,"time":"2024-10-17T19:43:52.915Z","pid":91986,"hostname":"ubuntux","msg":"Token validation attempt for user: 66f84836b885ff9e93b2a406"}
+{"level":30,"time":"2024-10-17T19:43:52.921Z","pid":91986,"hostname":"ubuntux","msg":"Token validated successfully for user: 66f84836b885ff9e93b2a406"}
+{"level":30,"time":"2024-10-17T19:43:52.932Z","pid":91986,"hostname":"ubuntux","msg":"Token validation attempt for user: 66f84836b885ff9e93b2a406"}
+{"level":30,"time":"2024-10-17T19:43:52.934Z","pid":91986,"hostname":"ubuntux","msg":"Token validated successfully for user: 66f84836b885ff9e93b2a406"}
+{"level":30,"time":"2024-10-17T19:44:16.387Z","pid":101587,"hostname":"ubuntux","msg":"Is production mode:"}
+{"level":30,"time":"2024-10-17T19:44:16.388Z","pid":101587,"hostname":"ubuntux","msg":"Serving static files from: /home/donsim/Desktop/Projects/preez/server/uploads"}
+{"level":30,"time":"2024-10-17T19:44:16.388Z","pid":101587,"hostname":"ubuntux","msg":"Attempting to connect to MongoDB..."}
+{"level":30,"time":"2024-10-17T19:44:16.399Z","pid":101587,"hostname":"ubuntux","msg":"Server port: 5000"}
+{"level":30,"time":"2024-10-17T19:44:16.403Z","pid":101587,"hostname":"ubuntux","msg":"HTTP Server running on port 5000"}
+{"level":30,"time":"2024-10-17T19:44:16.432Z","pid":101587,"hostname":"ubuntux","msg":"Connected to MongoDB"}
+{"level":30,"time":"2024-10-17T19:44:20.837Z","pid":101587,"hostname":"ubuntux","msg":"Token validation attempt for user: 66f84836b885ff9e93b2a406"}
+{"level":30,"time":"2024-10-17T19:44:20.840Z","pid":101587,"hostname":"ubuntux","msg":"Token validated successfully for user: 66f84836b885ff9e93b2a406"}
+{"level":30,"time":"2024-10-17T19:44:20.880Z","pid":101587,"hostname":"ubuntux","msg":"Token validation attempt for user: 66f84836b885ff9e93b2a406"}
+{"level":30,"time":"2024-10-17T19:44:20.887Z","pid":101587,"hostname":"ubuntux","msg":"Token validated successfully for user: 66f84836b885ff9e93b2a406"}
+{"level":30,"time":"2024-10-17T19:44:51.584Z","pid":101587,"hostname":"ubuntux","msg":"Refresh token attempt"}
+{"level":30,"time":"2024-10-17T19:44:51.585Z","pid":101587,"hostname":"ubuntux","msg":"Refresh token valid for user: 66f84836b885ff9e93b2a406"}
+{"level":30,"time":"2024-10-17T19:44:51.586Z","pid":101587,"hostname":"ubuntux","msg":"Generating tokens for user: 66f84836b885ff9e93b2a406"}
+{"level":30,"time":"2024-10-17T19:44:51.606Z","pid":101587,"hostname":"ubuntux","msg":"User logged out: 66f84836b885ff9e93b2a406"}
+{"level":30,"time":"2024-10-17T19:44:55.043Z","pid":101587,"hostname":"ubuntux","msg":"Login attempt: tester"}
+{"level":30,"time":"2024-10-17T19:44:55.127Z","pid":101587,"hostname":"ubuntux","msg":"User logged in: 67101f3a6c9b4c85db602acd"}
+{"level":30,"time":"2024-10-17T19:44:55.127Z","pid":101587,"hostname":"ubuntux","msg":"Generating tokens for user: 67101f3a6c9b4c85db602acd"}
+{"level":30,"time":"2024-10-17T19:45:24.772Z","pid":101587,"hostname":"ubuntux","msg":"Token validation attempt for user: 67101f3a6c9b4c85db602acd"}
+{"level":30,"time":"2024-10-17T19:45:24.773Z","pid":101587,"hostname":"ubuntux","msg":"Token validated successfully for user: 67101f3a6c9b4c85db602acd"}
+{"level":30,"time":"2024-10-17T19:45:24.808Z","pid":101587,"hostname":"ubuntux","msg":"Token validation attempt for user: 67101f3a6c9b4c85db602acd"}
+{"level":30,"time":"2024-10-17T19:45:24.809Z","pid":101587,"hostname":"ubuntux","msg":"Token validated successfully for user: 67101f3a6c9b4c85db602acd"}
+{"level":30,"time":"2024-10-17T19:45:30.559Z","pid":101587,"hostname":"ubuntux","msg":"Token validation attempt for user: 67101f3a6c9b4c85db602acd"}
+{"level":30,"time":"2024-10-17T19:45:30.560Z","pid":101587,"hostname":"ubuntux","msg":"Token validated successfully for user: 67101f3a6c9b4c85db602acd"}
+{"level":30,"time":"2024-10-17T19:45:37.219Z","pid":101587,"hostname":"ubuntux","msg":"Token validation attempt for user: 67101f3a6c9b4c85db602acd"}
+{"level":30,"time":"2024-10-17T19:45:37.221Z","pid":101587,"hostname":"ubuntux","msg":"Token validated successfully for user: 67101f3a6c9b4c85db602acd"}
+{"level":30,"time":"2024-10-17T19:45:37.287Z","pid":101587,"hostname":"ubuntux","msg":"Token validation attempt for user: 67101f3a6c9b4c85db602acd"}
+{"level":30,"time":"2024-10-17T19:45:37.289Z","pid":101587,"hostname":"ubuntux","msg":"Token validated successfully for user: 67101f3a6c9b4c85db602acd"}
+{"level":30,"time":"2024-10-17T19:45:56.344Z","pid":101587,"hostname":"ubuntux","msg":"Settings fetched for user: 67101f3a6c9b4c85db602acd"}
+{"level":30,"time":"2024-10-17T19:46:41.866Z","pid":101587,"hostname":"ubuntux","msg":"Settings fetched for user: 67101f3a6c9b4c85db602acd"}

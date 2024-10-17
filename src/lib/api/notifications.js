@@ -1,12 +1,23 @@
-import { api } from './api';
+import axios from 'axios';
+import { auth } from '../../stores/auth';
+import { get } from 'svelte/store';
 
-export const getNotifications = () => api.get('/api/notifications');
+const api = axios.create({
+  baseURL: '/api/notifications',
+});
+
+const getAuthHeader = () => {
+  const authStore = get(auth);
+  return { Authorization: `Bearer ${authStore.accessToken}` };
+};
+
+export const getNotifications = () => api.get('/', { headers: getAuthHeader() });
 
 export const createNotification = (type, title, message) => 
-  api.post('/api/notifications', { type, title, message });
+  api.post('/', { type, title, message }, { headers: getAuthHeader() });
 
 export const markNotificationAsRead = (id) => 
-  api.patch(`/api/notifications/${id}/read`);
+  api.patch(`/${id}/read`, null, { headers: getAuthHeader() });
 
 let socket;
 

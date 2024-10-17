@@ -59,7 +59,7 @@
     {/if}
   </button>
 
-  <div class="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-20 border border-gray-200 dark:border-white transition-all duration-200 ease-in-out transform origin-top-right"
+  <div class="fixed inset-x-0 top-12 mt-2 mx-auto w-full max-w-sm bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-20 border border-gray-200 dark:border-white transition-all duration-200 ease-in-out transform origin-top"
        class:scale-95={!showInbox}
        class:scale-100={showInbox}
        class:opacity-0={!showInbox}
@@ -82,7 +82,7 @@
       >
         Mark all as read
       </button>
-      <div class="max-h-60 overflow-y-auto">
+      <div class="max-h-[60vh] overflow-y-auto">
         {#if filteredNotifications.length === 0}
           <p class="px-4 py-2 text-gray-700 dark:text-gray-300">No notifications</p>
         {:else}

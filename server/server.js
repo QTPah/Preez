@@ -11,6 +11,7 @@ import userRoutes from './routes/users.js';
 import notificationRoutes from './routes/notifications.js';
 import chatRoutes from './routes/chat.js';
 import settingsRoutes from './routes/settings.js';
+import statisticsRoutes from './routes/statistics.js';
 import { handler } from '../build/handler.js';
 import logger from './utils/logger.js';
 import { deleteOldReadNotifications } from './utils/notificationUtils.js';
@@ -54,6 +55,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/statistics', statisticsRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

@@ -107,7 +107,7 @@
   </button>
   {#if isOpen}
     <div class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0">
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full sm:w-96 max-w-full h-full sm:h-[32rem] flex flex-col dark:border dark:border-white"
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full sm:w-96 max-w-full h-full sm:h-[32rem] flex flex-col dark:border dark:border-white text-gray-900 dark:text-white"
            in:fly="{{ y: 20, duration: 300 }}"
            out:fade="{{ duration: 200 }}"
            style="z-index: 51;">
@@ -133,7 +133,7 @@
             id="user-search"
             bind:value={searchTerm}
             placeholder="Search for a user..."
-            class="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            class="w-full p-2 border rounded-lg text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
           />
         </div>
         <div class="flex-grow overflow-y-auto">
@@ -182,7 +182,7 @@
               bind:value={newMessage}
               on:keydown={handleKeydown}
               placeholder="Type a message..."
-              class="flex-grow mr-2 p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              class="flex-grow mr-2 p-2 border rounded-lg text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             />
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

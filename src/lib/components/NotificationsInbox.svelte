@@ -59,7 +59,7 @@
     {/if}
   </button>
 
-  <div class="fixed left-1/2 transform -translate-x-1/2 mt-2 w-full max-w-sm bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-20 border border-gray-200 dark:border-white transition-all duration-200 ease-in-out origin-top"
+  <div class="fixed left-1/2 transform -translate-x-1/2 mt-2 w-full max-w-sm bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-20 border border-gray-200 dark:border-white transition-all duration-200 ease-in-out origin-top text-gray-900 dark:text-white"
        class:scale-95={!showInbox}
        class:scale-100={showInbox}
        class:opacity-0={!showInbox}
@@ -73,7 +73,7 @@
           type="text"
           placeholder="Search notifications..."
           bind:value={searchTerm}
-          class="w-full px-2 py-1 text-sm border rounded dark:bg-gray-700 dark:text-white dark:border-gray-600"
+          class="w-full px-2 py-1 text-sm border rounded text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600"
         />
       </div>
       <button 

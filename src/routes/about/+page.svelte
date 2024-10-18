@@ -13,6 +13,8 @@
   onMount(async () => {
     try {
       aboutContent = await getAboutPageContent();
+      // Replace \n with actual line breaks
+      aboutContent = aboutContent.replace(/\\n/g, '\n');
     } catch (error) {
       console.error('Error fetching About page content:', error);
       aboutContent = 'Error loading content. Please try again later.';

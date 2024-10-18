@@ -5,7 +5,6 @@ import cors from 'cors';
 import https from 'https';
 import fs from 'fs';
 import path from 'path';
-import { WebSocketServer } from 'ws';
 import authRoutes from './routes/auth.js';
 import offerRoutes from './routes/offers.js';
 import userRoutes from './routes/users.js';
@@ -68,26 +67,9 @@ logger.info('Server port: ' + PORT);
 if(isProduction) {
   app.use(handler);
   const server = https.createServer(options, app);
-  const wss = new WebSocketServer({ server });
-  
-  wss.on('connection', (ws) => {
-    logger.info('New WebSocket connection');
-    ws.on('message', (message) => {
-      logger.info('Received:', message);
-    });
-  });
-
   server.listen(PORT, '0.0.0.0', () => logger.info(`HTTPS Server running on port ${PORT}`));
 } else {
-  const server = app.listen(PORT, () => logger.info(`HTTP Server running on port ${PORT}`));
-  const wss = new WebSocketServer({ server });
-  
-  wss.on('connection', (ws) => {
-    logger.info('New WebSocket connection');
-    ws.on('message', (message) => {
-      logger.info('Received:', message);
-    });
-  });
+  app.listen(PORT, () => logger.info(`HTTP Server running on port ${PORT}`));
 }
 
 // Schedule deletion of old read notifications

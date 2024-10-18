@@ -44,14 +44,14 @@
   {#if isEditing}
     <textarea
       bind:value={editedContent}
-      class="w-full h-64 p-2 border rounded"
+      class="w-full h-64 p-2 border rounded dark:bg-gray-700"
     ></textarea>
     <div class="mt-2">
       <button on:click={saveChanges} class="bg-blue-500 text-white px-4 py-2 rounded mr-2">Save</button>
-      <button on:click={cancelEditing} class="bg-gray-300 px-4 py-2 rounded">Cancel</button>
+      <button on:click={cancelEditing} class="bg-gray-300 px-4 py-2 rounded dark:text-black">Cancel</button>
     </div>
   {:else}
-    <div class="bg-gray-100 p-4 rounded">
+    <div class="bg-gray-100 p-4 rounded dark:bg-gray-700">
       {@html marked(aboutPageContent)}
     </div>
     <button on:click={startEditing} class="mt-2 bg-green-500 text-white px-4 py-2 rounded">Edit</button>

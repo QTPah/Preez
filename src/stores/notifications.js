@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
-import { getNotifications, markNotificationAsRead, connectWebSocket, disconnectWebSocket } from '$lib/api/notifications';
+import { getNotifications, markNotificationAsRead } from '$lib/api/notifications';
 
 function createNotificationsStore() {
   const { subscribe, set, update } = writable([]);
@@ -11,9 +11,6 @@ function createNotificationsStore() {
       try {
         const response = await getNotifications();
         set(response);
-        if (browser) {
-          connectWebSocket(token);
-        }
       } catch (error) {
         console.error('Error initializing notifications:', error);
       }
@@ -32,9 +29,6 @@ function createNotificationsStore() {
       }
     },
     cleanup: () => {
-      if (browser) {
-        disconnectWebSocket();
-      }
       set([]);
     }
   };

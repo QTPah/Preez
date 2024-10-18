@@ -5,6 +5,11 @@
 
   let aboutContent = '';
 
+  marked.setOptions({
+    breaks: true,
+    gfm: true
+  });
+
   onMount(async () => {
     try {
       aboutContent = await getAboutPageContent();
@@ -15,6 +20,6 @@
   });
 </script>
 
-<main class="container mx-auto px-4 py-8">
+<main class="container mx-auto px-4 py-8 prose dark:prose-invert max-w-none">
   {@html marked(aboutContent)}
 </main>

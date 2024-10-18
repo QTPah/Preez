@@ -5,6 +5,7 @@
   import { auth, isLoggedIn } from '../stores/auth';
   import { theme } from '../stores/theme';
   import { language } from '../stores/language';
+  import { translations } from '$lib/translations';
   import { login, register, logout, validateTokenAndFetchUser } from '$lib/api/auth';
   import AuthForm from '$lib/components/AuthForm.svelte';
   import NotificationsInbox from '$lib/components/NotificationsInbox.svelte';
@@ -15,6 +16,7 @@
   import { cubicInOut } from 'svelte/easing';
 
   let showAuthForm = false;
+  $: t = translations[$language];
   let showDropdown = false;
   let showChat = false;
   let profilePicture = defaultProfile;

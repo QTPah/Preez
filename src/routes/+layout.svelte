@@ -28,10 +28,9 @@
 
   $: isMobile = innerWidth < 640;
   $: isScrolled = scrollY > 50;
-  $: logoVisible = !isScrolled;
 
   $: {
-    navHeight.set(isScrolled ? 48 : 64);
+    navHeight.set(isScrolled ? 56 : 82);
   }
 
   async function validateToken() {
@@ -116,9 +115,7 @@
        style="height: {$navHeight}px;"
        use:clickOutside on:click_outside={() => showDropdown = false}>
     <div class="container mx-auto h-full flex justify-between items-center px-4">
-      <a href="/" class="text-2xl font-bold transition-opacity duration-200"
-         class:opacity-0={!logoVisible}
-         class:invisible={!logoVisible}>
+      <a href="/" class="text-2xl font-bold transition-opacity duration-200">
         Preez
       </a>
       <ul class="flex items-center space-x-4">

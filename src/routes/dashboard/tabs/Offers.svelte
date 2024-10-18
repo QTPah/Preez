@@ -55,33 +55,35 @@
   }
 </script>
 
-<h2 class="text-2xl font-bold mb-4">Offer Management</h2>
+<h2 class="text-xl sm:text-2xl font-bold mb-4">Offer Management</h2>
 {#if loading}
   <p>Loading offers...</p>
 {:else}
-  <table class="min-w-full">
-    <thead>
-      <tr>
-        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Title</th>
-        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Price</th>
-        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Category</th>
-        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each offers as offer}
+  <div class="overflow-x-auto">
+    <table class="min-w-full">
+      <thead>
         <tr>
-          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{offer.title}</td>
-          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">${offer.price}</td>
-          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{offer.category}</td>
-          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
-            <button on:click={() => editOffer(offer)} class="text-blue-600 hover:text-blue-900">Edit</button>
-            <button on:click={() => deleteOfferConfirm(offer._id)} class="ml-2 text-red-600 hover:text-red-900">Delete</button>
-          </td>
+          <th class="px-4 sm:px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Title</th>
+          <th class="px-4 sm:px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Price</th>
+          <th class="px-4 sm:px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Category</th>
+          <th class="px-4 sm:px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Actions</th>
         </tr>
-      {/each}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {#each offers as offer}
+          <tr>
+            <td class="px-4 sm:px-6 py-4 whitespace-no-wrap border-b border-gray-300">{offer.title}</td>
+            <td class="px-4 sm:px-6 py-4 whitespace-no-wrap border-b border-gray-300">${offer.price}</td>
+            <td class="px-4 sm:px-6 py-4 whitespace-no-wrap border-b border-gray-300 hidden sm:table-cell">{offer.category}</td>
+            <td class="px-4 sm:px-6 py-4 whitespace-no-wrap border-b border-gray-300">
+              <button on:click={() => editOffer(offer)} class="text-blue-600 hover:text-blue-900 mr-2">Edit</button>
+              <button on:click={() => deleteOfferConfirm(offer._id)} class="text-red-600 hover:text-red-900">Delete</button>
+            </td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  </div>
 {/if}
 
 {#if showOfferModal}

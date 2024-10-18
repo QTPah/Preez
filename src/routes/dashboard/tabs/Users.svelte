@@ -67,37 +67,41 @@
   }
 </script>
 
-<h2 class="text-2xl font-bold mb-4">User Management</h2>
+<h2 class="text-xl sm:text-2xl font-bold mb-4">User Management</h2>
 {#if loading}
   <p>Loading users...</p>
 {:else}
-  <table class="min-w-full">
-    <thead>
-      <tr>
-        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Username</th>
-        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Email</th>
-        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Permissions</th>
-        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each users as user}
+  <div class="overflow-x-auto">
+    <table class="min-w-full">
+      <thead>
         <tr>
-          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{user.username}</td>
-          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{user.email}</td>
-          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
-            {#each user.permissions as permission}
-              <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">{permission}</span>
-            {/each}
-          </td>
-          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
-            <button on:click={() => editUser(user)} class="text-blue-600 hover:text-blue-900">Edit</button>
-            <button on:click={() => deleteUserConfirm(user._id)} class="ml-2 text-red-600 hover:text-red-900">Delete</button>
-          </td>
+          <th class="px-4 sm:px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Username</th>
+          <th class="px-4 sm:px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Email</th>
+          <th class="px-4 sm:px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Permissions</th>
+          <th class="px-4 sm:px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Actions</th>
         </tr>
-      {/each}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {#each users as user}
+          <tr>
+            <td class="px-4 sm:px-6 py-4 whitespace-no-wrap border-b border-gray-300">{user.username}</td>
+            <td class="px-4 sm:px-6 py-4 whitespace-no-wrap border-b border-gray-300 hidden sm:table-cell">{user.email}</td>
+            <td class="px-4 sm:px-6 py-4 whitespace-no-wrap border-b border-gray-300 hidden md:table-cell">
+              <div class="flex flex-wrap">
+                {#each user.permissions as permission}
+                  <span class="inline-block bg-gray-200 rounded-full px-2 py-1 text-xs font-semibold text-gray-700 mr-1 mb-1">{permission}</span>
+                {/each}
+              </div>
+            </td>
+            <td class="px-4 sm:px-6 py-4 whitespace-no-wrap border-b border-gray-300">
+              <button on:click={() => editUser(user)} class="text-blue-600 hover:text-blue-900 mr-2">Edit</button>
+              <button on:click={() => deleteUserConfirm(user._id)} class="text-red-600 hover:text-red-900">Delete</button>
+            </td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  </div>
   <button on:click={addNewUser} class="mt-4 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
     Add User
   </button>

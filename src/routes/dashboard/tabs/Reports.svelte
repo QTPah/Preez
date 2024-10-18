@@ -87,7 +87,7 @@
   }
 </script>
 
-<h2 class="text-2xl font-bold mb-4">Reports</h2>
+<h2 class="text-xl sm:text-2xl font-bold mb-4">Reports</h2>
 
 <div class="mb-4">
   <label for="sort-order" class="mr-2">Sort by:</label>
@@ -100,113 +100,113 @@
 {#if loading}
   <p>Loading reports...</p>
 {:else}
-  <h3 class="text-xl font-bold mb-2">User Reports</h3>
-  <table class="min-w-full mb-8">
-    <thead>
-      <tr>
-        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reported User</th>
-        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reporter</th>
-        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reason</th>
-        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Date</th>
-        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Status</th>
-        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each userReports as report}
+  <h3 class="text-lg sm:text-xl font-bold mb-2">User Reports</h3>
+  <div class="overflow-x-auto mb-8">
+    <table class="min-w-full">
+      <thead>
         <tr>
-          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
-            <button 
-              on:click={() => redirectToUser(report.reportedUser._id)}
-              class="text-blue-600 hover:text-blue-900"
-            >
-              {report.reportedUser.username}
-            </button>
-          </td>
-          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
-            <button 
-              on:click={() => redirectToUser(report.reportedBy._id)}
-              class="text-blue-600 hover:text-blue-900"
-            >
-              {report.reportedBy.username}
-            </button>
-          </td>
-          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.reason}</td>
-          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{new Date(report.createdAt).toLocaleDateString()}</td>
-          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
-            <span class={`px-2 py-1 text-xs font-semibold rounded-full 
-              ${report.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
-                report.status === 'resolved' ? 'bg-green-100 text-green-800' : 
-                'bg-red-100 text-red-800'}`}>
-              {report.status}
-            </span>
-          </td>
-          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
-            <button 
-              on:click={() => showReviewModal(report, 'user')}
-              class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded"
-            >
-              Review
-            </button>
-          </td>
+          <th class="px-4 sm:px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reported User</th>
+          <th class="px-4 sm:px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Reporter</th>
+          <th class="px-4 sm:px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Reason</th>
+          <th class="px-4 sm:px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Status</th>
+          <th class="px-4 sm:px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Actions</th>
         </tr>
-      {/each}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {#each userReports as report}
+          <tr>
+            <td class="px-4 sm:px-6 py-4 whitespace-no-wrap border-b border-gray-300">
+              <button 
+                on:click={() => redirectToUser(report.reportedUser._id)}
+                class="text-blue-600 hover:text-blue-900"
+              >
+                {report.reportedUser.username}
+              </button>
+            </td>
+            <td class="px-4 sm:px-6 py-4 whitespace-no-wrap border-b border-gray-300 hidden sm:table-cell">
+              <button 
+                on:click={() => redirectToUser(report.reportedBy._id)}
+                class="text-blue-600 hover:text-blue-900"
+              >
+                {report.reportedBy.username}
+              </button>
+            </td>
+            <td class="px-4 sm:px-6 py-4 whitespace-no-wrap border-b border-gray-300 hidden md:table-cell">{report.reason}</td>
+            <td class="px-4 sm:px-6 py-4 whitespace-no-wrap border-b border-gray-300">
+              <span class={`px-2 py-1 text-xs font-semibold rounded-full 
+                ${report.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
+                  report.status === 'resolved' ? 'bg-green-100 text-green-800' : 
+                  'bg-red-100 text-red-800'}`}>
+                {report.status}
+              </span>
+            </td>
+            <td class="px-4 sm:px-6 py-4 whitespace-no-wrap border-b border-gray-300">
+              <button 
+                on:click={() => showReviewModal(report, 'user')}
+                class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded text-sm"
+              >
+                Review
+              </button>
+            </td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  </div>
 
-  <h3 class="text-xl font-bold mb-2">Offer Reports</h3>
-  <table class="min-w-full">
-    <thead>
-      <tr>
-        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reported Offer</th>
-        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reporter</th>
-        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reason</th>
-        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Date</th>
-        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Status</th>
-        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each offerReports as report}
+  <h3 class="text-lg sm:text-xl font-bold mb-2">Offer Reports</h3>
+  <div class="overflow-x-auto">
+    <table class="min-w-full">
+      <thead>
         <tr>
-          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
-            <button 
-              on:click={() => redirectToOffer(report.targetId)}
-              class="text-blue-600 hover:text-blue-900"
-            >
-              {report.reportedOffer.title}
-            </button>
-          </td>
-          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
-            <button 
-              on:click={() => redirectToUser(report.reportedBy._id)}
-              class="text-blue-600 hover:text-blue-900"
-            >
-              {report.reportedBy.username}
-            </button>
-          </td>
-          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{report.reason}</td>
-          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{new Date(report.createdAt).toLocaleDateString()}</td>
-          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
-            <span class={`px-2 py-1 text-xs font-semibold rounded-full 
-              ${report.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
-                report.status === 'resolved' ? 'bg-green-100 text-green-800' : 
-                'bg-red-100 text-red-800'}`}>
-              {report.status}
-            </span>
-          </td>
-          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-300">
-            <button 
-              on:click={() => showReviewModal(report, 'offer')}
-              class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded"
-            >
-              Review
-            </button>
-          </td>
+          <th class="px-4 sm:px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Reported Offer</th>
+          <th class="px-4 sm:px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Reporter</th>
+          <th class="px-4 sm:px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Reason</th>
+          <th class="px-4 sm:px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Status</th>
+          <th class="px-4 sm:px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Actions</th>
         </tr>
-      {/each}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {#each offerReports as report}
+          <tr>
+            <td class="px-4 sm:px-6 py-4 whitespace-no-wrap border-b border-gray-300">
+              <button 
+                on:click={() => redirectToOffer(report.targetId)}
+                class="text-blue-600 hover:text-blue-900"
+              >
+                {report.reportedOffer.title}
+              </button>
+            </td>
+            <td class="px-4 sm:px-6 py-4 whitespace-no-wrap border-b border-gray-300 hidden sm:table-cell">
+              <button 
+                on:click={() => redirectToUser(report.reportedBy._id)}
+                class="text-blue-600 hover:text-blue-900"
+              >
+                {report.reportedBy.username}
+              </button>
+            </td>
+            <td class="px-4 sm:px-6 py-4 whitespace-no-wrap border-b border-gray-300 hidden md:table-cell">{report.reason}</td>
+            <td class="px-4 sm:px-6 py-4 whitespace-no-wrap border-b border-gray-300">
+              <span class={`px-2 py-1 text-xs font-semibold rounded-full 
+                ${report.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
+                  report.status === 'resolved' ? 'bg-green-100 text-green-800' : 
+                  'bg-red-100 text-red-800'}`}>
+                {report.status}
+              </span>
+            </td>
+            <td class="px-4 sm:px-6 py-4 whitespace-no-wrap border-b border-gray-300">
+              <button 
+                on:click={() => showReviewModal(report, 'offer')}
+                class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded text-sm"
+              >
+                Review
+              </button>
+            </td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  </div>
 {/if}
 
 {#if showModal}

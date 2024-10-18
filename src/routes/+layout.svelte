@@ -162,16 +162,6 @@
             </button>
           </li>
         {/if}
-        <li class="mx-2 my-1">
-          <button on:click={() => theme.toggleTheme()} class="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100">
-            {$theme === 'dark' ? '☀️' : '🌙'}
-          </button>
-        </li>
-        <li class="mx-2 my-1">
-          <button on:click={() => language.toggleLanguage()} class="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100">
-            {$language === 'en' ? '🇩🇪' : '🇬🇧'}
-          </button>
-        </li>
       </ul>
     </div>
   </nav>

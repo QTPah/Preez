@@ -5,6 +5,7 @@
   import defaultProfile from '$lib/assets/default-picture.jpeg';
   import { language } from '../../stores/language';
   import { translations } from '$lib/translations';
+  import { theme } from '../../stores/theme';
 
   $: t = translations[$language];
 
@@ -32,6 +33,7 @@
     { id: 'account', name: t.accountSettings },
     { id: 'notifications', name: t.notificationPreferences },
     { id: 'privacy', name: t.privacySettings },
+    { id: 'preferences', name: t.preferences },
   ];
 
   onMount(async () => {
@@ -323,6 +325,24 @@
             <label class="flex items-center text-gray-700 dark:text-gray-300">
               <input type="checkbox" bind:checked={settings.allowMessaging} class="mr-2">
               {t.allowMessaging}
+            </label>
+          </div>
+        {:else if activeSection === 'preferences'}
+          <h2 class="text-2xl font-semibold mb-4 dark:text-white">{t.preferences}</h2>
+          <div class="mb-4">
+            <label class="flex items-center text-gray-700 dark:text-gray-300">
+              <span class="mr-2">{t.theme}:</span>
+              <button on:click={() => theme.toggleTheme()} class="bg-gray-200 dark:bg-gray-600 px-3 py-1 rounded">
+                {$theme === 'dark' ? '☀️ ' + t.lightMode : '🌙 ' + t.darkMode}
+              </button>
+            </label>
+          </div>
+          <div class="mb-4">
+            <label class="flex items-center text-gray-700 dark:text-gray-300">
+              <span class="mr-2">{t.language}:</span>
+              <button on:click={() => language.toggleLanguage()} class="bg-gray-200 dark:bg-gray-600 px-3 py-1 rounded">
+                {$language === 'en' ? '🇩🇪 Deutsch' : '🇬🇧 English'}
+              </button>
             </label>
           </div>
         {/if}

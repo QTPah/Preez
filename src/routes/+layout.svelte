@@ -4,6 +4,7 @@
   import { onMount } from 'svelte';
   import { auth, isLoggedIn } from '../stores/auth';
   import { theme } from '../stores/theme';
+  import { language } from '../stores/language';
   import { login, register, logout, validateTokenAndFetchUser } from '$lib/api/auth';
   import AuthForm from '$lib/components/AuthForm.svelte';
   import NotificationsInbox from '$lib/components/NotificationsInbox.svelte';
@@ -123,8 +124,8 @@
         Preez
       </a>
       <ul class="flex items-center space-x-4">
-        <li class="mx-2 my-1"><a href="/" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/'}>Home</a></li>
-        <li class="mx-2 my-1"><a href="/about" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/about'}>About</a></li>
+        <li class="mx-2 my-1"><a href="/" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/'}>{t.home}</a></li>
+        <li class="mx-2 my-1"><a href="/about" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/about'}>{t.about}</a></li>
         {#if $isLoggedIn}
           <li class="mx-2 my-1">
             <NotificationsInbox />
@@ -145,23 +146,28 @@
                  class:pointer-events-auto={showDropdown}>
               <div class="transition-all duration-200 ease-in-out" class:opacity-0={!showDropdown} class:scale-95={!showDropdown}>
                 {#if $auth.user?.permissions?.includes('viewDashboard')}
-                  <a href="/dashboard" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Dashboard</a>
+                  <a href="/dashboard" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">{t.dashboard}</a>
                 {/if}
-                <a href="/settings" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Settings</a>
-                <button on:click={handleLogout} class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Logout</button>
+                <a href="/settings" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">{t.settings}</a>
+                <button on:click={handleLogout} class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">{t.logout}</button>
               </div>
             </div>
           </li>
         {:else}
           <li class="mx-2 my-1">
             <button on:click={openAuthForm} class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded text-xs sm:text-sm">
-              Login / Register
+              {t.login} / {t.register}
             </button>
           </li>
         {/if}
         <li class="mx-2 my-1">
           <button on:click={() => theme.toggleTheme()} class="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100">
             {$theme === 'dark' ? '☀️' : '🌙'}
+          </button>
+        </li>
+        <li class="mx-2 my-1">
+          <button on:click={() => language.toggleLanguage()} class="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100">
+            {$language === 'en' ? '🇩🇪' : '🇬🇧'}
           </button>
         </li>
       </ul>

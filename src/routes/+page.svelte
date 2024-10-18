@@ -2,6 +2,8 @@
   import { onMount } from 'svelte';
   import OfferCard from '$lib/components/OfferCard.svelte';
   import { getAllOffers } from '$lib/api/offers';
+  import { language } from '../stores/language';
+  import { translations } from '$lib/translations';
 
   let offers = [];
   let searchQuery = '';
@@ -10,6 +12,8 @@
   let currentPage = 1;
   let totalPages = 1;
   let totalOffers = 0;
+
+  $: t = translations[$language];
 
   async function loadOffers(page = 1) {
     isLoading = true;
@@ -53,26 +57,26 @@
 </script>
 
 <main class="px-4 py-8">
-  <h1 class="text-4xl font-bold mb-8 text-center">Welcome to Preez</h1>
-  <p class="text-xl mb-8 text-center">A marketplace for students to share and discover academic resources</p>
+  <h1 class="text-4xl font-bold mb-8 text-center">{t.welcome}</h1>
+  <p class="text-xl mb-8 text-center">{t.welcomeDescription}</p>
   
   <div class="mb-8">
     <input
       type="text"
-      placeholder="Search for offers..."
+      placeholder={t.searchOffers}
       bind:value={searchQuery}
       class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:focus:ring-blue-600"
     />
   </div>
 
-  <h2 class="text-3xl font-bold mb-6">Offers</h2>
+  <h2 class="text-3xl font-bold mb-6">{t.offers}</h2>
   
   {#if isLoading}
-    <p class="text-center">Loading offers...</p>
+    <p class="text-center">{t.loading}</p>
   {:else if error}
     <p class="text-center text-red-500">{error}</p>
   {:else if filteredOffers.length === 0}
-    <p class="text-center">No offers found.</p>
+    <p class="text-center">{t.noOffers}</p>
   {:else}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {#each filteredOffers as offer (offer._id)}
@@ -86,7 +90,7 @@
         disabled={currentPage === 1}
         class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
       >
-        Previous
+        {t.previous}
       </button>
       <span>Page {currentPage} of {totalPages}</span>
       <button
@@ -94,9 +98,9 @@
         disabled={currentPage === totalPages}
         class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
       >
-        Next
+        {t.next}
       </button>
     </div>
-    <p class="text-center mt-4">Total offers: {totalOffers}</p>
+    <p class="text-center mt-4">{t.totalOffers} {totalOffers}</p>
   {/if}
 </main>

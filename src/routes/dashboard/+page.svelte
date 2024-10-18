@@ -9,16 +9,20 @@
   import { page } from '$app/stores';
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
+  import { language } from '../../stores/language';
+  import { translations } from '$lib/translations';
 
   let activeTab;
 
+  $: t = translations[$language];
+
   const tabs = [
-    { id: 'overview', name: 'Overview', permission: null, component: Overview },
-    { id: 'users', name: 'Users', permission: 'manageUsers', component: Users },
-    { id: 'offers', name: 'Offers', permission: 'manageOffers', component: Offers },
-    { id: 'categories', name: 'Categories', permission: 'manageCategories', component: Categories },
-    { id: 'reports', name: 'Reports', permission: 'viewReports', component: Reports },
-    { id: 'settings', name: 'Settings', permission: 'manageSettings', component: Settings }
+    { id: 'overview', name: t.overview, permission: null, component: Overview },
+    { id: 'users', name: t.users, permission: 'manageUsers', component: Users },
+    { id: 'offers', name: t.offers, permission: 'manageOffers', component: Offers },
+    { id: 'categories', name: t.categories, permission: 'manageCategories', component: Categories },
+    { id: 'reports', name: t.reports, permission: 'viewReports', component: Reports },
+    { id: 'settings', name: t.settings, permission: 'manageSettings', component: Settings }
   ];
 
   function hasPermission(permission) {
@@ -47,7 +51,7 @@
 </script>
 
 <div class="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
-  <h1 class="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Dashboard</h1>
+  <h1 class="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">{t.dashboard}</h1>
 
   <div class="mb-4 sm:mb-6 overflow-x-auto">
     <ul class="flex flex-nowrap border-b">

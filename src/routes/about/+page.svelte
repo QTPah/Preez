@@ -2,8 +2,12 @@
   import { onMount } from 'svelte';
   import { getAboutPageContent } from '$lib/api/settings';
   import { marked } from 'marked';
+  import { language } from '../../stores/language';
+  import { translations } from '$lib/translations';
 
   let aboutContent = '';
+
+  $: t = translations[$language];
 
   marked.setOptions({
     breaks: true,
@@ -17,11 +21,12 @@
       aboutContent = aboutContent.replace(/\\n/g, '\n');
     } catch (error) {
       console.error('Error fetching About page content:', error);
-      aboutContent = 'Error loading content. Please try again later.';
+      aboutContent = t.errorLoadingContent;
     }
   });
 </script>
 
 <main class="container mx-auto px-4 py-8 prose dark:prose-invert max-w-none">
+  <h1>{t.aboutTitle}</h1>
   {@html marked(aboutContent)}
 </main>

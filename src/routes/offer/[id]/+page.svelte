@@ -3,10 +3,13 @@
   import { isLoggedIn, auth } from '../../../stores/auth';
   import { onMount } from 'svelte';
   import ReportModal from '$lib/components/ReportModal.svelte';
+  import { language } from '../../../stores/language';
+  import { translations } from '$lib/translations';
   
   export let data;
   
   $: offer = data.offer;
+  $: t = translations[$language];
 
   let purchaseStatus = '';
   let showReportModal = false;
@@ -37,13 +40,13 @@
         });
         const result = await response.json();
         if (result.success) {
-          purchaseStatus = 'Purchase successful!';
+          purchaseStatus = t.purchaseSuccessful;
         } else {
-          purchaseStatus = result.message || 'Purchase failed. Please try again.';
+          purchaseStatus = result.message || t.purchaseFailed;
         }
       } catch (error) {
         console.error('Purchase error:', error);
-        purchaseStatus = 'An error occurred during purchase. Please try again.';
+        purchaseStatus = t.purchaseError;
       }
     } else {
       // Dispatch a custom event to open the auth form
@@ -76,7 +79,7 @@
     on:click={handleBuy}
     class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mb-6"
   >
-    Buy Now
+    {t.buyNow}
   </button>
 
   {#if purchaseStatus}
@@ -85,7 +88,7 @@
     </p>
   {/if}
   
-  <h2 class="text-2xl font-bold mb-4">Additional Details</h2>
+  <h2 class="text-2xl font-bold mb-4">{t.additionalDetails}</h2>
   
   <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
     {#each Object.entries(offer.customFields || {}) as [key, value]}
@@ -100,7 +103,7 @@
     on:click={() => showReportModal = true}
     class="mt-6 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
   >
-    Report Offer
+    {t.reportOffer}
   </button>
 
   {#if showReportModal}

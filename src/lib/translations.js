@@ -48,6 +48,11 @@ export const translations = {
     saveChanges: 'Save Changes',
     editProfilePicture: 'Edit',
     deleteProfilePicture: 'Delete',
+    preferences: 'Preferences',
+    theme: 'Theme',
+    lightMode: 'Light Mode',
+    darkMode: 'Dark Mode',
+    language: 'Language',
   },
   de: {
     home: 'Home',
@@ -98,5 +103,10 @@ export const translations = {
     saveChanges: 'Änderungen speichern',
     editProfilePicture: 'Bearbeiten',
     deleteProfilePicture: 'Löschen',
+    preferences: 'Einstellungen',
+    theme: 'Thema',
+    lightMode: 'Heller Modus',
+    darkMode: 'Dunkler Modus',
+    language: 'Sprache',
   }
 };

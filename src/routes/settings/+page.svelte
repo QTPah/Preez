@@ -30,10 +30,10 @@
 
   $: sections = [
     { id: 'profile', name: t.profileSettings },
+    { id: 'appearance', name: t.appearance },
     { id: 'account', name: t.accountSettings },
     { id: 'notifications', name: t.notificationPreferences },
     { id: 'privacy', name: t.privacySettings },
-    { id: 'preferences', name: t.preferences },
   ];
 
   onMount(async () => {
@@ -327,7 +327,7 @@
               {t.allowMessaging}
             </label>
           </div>
-        {:else if activeSection === 'preferences'}
+        {:else if activeSection === 'appearance'}
           <h2 class="text-2xl font-semibold mb-4 dark:text-white">{t.preferences}</h2>
           <div class="mb-4">
             <label class="flex items-center text-gray-700 dark:text-gray-300">
@@ -345,7 +345,8 @@
               </button>
             </label>
           </div>
-        {:else}
+        {/if}
+        {#if activeSection !== 'appearance'}
           <button
             on:click={handleSave}
             class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

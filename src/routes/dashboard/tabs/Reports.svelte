@@ -91,7 +91,7 @@
 
 <div class="mb-4">
   <label for="sort-order" class="mr-2">Sort by:</label>
-  <select id="sort-order" on:change={handleSortChange} class="border rounded p-1">
+  <select id="sort-order" on:change={handleSortChange} class="border rounded p-1 dark:bg-gray-800">
     <option value="newest">Newest</option>
     <option value="oldest">Oldest</option>
   </select>

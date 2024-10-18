@@ -20,3 +20,4 @@ vite.config.ts.timestamp-*
 *.pem
 
 server/uploads
+server/data

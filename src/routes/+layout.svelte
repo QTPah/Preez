@@ -125,7 +125,7 @@
       <a href="/" class="text-2xl font-bold transition-opacity duration-200">
         Preez 
       </a>
-      <ul class="flex items-center space-x-2">
+      <ul class="flex items-center space-x-3">
         <li class="mx-2 my-1"><a href="/" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/'}>{t.home}</a></li>
         <li class="mx-2 my-1"><a href="/about" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/about'}>{t.about}</a></li>
         {#if $isLoggedIn}

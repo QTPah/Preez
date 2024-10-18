@@ -15,8 +15,8 @@
   let activeTab;
 
   $: t = translations[$language];
-
-  const tabs = [
+  
+  $: tabs = [
     { id: 'overview', name: t.overview, permission: null, component: Overview },
     { id: 'users', name: t.users, permission: 'manageUsers', component: Users },
     { id: 'offers', name: t.offers, permission: 'manageOffers', component: Offers },

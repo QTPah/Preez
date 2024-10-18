@@ -59,7 +59,7 @@
     {/if}
   </button>
 
-  <div class="absolute right-0 mt-2 w-full max-w-sm bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-20 border border-gray-200 dark:border-white transition-all duration-200 ease-in-out transform origin-top"
+  <div class="fixed right-0 mt-2 w-full max-w-sm bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-20 border border-gray-200 dark:border-white transition-all duration-200 ease-in-out transform origin-top"
        class:scale-95={!showInbox}
        class:scale-100={showInbox}
        class:opacity-0={!showInbox}

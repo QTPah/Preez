@@ -11,7 +11,7 @@
   import { clickOutside } from '$lib/actions/clickOutside';
   import defaultProfile from '$lib/assets/default-picture.jpeg';
   import { tweened } from 'svelte/motion';
-  import { cubicOut } from 'svelte/easing';
+  import { cubicInOut } from 'svelte/easing';
 
   let showAuthForm = false;
   let showDropdown = false;
@@ -21,16 +21,20 @@
   let innerHeight;
   let innerWidth;
 
-  const navHeight = tweened(64, {
-    duration: 200,
-    easing: cubicOut
+  const navHeight = tweened(82, {
+    duration: 300,
+    easing: cubicInOut
   });
 
   $: isMobile = innerWidth < 640;
   $: isScrolled = scrollY > 50;
 
   $: {
-    navHeight.set(isScrolled ? 56 : 82);
+    if (isMobile) {
+      navHeight.set(isScrolled ? 56 : 82);
+    } else {
+      navHeight.set(82);
+    }
   }
 
   async function validateToken() {
@@ -111,7 +115,7 @@
 <svelte:window bind:scrollY bind:innerHeight bind:innerWidth />
 
 <div class="flex flex-col min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-  <nav class="fixed top-0 left-0 right-0 bg-gray-800 text-white transition-all duration-200 z-10"
+  <nav class="fixed top-0 left-0 right-0 bg-gray-800 text-white transition-all duration-300 z-10"
        style="height: {$navHeight}px;"
        use:clickOutside on:click_outside={() => showDropdown = false}>
     <div class="container mx-auto h-full flex justify-between items-center px-4">
@@ -168,7 +172,7 @@
     <AuthForm on:close={closeAuthForm} on:auth={handleAuth} />
   {/if}
 
-  <main class="flex-grow mt-16">
+  <main class="flex-grow" style="margin-top: {$navHeight}px;">
     <slot />
   </main>
 

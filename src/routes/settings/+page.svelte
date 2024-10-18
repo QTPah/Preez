@@ -27,7 +27,7 @@
   let newPassword = '';
   let confirmPassword = '';
 
-  const sections = [
+  $: sections = [
     { id: 'profile', name: t.profileSettings },
     { id: 'account', name: t.accountSettings },
     { id: 'notifications', name: t.notificationPreferences },

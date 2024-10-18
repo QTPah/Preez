@@ -123,9 +123,9 @@
        use:clickOutside on:click_outside={() => showDropdown = false}>
     <div class="container mx-auto h-full flex justify-between items-center px-4">
       <a href="/" class="text-2xl font-bold transition-opacity duration-200">
-        Preez
+        Preez 
       </a>
-      <ul class="flex items-center space-x-4">
+      <ul class="flex items-center space-x-2">
         <li class="mx-2 my-1"><a href="/" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/'}>{t.home}</a></li>
         <li class="mx-2 my-1"><a href="/about" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/about'}>{t.about}</a></li>
         {#if $isLoggedIn}

@@ -16,13 +16,17 @@ function createLanguageStore() {
       set(lang);
     },
     toggleLanguage: () => {
-      subscribe(currentLang => {
-        const newLang = currentLang === 'en' ? 'de' : 'en';
-        if (browser) {
-          localStorage.setItem('language', newLang);
-        }
-        set(newLang);
+      let currentLang;
+      const unsubscribe = subscribe(value => {
+        currentLang = value;
       });
+      unsubscribe();
+      
+      const newLang = currentLang === 'en' ? 'de' : 'en';
+      if (browser) {
+        localStorage.setItem('language', newLang);
+      }
+      set(newLang);
     }
   };
 }

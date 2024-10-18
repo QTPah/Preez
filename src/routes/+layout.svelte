@@ -10,11 +10,29 @@
   import ChatComponent from '$lib/components/ChatComponent.svelte';
   import { clickOutside } from '$lib/actions/clickOutside';
   import defaultProfile from '$lib/assets/default-picture.jpeg';
+  import { tweened } from 'svelte/motion';
+  import { cubicOut } from 'svelte/easing';
 
   let showAuthForm = false;
   let showDropdown = false;
   let showChat = false;
   let profilePicture = defaultProfile;
+  let scrollY;
+  let innerHeight;
+  let innerWidth;
+
+  const navHeight = tweened(64, {
+    duration: 200,
+    easing: cubicOut
+  });
+
+  $: isMobile = innerWidth < 640;
+  $: isScrolled = scrollY > 50;
+  $: logoVisible = !isScrolled;
+
+  $: {
+    navHeight.set(isScrolled ? 48 : 64);
+  }
 
   async function validateToken() {
     if ($auth.accessToken) {
@@ -91,11 +109,19 @@
   }
 </script>
 
+<svelte:window bind:scrollY bind:innerHeight bind:innerWidth />
+
 <div class="flex flex-col min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-  <nav class="bg-gray-800 text-white p-2 sm:p-4" use:clickOutside on:click_outside={() => showDropdown = false}>
-    <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center">
-      <a href="/" class="text-2xl font-bold mb-2 sm:mb-0">Preez</a>
-      <ul class="flex flex-wrap justify-center sm:space-x-4 items-center text-sm sm:text-base">
+  <nav class="fixed top-0 left-0 right-0 bg-gray-800 text-white transition-all duration-200 z-10"
+       style="height: {$navHeight}px;"
+       use:clickOutside on:click_outside={() => showDropdown = false}>
+    <div class="container mx-auto h-full flex justify-between items-center px-4">
+      <a href="/" class="text-2xl font-bold transition-opacity duration-200"
+         class:opacity-0={!logoVisible}
+         class:invisible={!logoVisible}>
+        Preez
+      </a>
+      <ul class="flex items-center space-x-4">
         <li class="mx-2 my-1"><a href="/" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/'}>Home</a></li>
         <li class="mx-2 my-1"><a href="/about" class="hover:text-gray-300" class:font-bold={$page.url.pathname === '/about'}>About</a></li>
         {#if $isLoggedIn}
@@ -145,7 +171,7 @@
     <AuthForm on:close={closeAuthForm} on:auth={handleAuth} />
   {/if}
 
-  <main class="flex-grow">
+  <main class="flex-grow mt-16">
     <slot />
   </main>
 

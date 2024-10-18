@@ -3,8 +3,10 @@ import authMiddleware from '../middleware/authMiddleware.js';
 import User from '../models/User.js';
 import Message from '../models/Message.js';
 import { createNotification } from '../utils/notificationUtils.js';
+import { createLogger } from '../utils/logger.js';
 
 const router = express.Router();
+const logger = createLogger('chat-routes');
 
 // Get all users with unread message count and last message timestamp
 router.get('/users', authMiddleware, async (req, res) => {
@@ -42,7 +44,7 @@ router.get('/users', authMiddleware, async (req, res) => {
 
     res.json(usersWithMessageInfo);
   } catch (error) {
-    console.error('Error fetching users:', error);
+    logger.error({ err: error }, 'Error fetching users');
     res.status(500).json({ success: false, message: 'Error fetching users' });
   }
 });
@@ -65,7 +67,7 @@ router.get('/messages/:userId', authMiddleware, async (req, res) => {
 
     res.json(messages);
   } catch (error) {
-    console.error('Error fetching messages:', error);
+    logger.error({ err: error }, 'Error fetching messages');
     res.status(500).json({ success: false, message: 'Error fetching messages' });
   }
 });
@@ -92,7 +94,7 @@ router.post('/messages', authMiddleware, async (req, res) => {
 
     res.status(201).json(message);
   } catch (error) {
-    console.error('Error sending message:', error);
+    logger.error({ err: error }, 'Error sending message');
     res.status(500).json({ success: false, message: 'Error sending message' });
   }
 });

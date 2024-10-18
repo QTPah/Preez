@@ -1,7 +1,9 @@
 import express from 'express';
 import authMiddleware from '../middleware/authMiddleware.js';
 import { createNotification, getUnreadNotifications, markNotificationAsRead } from '../utils/notificationUtils.js';
-import logger from '../utils/logger.js';
+import { createLogger } from '../utils/logger.js';
+
+const logger = createLogger('notification-routes');
 
 const router = express.Router();
 

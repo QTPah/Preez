@@ -3,8 +3,10 @@ import User from '../models/User.js';
 import Offer from '../models/Offer.js';
 import Report from '../models/Report.js';
 import Message from '../models/Message.js';
+import { createLogger } from '../utils/logger.js';
 
 const router = express.Router();
+const logger = createLogger('statistics-routes');
 
 router.get('/', async (req, res) => {
   try {
@@ -34,7 +36,7 @@ router.get('/', async (req, res) => {
       pendingReports
     });
   } catch (error) {
-    console.error('Error fetching statistics:', error);
+    logger.error({ err: error }, 'Error fetching statistics');
     res.status(500).json({ error: 'Error fetching statistics' });
   }
 });

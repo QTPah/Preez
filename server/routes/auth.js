@@ -5,7 +5,9 @@ import path from 'path';
 import fs from 'fs';
 import User from '../models/User.js';
 import authMiddleware from '../middleware/authMiddleware.js';
-import logger from '../utils/logger.js';
+import { createLogger } from '../utils/logger.js';
+
+const logger = createLogger('auth-routes');
 
 const router = express.Router();
 

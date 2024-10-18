@@ -22,9 +22,11 @@ const transport = pino.transport({
   ],
 });
 
-const logger = pino({
-  level: 'info',
+const baseLogger = pino({
+  level: 'trace',
   timestamp: pino.stdTimeFunctions.isoTime,
 }, transport);
 
-export default logger;
+export const createLogger = (module) => baseLogger.child({ module });
+
+export default baseLogger;

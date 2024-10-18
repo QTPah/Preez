@@ -3,8 +3,10 @@ import User from '../models/User.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 import bcrypt from 'bcryptjs';
 import { getAllUserReports, updateUserReportStatus } from '../controllers/usersController.js';
+import { createLogger } from '../utils/logger.js';
 
 const router = express.Router();
+const logger = createLogger('user-routes');
 
 // New routes for user view
 router.get('/reports', authMiddleware, getAllUserReports);
@@ -19,7 +21,7 @@ router.get('/', authMiddleware, async (req, res) => {
     const users = await User.find().select('-password');
     res.json({ success: true, users });
   } catch (error) {
-    console.error('Error fetching users:', error);
+    logger.error({ err: error }, 'Error fetching users');
     res.status(500).json({ success: false, message: error.message });
   }
 });
@@ -35,7 +37,7 @@ router.post('/', authMiddleware, async (req, res) => {
     await user.save();
     res.status(201).json({ success: true, user: user.toObject({ versionKey: false, transform: (doc, ret) => { delete ret.password; return ret; } }) });
   } catch (error) {
-    console.error('Error adding user:', error);
+    logger.error({ err: error }, 'Error adding user');
     res.status(400).json({ success: false, message: error.message });
   }
 });
@@ -63,7 +65,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
     await user.save();
     res.json({ success: true, user: user.toObject({ versionKey: false, transform: (doc, ret) => { delete ret.password; return ret; } }) });
   } catch (error) {
-    console.error('Error updating user:', error);
+    logger.error({ err: error }, 'Error updating user');
     res.status(400).json({ success: false, message: error.message });
   }
 });
@@ -80,7 +82,7 @@ router.delete('/:id', authMiddleware, async (req, res) => {
     }
     res.json({ success: true, message: 'User deleted successfully' });
   } catch (error) {
-    console.error('Error deleting user:', error);
+    logger.error({ err: error }, 'Error deleting user');
     res.status(400).json({ success: false, message: error.message });
   }
 });
@@ -109,11 +111,11 @@ router.post('/:id/report', authMiddleware, async (req, res) => {
     
     await report.save();
     
-    console.log(`User ${req.params.id} reported by user ${req.user.id}. Report ID: ${report._id}`);
+    logger.info(`User ${req.params.id} reported by user ${req.user.id}. Report ID: ${report._id}`);
     
     res.json({ success: true, message: 'Report submitted successfully' });
   } catch (error) {
-    console.error(`Error reporting user ${req.params.id}:`, error);
+    logger.error({ err: error }, `Error reporting user ${req.params.id}`);
     res.status(400).json({ success: false, message: error.message });
   }
 });
@@ -129,7 +131,7 @@ router.get('/reports', authMiddleware, async (req, res) => {
       .populate('targetId', 'username title');
     res.json({ success: true, reports });
   } catch (error) {
-    console.error('Error fetching reports:', error);
+    logger.error({ err: error }, 'Error fetching reports');
     res.status(500).json({ success: false, message: error.message });
   }
 });
@@ -160,7 +162,7 @@ router.patch('/reports/:reportId', authMiddleware, async (req, res) => {
 
     res.json({ success: true, report });
   } catch (error) {
-    console.error('Error updating report status:', error);
+    logger.error({ err: error }, 'Error updating report status');
     res.status(500).json({ success: false, message: 'Error updating report status', error: error.message });
   }
 });

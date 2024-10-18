@@ -2,8 +2,10 @@ import express from 'express';
 import fs from 'fs/promises';
 import path from 'path';
 import authMiddleware from '../middleware/authMiddleware.js';
+import { createLogger } from '../utils/logger.js';
 
 const router = express.Router();
+const logger = createLogger('settings-routes');
 
 const aboutPagePath = path.join(process.cwd(), 'data', 'about.md');
 
@@ -12,7 +14,7 @@ router.get('/about', async (req, res) => {
     const content = await fs.readFile(aboutPagePath, 'utf-8');
     res.json({ content });
   } catch (error) {
-    console.error('Error reading About page content:', error);
+    logger.error({ err: error }, 'Error reading About page content');
     res.status(500).json({ error: 'Error reading About page content' });
   }
 });
@@ -31,7 +33,7 @@ router.put('/about', authMiddleware, async (req, res) => {
     await fs.writeFile(aboutPagePath, content, 'utf-8');
     res.json({ message: 'About page content updated successfully' });
   } catch (error) {
-    console.error('Error updating About page content:', error);
+    logger.error({ err: error }, 'Error updating About page content');
     res.status(500).json({ error: 'Error updating About page content' });
   }
 });

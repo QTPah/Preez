@@ -13,7 +13,9 @@ import chatRoutes from './routes/chat.js';
 import settingsRoutes from './routes/settings.js';
 import statisticsRoutes from './routes/statistics.js';
 import { handler } from '../build/handler.js';
-import logger from './utils/logger.js';
+import baseLogger, { createLogger } from './utils/logger.js';
+
+const logger = createLogger('server');
 import { deleteOldReadNotifications } from './utils/notificationUtils.js';
 
 dotenv.config();

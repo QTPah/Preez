@@ -3,6 +3,10 @@
   import { onMount } from 'svelte';
   import { updateUserSettings, changePassword, updateUserProfile } from '$lib/api/auth';
   import defaultProfile from '$lib/assets/default-picture.jpeg';
+  import { language } from '../../stores/language';
+  import { translations } from '$lib/translations';
+
+  $: t = translations[$language];
 
   let activeSection = 'profile';
   let username = $auth.user?.username || '';
@@ -24,10 +28,10 @@
   let confirmPassword = '';
 
   const sections = [
-    { id: 'profile', name: 'Profile' },
-    { id: 'account', name: 'Account' },
-    { id: 'notifications', name: 'Notifications' },
-    { id: 'privacy', name: 'Privacy' },
+    { id: 'profile', name: t.profileSettings },
+    { id: 'account', name: t.accountSettings },
+    { id: 'notifications', name: t.notificationPreferences },
+    { id: 'privacy', name: t.privacySettings },
   ];
 
   onMount(async () => {
@@ -153,7 +157,7 @@
 </script>
 
 <div class="container mx-auto px-4 py-8 dark:bg-gray-900">
-  <h1 class="text-3xl font-bold mb-6 dark:text-white">Settings</h1>
+  <h1 class="text-3xl font-bold mb-6 dark:text-white">{t.settings}</h1>
   
   {#if message}
     <div class={`mb-4 p-2 rounded ${messageType === 'success' ? 'bg-green-100 text-green-700 dark:bg-green-800 dark:text-green-200' : 'bg-red-100 text-red-700 dark:bg-red-800 dark:text-red-200'}`}>
@@ -194,14 +198,14 @@
                 on:click={handleEditProfilePicture}
                 class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mr-2"
               >
-                Edit
+                {t.editProfilePicture}
               </button>
               <button
                 type="button"
                 on:click={handleDeleteProfilePicture}
                 class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
               >
-                Delete
+                {t.deleteProfilePicture}
               </button>
             </div>
           </div>
@@ -212,9 +216,9 @@
             on:change={(e) => profilePicture = e.target.files[0]}
             class="hidden"
           />
-          <h2 class="text-2xl font-semibold mb-4 dark:text-white">Profile Settings</h2>
+          <h2 class="text-2xl font-semibold mb-4 dark:text-white">{t.profileSettings}</h2>
           <div class="mb-4">
-            <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Username</label>
+            <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.username}</label>
             <input
               type="text"
               id="username"
@@ -223,7 +227,7 @@
             />
           </div>
           <div class="mb-4">
-            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.email}</label>
             <input
               type="email"
               id="email"
@@ -232,7 +236,7 @@
             />
           </div>
           <div class="mb-4">
-            <label for="bio" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bio</label>
+            <label for="bio" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.bio}</label>
             <textarea
               id="bio"
               bind:value={bio}
@@ -241,9 +245,9 @@
             ></textarea>
           </div>
         {:else if activeSection === 'account'}
-          <h2 class="text-2xl font-semibold mb-4 dark:text-white">Account Settings</h2>
+          <h2 class="text-2xl font-semibold mb-4 dark:text-white">{t.accountSettings}</h2>
           <div class="mb-4">
-            <label for="current-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Current Password</label>
+            <label for="current-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.currentPassword}</label>
             <input
               type="password"
               id="current-password"
@@ -252,7 +256,7 @@
             />
           </div>
           <div class="mb-4">
-            <label for="new-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">New Password</label>
+            <label for="new-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.newPassword}</label>
             <input
               type="password"
               id="new-password"
@@ -261,7 +265,7 @@
             />
           </div>
           <div class="mb-4">
-            <label for="confirm-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirm New Password</label>
+            <label for="confirm-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.confirmNewPassword}</label>
             <input
               type="password"
               id="confirm-password"
@@ -270,35 +274,35 @@
             />
           </div>
         {:else if activeSection === 'notifications'}
-          <h2 class="text-2xl font-semibold mb-4 dark:text-white">Notification Preferences</h2>
+          <h2 class="text-2xl font-semibold mb-4 dark:text-white">{t.notificationPreferences}</h2>
           <div class="mb-4">
             <label class="flex items-center text-gray-700 dark:text-gray-300">
               <input type="checkbox" bind:checked={settings.emailNotifications} class="mr-2">
-              Receive email notifications
+              {t.receiveEmailNotifications}
             </label>
           </div>
           <div class="mb-4">
             <label class="flex items-center text-gray-700 dark:text-gray-300">
               <input type="checkbox" bind:checked={settings.pushNotifications} class="mr-2">
-              Receive push notifications
+              {t.receivePushNotifications}
             </label>
           </div>
           <div class="mb-4">
             <label class="flex items-center text-gray-700 dark:text-gray-300">
               <input type="checkbox" bind:checked={settings.offerUpdates} class="mr-2">
-              Receive updates about your offers
+              {t.receiveOfferUpdates}
             </label>
           </div>
           <div class="mb-4">
             <label class="flex items-center text-gray-700 dark:text-gray-300">
               <input type="checkbox" bind:checked={settings.marketingEmails} class="mr-2">
-              Receive marketing emails
+              {t.receiveMarketingEmails}
             </label>
           </div>
         {:else if activeSection === 'privacy'}
-          <h2 class="text-2xl font-semibold mb-4 dark:text-white">Privacy Settings</h2>
+          <h2 class="text-2xl font-semibold mb-4 dark:text-white">{t.privacySettings}</h2>
           <div class="mb-4">
-            <label for="profile-visibility" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Profile Visibility</label>
+            <label for="profile-visibility" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.profileVisibility}</label>
             <select
               id="profile-visibility"
               bind:value={settings.profileVisibility}
@@ -312,13 +316,13 @@
           <div class="mb-4">
             <label class="flex items-center text-gray-700 dark:text-gray-300">
               <input type="checkbox" bind:checked={settings.showEmail} class="mr-2">
-              Show email on profile
+              {t.showEmailOnProfile}
             </label>
           </div>
           <div class="mb-4">
             <label class="flex items-center text-gray-700 dark:text-gray-300">
               <input type="checkbox" bind:checked={settings.allowMessaging} class="mr-2">
-              Allow other users to message you
+              {t.allowMessaging}
             </label>
           </div>
         {/if}
@@ -327,7 +331,7 @@
           on:click={handleSave}
           class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
         >
-          Save Changes
+          {t.saveChanges}
         </button>
       </div>
     </div>
